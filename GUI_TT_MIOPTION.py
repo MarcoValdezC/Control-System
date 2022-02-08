@@ -257,6 +257,7 @@ def main(function, limites, poblacion, f_mut, recombination, generaciones,pardyn
             
             solu1=function(v_hijo,pardyna)
             f_ui, g_ui = solu1[0],solu1[1]
+            
             #-------------------------Caso 1-----------------------------------------
             flag_ui=True
             if g_ui == 0 and g_x[i][j] == 0:
@@ -643,7 +644,7 @@ while True:
         
         afe=values['Tabl']
         #print(s[afe[0],:])
-        pen=pendulum_spos(s[afe[0],:], dinps)
+        pen=pendulum_s(s[afe[0],:], dinps)
         posi=pen[2]
         tor=pen[3]
         tim=pen[4]
@@ -672,7 +673,7 @@ while True:
         ax4 = figgraps.add_subplot(223)
         ax4.set_xlabel('Time')
         ax4.set_ylabel('Señal de control')
-        ax4.plot(tim, tor[:, 0], '',label=r'$u$',lw=1)
+        ax4.plot(tim, tor[:, 0], 'r',label=r'$u$',lw=1)
         ax4.legend()
         
         
