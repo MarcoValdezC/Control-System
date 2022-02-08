@@ -135,92 +135,9 @@ def pendulum_s(r,dyna):
         #print(u[o,0])
        
     
-    return np.array([ise_next, iadu_next]),g
+    return np.array([ise_next, iadu_next]),g,x,u,t
 #----------------------------------------------------------------------------------------------------
 
-#----------Problema de optimización---------
-def pendulum_spos(r,dyna):
-    '''Time Parameters'''
-    dt = 0.005  # Tiempo de muestreo (5ms)
-    ti = 0.0  # Tiempo inicial de la simulación (0s)
-    tf = 10.0  # Tiempo inicial de la simulación (10s)
-    n = int((tf - ti) / dt) + 1  # Número de muestras
-    t = np.linspace(ti, tf, n)  # Vector con los intsntes de tiempo (en Matlab 0:0.005:10)
-    
-    '''Dynamics Parameters'''
-    m = dyna[0]  # Masa del pendulo (kg)
-    l = dyna[1]  # Longitud de la barra del péndulo (m)
-    lc = dyna[2]  # Longitud al centro de masa del péndulo (m)
-    b = dyna[3]  # Coeficiente de fricción viscosa pendulo
-    g = 9.81  # Aceleración de la gravedad en la Tierra
-    I = dyna[4]  # Tensor de inercia del péndulo
-
-    '''State variables'''
-    x = np.zeros((n, 2))
-
-    '''Control vector'''
-    u = np.zeros((n, 1))
-    
-    
-    ise=0
-    ise_next=0
-    iadu=0
-    iadu_next=0
-    
-    '''Initial conditions'''
-    x[0, 0] = 0  # Initial pendulum position (rad)
-    x[0, 1] = 0  # Initial pendulum velocity (rad/s)
-    ie_th = 0
-
-    '''State equation'''
-    xdot = [0, 0]
-
-    '''Dynamic simulation'''
-    for o in range(n - 1):
-        '''Current states'''
-        th = x[o, 0]
-        th_dot = x[o, 1]
-        e_th =dyna[5]-th
-        e_th_dot = 0 - th_dot
-        
-        '''Controller'''
-        Kp =r[0]
-        Kd =r[1]
-        Ki =r[2]
-        
-        u[o,0]= limcontro(Kp * e_th + Kd * e_th_dot + Ki * ie_th)
- 
-        
-        
-        '''System dynamics'''
-        
-        xdot[0] = th_dot
-        xdot[1] = (u[o] - m * g * lc * np.sin(th) - b * th_dot) / (m * lc ** 2 + I)
-        
-        '''Integrate dynamics'''
-        x[o + 1, 0] = x[o, 0] + xdot[0] * dt
-        x[o + 1, 1] = x[o, 1] + xdot[1] * dt
-        ie_th = ie_th + e_th * dt
-        
-        ise=ise_next+(e_th**2)*dt
-        iadu=iadu_next+ (abs(u[o]-u[o-1]))*dt
-        g=0
-        if(ise>=3):
-            ie=3
-            g+=1
-        else:
-            ie=ise
-            g+=0
-        if(iadu>=0.8):
-            ia=0.8
-            g+=1
-        else:
-            ia=iadu
-            g+=0
-   
-        ise_next=ie
-        iadu_next=ia
-    return x,u,t
 
 #---------------Asegurar limites de caja-------------------------------------------------------------
 def asegurar_limites(vec, limit):
@@ -281,8 +198,8 @@ def main(function, limites, poblacion, f_mut, recombination, generaciones,pardyn
 
     #-------------Evaluación población 0------------------------------------------------------------------
     for i, xi in enumerate(population[0,:]):  # Evalua objetivos
-    
-        f_x[0][i], g_x[0][i] = function(xi,pardyna)
+        solu=function(xi,pardyna)
+        f_x[0][i], g_x[0][i] =solu[0],solu[1] #function(xi,pardyna)
     #------------------------------------------------------------------------------------------------------
 
     #---------------------Ciclo evolutivo------------------------------------------------------------------
@@ -337,8 +254,9 @@ def main(function, limites, poblacion, f_mut, recombination, generaciones,pardyn
                     v_hijo[k]=x_t[k]
                     
             # Evalua descendiente
-            f_ui, g_ui = function(v_hijo,pardyna)
-
+            
+            solu1=function(v_hijo,pardyna)
+            f_ui, g_ui = solu1[0],solu1[1]
             #-------------------------Caso 1-----------------------------------------
             flag_ui=True
             if g_ui == 0 and g_x[i][j] == 0:
@@ -726,9 +644,9 @@ while True:
         afe=values['Tabl']
         #print(s[afe[0],:])
         pen=pendulum_spos(s[afe[0],:], dinps)
-        posi=pen[0]
-        tor=pen[1]
-        tim=pen[2]
+        posi=pen[2]
+        tor=pen[3]
+        tim=pen[4]
         
         figan = plt.figure(figsize=(7, 6))
         ax1 = figan.add_subplot(111, autoscale_on=False,xlim=(-1.8, 1.8), ylim=(-1.2, 1.2))
