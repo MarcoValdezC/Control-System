@@ -382,7 +382,7 @@ def inverted_pendulum(r,dimpi):
     '''Time parameters'''
     dt = 0.005  # Tiempo de muestreo (5ms)
     ti = 0.0  # Tiempo inicial de la simulación (0s)
-    tf = 10.0  # Tiempo inicial de la simulación (10s)
+    tf = 15.0  # Tiempo inicial de la simulación (10s)
     n = int((tf - ti) / dt) + 1  # Número de muestras
     t = np.linspace(ti, tf, n)  # Vector con los intsntes de tiempo (en Matlab 0:0.005:10)
     
@@ -590,7 +590,7 @@ while True:
     
     #u=float(p)
     #e=eval(values[0])
-    if event in (None, 'Exit','Exit0'):
+    if event in (None, 'Exit','Exit0','Exit1'):
         break
     if event == 'Simple':
         #print(window['Simple'].get_size())
@@ -867,5 +867,8 @@ while True:
         ani_api = animation.FuncAnimation(figanpi, animatepi, \
                                 np.arange(1, len(timpi)), \
                                 interval=40, blit=False)
+    elif event=='Homesimupi':
+        window['respi'].update(visible=False)
+        window['Home'].update(visible=True)
     
 window.close()
