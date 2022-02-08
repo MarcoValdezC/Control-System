@@ -368,7 +368,7 @@ def main(function, limites, poblacion, f_mut, recombination, generaciones,pardyn
 
 
 #-----------------Péndulo invertido----------------
-limitpi=[(0,10),(0,10),(0,10),(0,20),(0,20),(0,20)]       # Limites inferior y superior
+limitpi=[(0,10),(0,10),(0,10),(0,10),(0,10),(0,10)]       # Limites inferior y superior
 poblacionpi = 200                    # Tamaño de la población, mayor >= 4
 f_mutpi = 0.5                        # Factor de mutacion [0,2]
 recombinationpi = 0.7                # Tasa de  recombinacion [0,1]
@@ -387,14 +387,14 @@ def inverted_pendulum(r,dimpi):
     t = np.linspace(ti, tf, n)  # Vector con los intsntes de tiempo (en Matlab 0:0.005:10)
     
     '''Dynamic parameters'''
-    m = 0.5  # Masa del pendulo (kg)
-    M = 0.7  # Masa del carro (kg) 
-    l = 1.0  # Longitud de la barra del péndulo (m)
-    lc = 0.3  # Longitud al centro de masa del péndulo (m)
-    b1 = 0.05  # Coeficiente de fricción viscosa pendulo
-    b2 = 0.06  # Coeficiente de friccion del carro
+    m = dimpi[0]  # Masa del pendulo (kg)
+    M = dimpi[1]  # Masa del carro (kg) 
+    l = dimpi[2]  # Longitud de la barra del péndulo (m)
+    lc = dimpi[3]  # Longitud al centro de masa del péndulo (m)
+    b1 = dimpi[4]  # Coeficiente de fricción viscosa pendulo
+    b2 = dimpi[5]  # Coeficiente de friccion del carro
     gra = 9.81  # Aceleración de la gravedad en la Tierra
-    I = 0.006  # Tensor de inercia del péndulo
+    I = dimpi[6]  # Tensor de inercia del péndulo
 
     '''State variables'''
     z = np.zeros((n, 4))
@@ -427,9 +427,9 @@ def inverted_pendulum(r,dimpi):
         th_dot = z[c, 3]  # Velocidad del péndulo
 
         '''Controller'''
-        e_x = 0 - x #Error de posición de carro
+        e_x = dimpi[8] - x #Error de posición de carro
         e_x_dot = 0 - x_dot #Error de velocidad de carro
-        e_th = np.pi/2-th #Error de posicón angular
+        e_th = dimpi[7]-th #Error de posicón angular
         e_th_dot = 0 - th_dot #Error de velocidad angular 
 
         '''Ganancias del controlador del carro'''
@@ -497,14 +497,10 @@ def inverted_pendulum(r,dimpi):
     
     #print(z[:, 0])
     
-    return np.array([ise_next, iadu_next]),g
+    return np.array([ise_next, iadu_next]),g,z,u,t
  
 #-----------------------------------------------------------------------------
-def val_conver(val):
-    di=np.zeros(len(val))
-    for i in range(len(val)):
-        di[i]=val[i]
-    return di
+
 
 #Function for drawing
 def draw_figure(canvas, figure):
@@ -557,13 +553,24 @@ layoutpfps=[[sg.Text('Seleccione un conjunto de ganancias del controlador  PID',
             [sg.Table(values=[['Espera','estamos','ejecutando','código','......'],['Espera','estamos','ejecutando','código','......']] ,headings=['Kp' , 'Kd' ,' Ki','ISE','IADU'],auto_size_columns=True,right_click_selects=True,enable_click_events=True, key='Tabl',vertical_scroll_only=False,num_rows=25 ), sg.Canvas(key='can')],
             [sg.Button('Simular',key='Simups')]]
 
+layoutpfpi=[[sg.Text('Seleccione un conjunto de ganancias del controlador  PID',text_color='white', font=('Franklin Gothic Book', 20, 'bold'))],
+            [sg.Table(values=[['Espera','estamos','ejecutando','código','......','......','......','......'],['Espera','estamos','ejecutando','código','......','......','......','......']] ,headings=['Kpcar' , 'Kdcar' ,'Kicar','Kppénd' , 'Kdpén' ,' Kipén','ISE','IADU'],auto_size_columns=True,right_click_selects=True,enable_click_events=True, key='Tablpi',vertical_scroll_only=False,num_rows=25 ), sg.Canvas(key='canpfpi')],
+            [sg.Button('Simular',key='Simupi')]]
+
+
 layoutsimpan=[[sg.Canvas(key='canani')]]
 layoutsimpgra=[[sg.Canvas(key='cangraps')]]
 
 layouttap=[[sg.TabGroup([[sg.Tab('Animación',layoutsimpan),sg.Tab('Graficas', layoutsimpgra)]],tab_location='centertop',border_width=5)],
            [sg.Button(image_filename='D:\TT2\home.png', key='Homesimups',image_subsample=8,button_color=(sg.theme_background_color(), sg.theme_background_color())),sg.Button('Salir',button_color='red',size=(3,2),border_width=5,key='Exit0')]]
 
-layout1=[[sg.Column(layouthome,key='Home'),sg.Column(layouts, visible=False,key='Sim'),sg.Column(layoutpfps,key='pfps',visible=False),sg.Column(layouttap,key='resps',visible=False),sg.Column(layouti,key='Inve',visible=False)]]
+layoutinvpan=[[sg.Canvas(key='cananipi')]]
+layoutinvpgra=[[sg.Canvas(key='cangrapi')]]
+
+layouttappi=[[sg.TabGroup([[sg.Tab('Animación',layoutinvpan),sg.Tab('Graficas', layoutinvpgra)]],tab_location='centertop',border_width=5)],
+           [sg.Button(image_filename='D:\TT2\home.png', key='Homesimupi',image_subsample=8,button_color=(sg.theme_background_color(), sg.theme_background_color())),sg.Button('Salir',button_color='red',size=(3,2),border_width=5,key='Exit1')]]
+
+layout1=[[sg.Column(layouthome,key='Home'),sg.Column(layouts, visible=False,key='Sim'),sg.Column(layoutpfps,key='pfps',visible=False),sg.Column(layouttap,key='resps',visible=False),sg.Column(layouti,key='Inve',visible=False),sg.Column(layoutpfpi,key='pfpi',visible=False),sg.Column(layouttappi,key='respi',visible=False)]]
         
 # #Create a fig for embedding.
 # fig = plt.figure(figsize=(5, 4))
@@ -586,7 +593,7 @@ while True:
     if event in (None, 'Exit','Exit0'):
         break
     if event == 'Simple':
-        print(window['Simple'].get_size())
+        #print(window['Simple'].get_size())
         window['Home'].update(visible=False)
         window['Sim'].update(visible=True)
     if event == 'deps':
@@ -711,13 +718,16 @@ while True:
     elif event=='Invertido':
         window['Home'].update(visible=False)
         window['Inve'].update(visible=True)
+    elif event == 'depi':
+        window['Inve'].update(visible=False)
+        window['pfpi'].update(visible=True)
         
         mi=values['masapi']
         mc=values['masaca']
         li=values['lpi']
         lci=values['lcpi']
         bi=values['bpi']
-        bc=values['bpc']
+        bc=values['bca']
         isi=values['ipi']
         sti=values['spi']
         stc=values['spc']
@@ -729,6 +739,133 @@ while True:
         #llamado de la función main de DE
         varpi=main(inverted_pendulum, limitpi, poblacionpi, f_mutpi, recombinationpi, generacionespi,dinpi,Dpi,Mpi,AMAXpi)
         
-        valu=np.zeros((len(varpi[0]),(Dpi+Mpi)))
+        valupi=np.zeros((len(varpi[0]),(Dpi+Mpi)))
+
+        tpi=varpi[0]
+        spi=varpi[1]
+        
+        valupi[:,0]=spi[:,0]
+        valupi[:,1]=spi[:,1]
+        valupi[:,2]=spi[:,2]
+        valupi[:,3]=spi[:,3]
+        valupi[:,4]=spi[:,4]
+        valupi[:,5]=spi[:,5]
+        valupi[:,6]=tpi[:,0]
+        valupi[:,7]=tpi[:,1]
+        
+        #Create a fig for embedding.
+        figpi = plt.figure(figsize=(6, 5))
+        
+        ax6 = figpi.add_subplot(111)
+        ax6.set_title('Aproximación al frente de Pareto')
+        ax6.set_xlabel('f1')
+        ax6.set_ylabel('f2')
+        
+        #plot
+        ax6.scatter(tpi[:,0], tpi[:,1])
+        
+        fig_aggpi = draw_figure(window['canpfpi'].TKCanvas, figpi)
+        
+        window['Tablpi'].update(values=valupi)
+        #After making changes, fig_agg.draw()Reflect the change with.
+        fig_aggpi.draw()
+    elif event=='Homepi':
+        window['Inve'].update(visible=False)
+        window['Home'].update(visible=True)
+
+    elif event=='Simupi':
+        window['pfpi'].update(visible=False)
+        window['respi'].update(visible=True)
+        
+        afepi=values['Tablpi']
+        #print(s[afe[0],:])
+        penpi=inverted_pendulum(spi[afepi[0],:], dinpi)
+        posipi=penpi[2]
+        torpi=penpi[3]
+        timpi=penpi[4]
+        
+        figanpi = plt.figure(figsize=(7, 6))
+        ax10 = figanpi.add_subplot(111, autoscale_on=False,xlim=(-1.8, 1.8), ylim=(-1.2, 1.2))
+        ax10.set_xlabel('x')
+        ax10.set_ylabel('y')
+        fig_animapi = draw_figure(window['cananipi'].TKCanvas, figanpi)
+        
+      
+        
+        figgrapspi = plt.figure(figsize=(7, 6))
+        ax11 = figgrapspi.add_subplot(321)
+        ax11.set_xlabel('Tiempo')
+        ax11.set_ylabel('Posición del carro')
+        ax11.plot(timpi, posipi[:, 0], 'k',label=r'$x$',lw=1)
+        ax11.legend()
+        
+        ax12 = figgrapspi.add_subplot(322)
+        ax12.set_xlabel('Tiempo')
+        ax12.set_ylabel('Posición del péndulo')
+        ax12.plot(timpi, posipi[:, 1], 'b',label=r'$\theta$',lw=1)
+        ax12.legend()
+        
+        ax13 = figgrapspi.add_subplot(323)
+        ax13.set_xlabel('Tiempo')
+        ax13.set_ylabel('Velocidad del carrito')
+        ax13.plot(timpi, posipi[:, 2], 'r',label=r'$\dot{x}$',lw=1)
+        ax13.legend()
+        
+        ax14 = figgrapspi.add_subplot(324)
+        ax14.set_xlabel('Tiempo')
+        ax14.set_ylabel('Velocidad del péndulo')
+        ax14.plot(timpi, posipi[:, 3], 'k',label=r'$x$',lw=1)
+        ax14.legend()
+        
+        ax15 = figgrapspi.add_subplot(325)
+        ax15.set_xlabel('Tiempo')
+        ax15.set_ylabel('$u_{car}$')
+        ax15.plot(timpi, torpi[0, :], 'b',label=r'$u_{car}$',lw=1)
+        ax15.legend()
+        
+        ax16 = figgrapspi.add_subplot(326)
+        ax16.set_xlabel('Tiempo')
+        ax16.set_ylabel('$u_{pendulum}$')
+        ax16.plot(timpi, torpi[1, :], 'r',label=r'$u_{pendulum}$',lw=1)
+        ax16.legend()
+        
+        
+        fig_graps = draw_figure(window['cangrapi'].TKCanvas, figgrapspi)
+        
+        
+        x1 = posipi[:, 0]
+        y1 = np.zeros(len(timpi))
+        
+        l=dinpi[2]
+     
+        x2 = l * np.cos(posipi[:, 1]) + x1
+        y2 = l * np.sin(posipi[:, 1])
+        
+        mass1, = ax10.plot([], [], linestyle='None', marker='s', \
+                 markersize=10, markeredgecolor='k', \
+                 color='green', markeredgewidth=2)
+        line, = ax10.plot([], [], 'o-', color='green', lw=4, \
+                markersize=6, markeredgecolor='k', \
+                markerfacecolor='k')
+        time_template = 't= %.1fs'
+        time_text = ax10.text(0.05, 0.9, '', transform=ax10.transAxes)
+        def init():
+            
+            mass1.set_data([], [])
+            line.set_data([], [])
+            time_text.set_text('')
+
+            return line, mass1, time_text
+        
+        def animatepi(i):
+            mass1.set_data([x1[i]], [y1[i]])
+            line.set_data([x1[i], x2[i]], [y1[i], y2[i]])
+            time_text.set_text(time_template % timpi[i])
+            return mass1, line, time_text
+        
+        
+        ani_api = animation.FuncAnimation(figanpi, animatepi, \
+                                np.arange(1, len(timpi)), \
+                                interval=40, blit=False)
     
 window.close()
