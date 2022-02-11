@@ -382,11 +382,11 @@ def main(function, limites, poblacion, f_mut, recombination, generaciones,pardyn
 
 
 #-----------------Péndulo invertido----------------
-limitpi=[(0,5),(0,5),(0,5),(0,10),(0,10),(0,10)]       # Limites inferior y superior
+limitpi=[(0,10),(0,5),(0,5),(0,20),(0,10),(0,10)]       # Limites inferior y superior
 poblacionpi = 200                    # Tamaño de la población, mayor >= 4
 f_mutpi = 0.5                        # Factor de mutacion [0,2]
 recombinationpi = 0.7                # Tasa de  recombinacion [0,1]
-generacionespi =10                 # Número de generaciones
+generacionespi =5                 # Número de generaciones
 Dpi = 6                             # Dimensionalidad O número de variables de diseño 
 Mpi = 2                              # Numero de objetivos
 AMAXpi = 30     
@@ -492,8 +492,8 @@ def inverted_pendulum(r,dimpi):
         ise=ise_next+(e_th**2)*dt+(e_x**2)*dt
         iadu=iadu_next+ (abs(u[0,c]-u[0,c-1]))*dt+(abs(u[1,c]-u[1,c-1]))*dt
         g=0
-        if(ise>=20):
-            ie=20
+        if(ise>=100):
+            ie=100
             g+=1
         else:
             ie=ise
@@ -823,7 +823,7 @@ layout1=[[sg.Column(layouthome,key='Home'),sg.Column(layouts, visible=False,key=
 
 
 
-window = sg.Window('Swapping the contents of a window', layout1, finalize=True)
+window = sg.Window('Swapping the contents of a window', layout1, finalize=True,resizable=True)
 #Associate fig with Canvas.
 
 layout = 1  # The currently visible layout
@@ -1042,7 +1042,7 @@ while True:
         torpi=penpi[3]
         timpi=penpi[4]
         
-        figanpi = plt.figure(figsize=(7, 6))
+        figanpi = plt.figure(figsize=(8, 6))
         ax10 = figanpi.add_subplot(111, autoscale_on=False,xlim=(-1.8, 1.8), ylim=(-1.2, 1.2))
         ax10.set_xlabel('x')
         ax10.set_ylabel('y')
@@ -1072,7 +1072,7 @@ while True:
         ax14 = figgrapspi.add_subplot(324)
         ax14.set_xlabel('Tiempo')
         ax14.set_ylabel('Velocidad del péndulo')
-        ax14.plot(timpi, posipi[:, 3], 'k',label=r'$x$',lw=1)
+        ax14.plot(timpi, posipi[:, 3], 'k',label=r'$\dot{\theta}$',lw=1)
         ax14.legend()
         
         ax15 = figgrapspi.add_subplot(325)
