@@ -382,7 +382,7 @@ def main(function, limites, poblacion, f_mut, recombination, generaciones,pardyn
 
 
 #-----------------Péndulo invertido----------------
-limitpi=[(0,10),(0,10),(0,10),(0,10),(0,10),(0,10)]       # Limites inferior y superior
+limitpi=[(0,5),(0,5),(0,5),(0,10),(0,10),(0,10)]       # Limites inferior y superior
 poblacionpi = 200                    # Tamaño de la población, mayor >= 4
 f_mutpi = 0.5                        # Factor de mutacion [0,2]
 recombinationpi = 0.7                # Tasa de  recombinacion [0,1]
@@ -730,13 +730,13 @@ def draw_figure(canvas, figure):
 
 ##-----DEFAULT SETTINGS----------------------------------##
 bw: dict = {'size': (20, 20), 'font': ('Franklin Gothic Book', 60), 'button_color': ("blue", "#F8F8F8")}
-bt: dict = {'size': (12, 1), 'font': ('Franklin Gothic Book', 18), 'button_color': ("black", "#F1EABC")}
+bt: dict = {'size': (6, 1),'font': ('Franklin Gothic Book', 14,'bold italic'), }
 bo: dict = {'size': (15, 2), 'font': ('Arial', 24), 'button_color': ("black", "#ECA527"), 'focus': True}
 
 layouthome= [[sg.Text('CONTROL PID CON OPTIMIZACIÓN MULTIOBJETIVO',justification='center', 
              text_color='white', font=('Franklin Gothic Book', 28, 'bold'))],
              [sg.Text('Selecciona un péndulo:', justification='center',text_color='white', font=('Franklin Gothic Book', 14, 'bold'))],
-             [sg.Button(image_filename='D:\TT2\imagen.png' ,key='Simple',button_color=(sg.theme_background_color(), sg.theme_background_color())), sg.Button(image_filename='D:\TT2\dob.png', key='Invertido',button_color=(sg.theme_background_color(), sg.theme_background_color())),sg.Button(image_filename='D:\TT2\doble.png', key='Doble')],
+             [sg.Button(image_filename='D:\TT2\PS.png' ,key='Simple',button_color=(sg.theme_background_color(), sg.theme_background_color())), sg.Button(image_filename='D:\TT2\PI.png', key='Invertido',button_color=(sg.theme_background_color(), sg.theme_background_color())),sg.Button(image_filename='D:\TT2\PD.png', key='Doble')],
              [sg.Text('Simple',size=(38,2),justification='center',font=('Franklin Gothic Book', 15, 'bold')), sg.Text('Invertido',size=(38,2), justification='center',font=('Franklin Gothic Book', 15, 'bold')),sg.Text('Doble',size=(38,2),justification='center',font=('Franklin Gothic Book', 15, 'bold'))],
              [sg.Button('Salir',button_color='red',size=(5,2),border_width=5,key='Exit')]]
 
@@ -744,11 +744,11 @@ layouts=[[sg.Text('Péndulo Simple:',text_color='white', font=('Franklin Gothic 
             [sg.Text('Masa (m):', text_color='black', font=('Franklin Gothic Book', 12, 'bold'),size=(24,1)), sg.Input('',key='masaps')],
             [sg.Text('Longitud (l):', text_color='black', font=('Franklin Gothic Book', 12, 'bold'),size=(24,1)), sg.InputText('',key='lps')],
             [sg.Text('Longitud al centro masa (lc):', text_color='black', font=('Franklin Gothic Book', 12, 'bold'),size=(24,1)), sg.InputText('',key='lcps')],
-            [sg.Text('Fricción (D):', text_color='black', font=('Franklin Gothic Book', 12, 'bold'),size=(24,1)), sg.InputText(key='bps')],
+            [sg.Text('Fricción (D):', text_color='black', font=('Franklin Gothic Book', 12, 'bold '),size=(24,1)), sg.InputText(key='bps')],
             [sg.Text('Momento de inercia (I):', text_color='black', font=('Franklin Gothic Book', 12, 'bold'),size=(24,1)), sg.InputText('',key='ips')],
-            [sg.Text('Set point (rad):', text_color='black', font=('Franklin Gothic Book', 12, 'bold'),size=(24,1)), sg.InputText('',key='sps')],
+            [sg.Text('Set point (rad):', text_color='black', font=('Franklin Gothic Book', 12, 'bold italic'),size=(24,1)), sg.InputText('',key='sps')],
             [sg.Text('Seleccione el algoritmo metaheurístico:',text_color='white', font=('Franklin Gothic Book', 28, 'bold'))],
-            [sg.Button('DE',button_color='blue',border_width=3,key='deps'),sg.Button('GE',button_color='blue',border_width=3,key='geps'),sg.Button('PSO',button_color='blue',border_width=3,key='psops')],
+            [sg.Button('DE',button_color='blue',border_width=5,key='deps',**bt),sg.Button('GE',button_color='blue',border_width=5,key='geps',**bt),sg.Button('PSO',button_color='blue',border_width=5,key='psops',**bt)],
             [sg.Button(image_filename='D:\TT2\home.png', key='Homeps',image_subsample=8,button_color=(sg.theme_background_color(), sg.theme_background_color()))]
             ]
 
@@ -760,26 +760,26 @@ layouti=[[sg.Text('Péndulo Invertido:',text_color='white', font=('Franklin Goth
             [sg.Text('Fricción del péndulo(b1):', text_color='black', font=('Franklin Gothic Book', 12, 'bold'),size=(24,1)), sg.InputText(key='bpi')],
             [sg.Text('Fricción del carrito(b2):', text_color='black', font=('Franklin Gothic Book', 12, 'bold'),size=(24,1)), sg.InputText(key='bca')],
             [sg.Text('Momento de inercia (I):', text_color='black', font=('Franklin Gothic Book', 12, 'bold'),size=(24,1)), sg.InputText('',key='ipi')],
-            [sg.Text('Set point del péndulo (rad):', text_color='black', font=('Franklin Gothic Book', 12, 'bold'),size=(24,1)), sg.InputText('',key='spi')],
-            [sg.Text('Set point del carrito:', text_color='black', font=('Franklin Gothic Book', 12, 'bold'),size=(24,1)), sg.InputText('',key='spc')],
+            [sg.Text('Set point del péndulo (rad):', text_color='black', font=('Franklin Gothic Book', 12, 'bold italic'),size=(24,1)), sg.InputText('',key='spi')],
+            [sg.Text('Set point del carrito:', text_color='black', font=('Franklin Gothic Book', 12, 'bold italic'),size=(24,1)), sg.InputText('',key='spc')],
             [sg.Text('Seleccione el algoritmo metaheurístico:',text_color='white', font=('Franklin Gothic Book', 28, 'bold'))],
-            [sg.Button('DE',button_color='blue',border_width=3,key='depi'),sg.Button('GE',button_color='blue',border_width=3,key='gepi'),sg.Button('PSO',button_color='blue',border_width=3,key='psopi')],
+            [sg.Button('DE',button_color='blue',border_width=5,key='depi',**bt),sg.Button('GE',button_color='blue',border_width=5,key='gepi',**bt),sg.Button('PSO',button_color='blue',border_width=5,key='psopi',**bt)],
             [sg.Button(image_filename='D:\TT2\home.png', key='Homepi',image_subsample=8,button_color=(sg.theme_background_color(), sg.theme_background_color()))]
             ]
 
 layoutd=[[sg.Text('Péndulo Doble:',text_color='white', font=('Franklin Gothic Book', 28, 'bold')) ],
-            [sg.Text('Masa del brazo 1(m1):', text_color='black', font=('Franklin Gothic Book', 12, 'bold'),size=(24,1)), sg.Input('',key='masapd1')],
-            [sg.Text('Masa del brazo 2(m1):', text_color='black', font=('Franklin Gothic Book', 12, 'bold'),size=(24,1)), sg.Input('',key='masapd2')],
-            [sg.Text('Longitud del brazo 1 (l1):', text_color='black', font=('Franklin Gothic Book', 12, 'bold'),size=(24,1)), sg.InputText('',key='lpd1')],
-            [sg.Text('Longitud al centro masa 1(lc1):', text_color='black', font=('Franklin Gothic Book', 12, 'bold'),size=(24,1)), sg.InputText('',key='lcpd1')],
-            [sg.Text('Longitud del brazo 2 (l2):', text_color='black', font=('Franklin Gothic Book', 12, 'bold'),size=(24,1)), sg.InputText('',key='lpd2')],
-            [sg.Text('Longitud al centro masa 2(lc2):', text_color='black', font=('Franklin Gothic Book', 12, 'bold'),size=(24,1)), sg.InputText('',key='lcpd2')],
-            [sg.Text('Fricción del brazo 1(b1):', text_color='black', font=('Franklin Gothic Book', 12, 'bold'),size=(24,1)), sg.InputText(key='bpd1')],
-            [sg.Text('Fricción del brazo 2(b2):', text_color='black', font=('Franklin Gothic Book', 12, 'bold'),size=(24,1)), sg.InputText(key='bpd2')],
-            [sg.Text('Momento de inercia  brazo 1(I1):', text_color='black', font=('Franklin Gothic Book', 12, 'bold'),size=(24,1)), sg.InputText('',key='ipd1')],
-            [sg.Text('Momento de inercia  brazo 2(I2):', text_color='black', font=('Franklin Gothic Book', 12, 'bold'),size=(24,1)), sg.InputText('',key='ipd2')],
+            [sg.Text('Masa del brazo 1(m1):', text_color='black', font=('Franklin Gothic Book', 12, 'bold'),size=(28,1)), sg.Input('',key='masapd1')],
+            [sg.Text('Masa del brazo 2(m1):', text_color='black', font=('Franklin Gothic Book', 12, 'bold'),size=(28,1)), sg.Input('',key='masapd2')],
+            [sg.Text('Longitud del brazo 1 (l1):', text_color='black', font=('Franklin Gothic Book', 12, 'bold'),size=(28,1)), sg.InputText('',key='lpd1')],
+            [sg.Text('Longitud al centro masa 1(lc1):', text_color='black', font=('Franklin Gothic Book', 12, 'bold'),size=(28,1)), sg.InputText('',key='lcpd1')],
+            [sg.Text('Longitud del brazo 2 (l2):', text_color='black', font=('Franklin Gothic Book', 12, 'bold'),size=(28,1)), sg.InputText('',key='lpd2')],
+            [sg.Text('Longitud al centro masa 2(lc2):', text_color='black', font=('Franklin Gothic Book', 12, 'bold'),size=(28,1)), sg.InputText('',key='lcpd2')],
+            [sg.Text('Fricción del brazo 1(b1):', text_color='black', font=('Franklin Gothic Book', 12, 'bold'),size=(28,1)), sg.InputText(key='bpd1')],
+            [sg.Text('Fricción del brazo 2(b2):', text_color='black', font=('Franklin Gothic Book', 12, 'bold'),size=(28,1)), sg.InputText(key='bpd2')],
+            [sg.Text('Momento de inercia  brazo 1(I1):', text_color='black', font=('Franklin Gothic Book', 12, 'bold'),size=(28,1)), sg.InputText('',key='ipd1')],
+            [sg.Text('Momento de inercia  brazo 2(I2):', text_color='black', font=('Franklin Gothic Book', 12, 'bold'),size=(28,1)), sg.InputText('',key='ipd2')],
             [sg.Text('Seleccione el algoritmo metaheurístico:',text_color='white', font=('Franklin Gothic Book', 28, 'bold'))],
-            [sg.Button('DE',button_color='blue',border_width=3,key='depd'),sg.Button('GE',button_color='blue',border_width=3,key='gepd'),sg.Button('PSO',button_color='blue',border_width=3,key='psopd')],
+            [sg.Button('DE',button_color='blue',border_width=5,key='depd',**bt),sg.Button('GE',button_color='blue',border_width=5,key='gepd',**bt),sg.Button('PSO',button_color='blue',border_width=5,key='psopd',**bt)],
             [sg.Button(image_filename='D:\TT2\home.png', key='Homepd',image_subsample=8,button_color=(sg.theme_background_color(), sg.theme_background_color()))]
             ]
 
@@ -851,41 +851,47 @@ while True:
         bs=values['bps']
         iss=values['ips']
         ss=values['sps']
+        try: 
+            dinps=np.asarray([ms,ls,lcs,bs,iss,ss], dtype=np.float64, order='C')
+            
+            # dina=val_conver(dinps)
+            #llamado de la función main de DE
+            var=main(pendulum_s, limit, poblacion, f_mut, recombination, generaciones,dinps,D,M,AMAX)
         
-        dinps=np.asarray([ms,ls,lcs,bs,iss,ss], dtype=np.float64, order='C')
-        sg.popup('Ejecución de evolución diferencial, espera para poder observar el resultado (Conjunto de ganancias para el controlador PID).Las ganancias permitiran al péndulo llegar de la posición inial a la deseada .Presiona ok para continuar con la ejecución')
-        # dina=val_conver(dinps)
+            sg.popup('Ejecución de evolución diferencial, espera para poder observar el resultado (Conjunto de ganancias para el controlador PID).Las ganancias permitiran al péndulo llegar de la posición inial a la deseada .Presiona ok para continuar con la ejecución')
+            valu=np.zeros((len(var[0]),5))
+        
+            t=var[0]
+            s=var[1]
+        
+            valu[:,0]=s[:,0]
+            valu[:,1]=s[:,1]
+            valu[:,2]=s[:,2]
+            valu[:,3]=t[:,0]
+            valu[:,4]=t[:,1]
+        
+            #Create a fig for embedding.
+            fig = plt.figure(figsize=(6, 5))
+        
+            ax = fig.add_subplot(111)
+            ax.set_title('Aproximación al frente de Pareto')
+            ax.set_xlabel('ISE')
+            ax.set_ylabel('IADU')
+        
+            #plot
+            ax.scatter(t[:,0], t[:,1])
+        
+            fig_agg = draw_figure(window['can'].TKCanvas, fig)
+        
+            window['Tabl'].update(values=valu)
+            #After making changes, fig_agg.draw()Reflect the change with.
+            fig_agg.draw()
+        except:
+            sg.popup('Todos los datos ingresados deben ser númericos, presiona ok y prueba de nuevo')
+            window['pfps'].update(visible=False)
+            window['Sim'].update(visible=True)
        
-        #llamado de la función main de DE
-        var=main(pendulum_s, limit, poblacion, f_mut, recombination, generaciones,dinps,D,M,AMAX)
         
-        valu=np.zeros((len(var[0]),5))
-        
-        t=var[0]
-        s=var[1]
-        
-        valu[:,0]=s[:,0]
-        valu[:,1]=s[:,1]
-        valu[:,2]=s[:,2]
-        valu[:,3]=t[:,0]
-        valu[:,4]=t[:,1]
-        
-        #Create a fig for embedding.
-        fig = plt.figure(figsize=(6, 5))
-        
-        ax = fig.add_subplot(111)
-        ax.set_title('Aproximación al frente de Pareto')
-        ax.set_xlabel('f1')
-        ax.set_ylabel('f2')
-        
-        #plot
-        ax.scatter(t[:,0], t[:,1])
-        
-        fig_agg = draw_figure(window['can'].TKCanvas, fig)
-        
-        window['Tabl'].update(values=valu)
-        #After making changes, fig_agg.draw()Reflect the change with.
-        fig_agg.draw()
        
     elif event=='Homeps':
         window['Sim'].update(visible=False)
@@ -977,43 +983,50 @@ while True:
         sti=values['spi']
         stc=values['spc']
         
-        dinpi=np.asarray([mi,mc,li,lci,bi,bc,isi,sti,stc], dtype=np.float64, order='C')
-        sg.popup('Ejecución de evolución diferencial, espera para poder observar el resultado (Conjunto de ganancias para el controlador PID).Las ganancias permitiran al péndulo llegar de la posición inial a la deseada .Presiona ok para continuar con la ejecución')
-        # dina=val_conver(dinps)
+        try:
+            
+            dinpi=np.asarray([mi,mc,li,lci,bi,bc,isi,sti,stc], dtype=np.float64, order='C')
+            sg.popup('Ejecución de evolución diferencial, espera para poder observar el resultado (Conjunto de ganancias para el controlador PID).Las ganancias permitiran al péndulo llegar de la posición inial a la deseada .Presiona ok para continuar con la ejecución')
+            # dina=val_conver(dinps)
        
-        #llamado de la función main de DE
-        varpi=main(inverted_pendulum, limitpi, poblacionpi, f_mutpi, recombinationpi, generacionespi,dinpi,Dpi,Mpi,AMAXpi)
-        
-        valupi=np.zeros((len(varpi[0]),(Dpi+Mpi)))
+            #llamado de la función main de DE
+            varpi=main(inverted_pendulum, limitpi, poblacionpi, f_mutpi, recombinationpi, generacionespi,dinpi,Dpi,Mpi,AMAXpi)
+            valupi=np.zeros((len(varpi[0]),(Dpi+Mpi)))
 
-        tpi=varpi[0]
-        spi=varpi[1]
+            tpi=varpi[0]
+            spi=varpi[1]
         
-        valupi[:,0]=spi[:,0]
-        valupi[:,1]=spi[:,1]
-        valupi[:,2]=spi[:,2]
-        valupi[:,3]=spi[:,3]
-        valupi[:,4]=spi[:,4]
-        valupi[:,5]=spi[:,5]
-        valupi[:,6]=tpi[:,0]
-        valupi[:,7]=tpi[:,1]
+            valupi[:,0]=spi[:,0]
+            valupi[:,1]=spi[:,1]
+            valupi[:,2]=spi[:,2]
+            valupi[:,3]=spi[:,3]
+            valupi[:,4]=spi[:,4]
+            valupi[:,5]=spi[:,5]
+            valupi[:,6]=tpi[:,0]
+            valupi[:,7]=tpi[:,1]
         
-        #Create a fig for embedding.
-        figpi = plt.figure(figsize=(6, 5))
+            #Create a fig for embedding.
+            figpi = plt.figure(figsize=(6, 5))
         
-        ax6 = figpi.add_subplot(111)
-        ax6.set_title('Aproximación al frente de Pareto')
-        ax6.set_xlabel('f1')
-        ax6.set_ylabel('f2')
+            ax6 = figpi.add_subplot(111)
+            ax6.set_title('Aproximación al frente de Pareto')
+            ax6.set_xlabel('ISE')
+            ax6.set_ylabel('IADU')
         
-        #plot
-        ax6.scatter(tpi[:,0], tpi[:,1])
+            #plot
+            ax6.scatter(tpi[:,0], tpi[:,1])
         
-        fig_aggpi = draw_figure(window['canpfpi'].TKCanvas, figpi)
+            fig_aggpi = draw_figure(window['canpfpi'].TKCanvas, figpi)
         
-        window['Tablpi'].update(values=valupi)
-        #After making changes, fig_agg.draw()Reflect the change with.
-        fig_aggpi.draw()
+            window['Tablpi'].update(values=valupi)
+            #After making changes, fig_agg.draw()Reflect the change with.
+            fig_aggpi.draw()
+        except:
+            sg.popup('Todos los datos ingresados deben ser númericos, presiona ok y prueba de nuevo')
+            window['pfpi'].update(visible=False)
+            window['Inve'].update(visible=True)
+            
+            
     elif event=='Homepi':
         window['Inve'].update(visible=False)
         window['Home'].update(visible=True)
@@ -1136,42 +1149,48 @@ while True:
         isd1=values['ipd1']
         isd2=values['ipd2']
         
+        try:
+            dinpd=np.asarray([m1,m2,l1,lc1,l2,lc2,b1,b2,isd1,isd2], dtype=np.float64, order='C')
+            sg.popup('Ejecución de evolución diferencial, espera para poder observar el resultado (Conjunto de ganancias para el controlador PID).Las ganancias permitiran al péndulo llegar de la posición inial a la deseada .Presiona ok para continuar con la ejecución')
+            # dina=val_conver(dinps)
         
-        dinpd=np.asarray([m1,m2,l1,lc1,l2,lc2,b1,b2,isd1,isd2], dtype=np.float64, order='C')
-        sg.popup('Ejecución de evolución diferencial, espera para poder observar el resultado (Conjunto de ganancias para el controlador PID).Las ganancias permitiran al péndulo llegar de la posición inial a la deseada .Presiona ok para continuar con la ejecución')
-        # dina=val_conver(dinps)
+            #llamado de la función main de DE
+            varpd=main(double_pendulum, limitpd, poblacionpd, f_mutpd, recombinationpd, generacionespd,dinpd,Dpd,Mpd,AMAXpd)
         
-        #llamado de la función main de DE
-        varpd=main(double_pendulum, limitpd, poblacionpd, f_mutpd, recombinationpd, generacionespd,dinpd,Dpd,Mpd,AMAXpd)
-        
-        valupd=np.zeros((len(varpd[0]),(Dpd+Mpd)))
+            valupd=np.zeros((len(varpd[0]),(Dpd+Mpd)))
 
-        tpd=varpd[0]
-        spd=varpd[1]
+            tpd=varpd[0]
+            spd=varpd[1]
         
-        valupd[:,0]=spd[:,0]
-        valupd[:,1]=spd[:,1]
-        valupd[:,2]=spd[:,2]
-        valupd[:,3]=spd[:,3]
-        valupd[:,4]=tpd[:,0]
-        valupd[:,5]=tpd[:,1]
+            valupd[:,0]=spd[:,0]
+            valupd[:,1]=spd[:,1]
+            valupd[:,2]=spd[:,2]
+            valupd[:,3]=spd[:,3]
+            valupd[:,4]=tpd[:,0]
+            valupd[:,5]=tpd[:,1]
         
-        #Create a fig for embedding.
-        figpd = plt.figure(figsize=(6, 5))
+            #Create a fig for embedding.
+            figpd = plt.figure(figsize=(6, 5))
         
-        ax30 = figpd.add_subplot(111)
-        ax30.set_title('Aproximación al frente de Pareto')
-        ax30.set_xlabel('f1')
-        ax30.set_ylabel('f2')
+            ax30 = figpd.add_subplot(111) 
+            ax30.set_title('Aproximación al frente de Pareto')
+            ax30.set_xlabel('ISE')
+            ax30.set_ylabel('IADU')
         
-        #plot
-        ax30.scatter(tpd[:,0], tpd[:,1])
+            #plot
+            ax30.scatter(tpd[:,0], tpd[:,1])
         
-        fig_aggpd = draw_figure(window['canpfpd'].TKCanvas, figpd)
+            fig_aggpd = draw_figure(window['canpfpd'].TKCanvas, figpd)
         
-        window['Tablpd'].update(values=valupd)
-        #After making changes, fig_agg.draw()Reflect the change with.
-        fig_aggpd.draw()
+            window['Tablpd'].update(values=valupd)
+            #After making changes, fig_agg.draw()Reflect the change with.
+            fig_aggpd.draw()
+        except:
+            sg.popup('Todos los datos ingresados deben ser númericos, presiona ok y prueba de nuevo')
+            window['pfpd'].update(visible=False)
+            window['Dob'].update(visible=True)
+            
+            
     
     elif event=='Homepd':
         window['Dob'].update(visible=False)

@@ -14,7 +14,7 @@ import math
 from drawnow import *
 
 #---------------------Parametros DE-----------------------------#
-limit=[(0,10),(0,10),(0,10),(0,20),(0,20),(0,20)]       # Limites inferior y superior
+limit=[(0,5),(0,5),(0,5),(0,10),(0,10),(0,10)]       # Limites inferior y superior
 poblacion = 200                    # Tamaño de la población, mayor >= 4
 f_mut = 0.5                        # Factor de mutacion [0,2]
 recombination = 0.7                # Tasa de  recombinacion [0,1]
