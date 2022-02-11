@@ -718,7 +718,7 @@ def double_pendulum(h,dinde):
     # print(ise_next)
     # print(iadu_next)
     
-    return np.array([ise_next, iadu_next]),g,x,t,u
+    return np.array([ise_next, iadu_next]),g,x,u,t
 #-----------------------------------------------------------------------------
 #Function for drawing
 def draw_figure(canvas, figure):
@@ -1023,7 +1023,7 @@ while True:
         window['respi'].update(visible=True)
         
         afepi=values['Tablpi']
-        #print(s[afe[0],:])
+       
         penpi=inverted_pendulum(spi[afepi[0],:], dinpi)
         posipi=penpi[2]
         torpi=penpi[3]
@@ -1177,6 +1177,109 @@ while True:
         window['Dob'].update(visible=False)
         window['Home'].update(visible=True)
     elif event=='Simupd':
-        window[''].update(visible=False)
+        window['pfpd'].update(visible=False)
+        window['respd'].update(visible=True)
+        
+        afepd=values['Tablpd']
        
+        penpd=double_pendulum(spd[afepd[0],:], dinpd)
+        posipd=penpd[2]
+        torpd=penpd[3]
+        timpd=penpd[4]
+        
+      
+      
+        
+        figgrapspd = plt.figure(figsize=(7, 7))
+        ax21 = figgrapspd.add_subplot(321)
+        ax21.set_xlabel('Tiempo')
+        ax21.set_ylabel('Posición de la barra 1 ')
+        ax21.plot(timpd, posipd[:, 0], 'k',label=r'$\theta_1$',lw=1)
+        ax21.legend()
+        
+        ax22 = figgrapspd.add_subplot(322)
+        ax22.set_xlabel('Tiempo')
+        ax22.set_ylabel('Posición de la barra 2')
+        ax22.plot(timpd, posipd[:, 1], 'b',label=r'$\theta_2$',lw=1)
+        ax22.legend()
+        
+        ax23 = figgrapspd.add_subplot(323)
+        ax23.set_xlabel('Tiempo')
+        ax23.set_ylabel('Velocidad de la barra 1')
+        ax23.plot(timpd, posipd[:, 2], 'r',label=r'$\dot{\theta_1}$',lw=1)
+        ax23.legend()
+        
+        ax24 = figgrapspd.add_subplot(324)
+        ax24.set_xlabel('Tiempo')
+        ax24.set_ylabel('Velocidad de la barra 2')
+        ax24.plot(timpd, posipd[:, 3], 'k',label=r'$\dot{\theta_1}$',lw=1)
+        ax24.legend()
+        
+        ax25 = figgrapspd.add_subplot(325)
+        ax25.set_xlabel('Tiempo')
+        ax25.set_ylabel('$u_{1}$')
+        ax25.plot(timpd, torpd[0, :], 'b',label=r'$u_{1}$',lw=1)
+        ax25.legend()
+        
+        ax26 = figgrapspd.add_subplot(326)
+        ax26.set_xlabel('Tiempo')
+        ax26.set_ylabel('$u_{2}$')
+        ax26.plot(timpd, torpd[1, :], 'r',label=r'$u_{2}$',lw=1)
+        ax26.legend()
+        
+        fig_grapd = draw_figure(window['cangrapd'].TKCanvas, figgrapspd)
+        
+        figanpd = plt.figure(figsize=(7, 6))
+        ax20 = figanpd.add_subplot(111, autoscale_on=False,xlim=(-2.8,2.8),ylim=(-2.2,2.2))
+        ax20.set_xlabel('x')
+        ax20.set_ylabel('y')
+        
+        fig_animapd = draw_figure(window['cananipd'].TKCanvas, figanpd)
+        l1=dinpd[2]
+        l2=dinpd[4]
+        
+        x0=np.zeros(len(timpd))
+        y0=np.zeros(len(timpd))
+
+        x1=l1*np.sin(posipd[:,0])
+        y1=-l1*np.cos(posipd[:,0])
+
+        x2=l1*np.sin(posipd[:,0])+ l2*np.sin(posipd[:,0]+posipd[:,1])
+        y2=-l1*np.cos(posipd[:,0])- l2*np.cos(posipd[:,0]+posipd[:,1])
+   
+        #line1, = ax.plot([], [], 'o-',color = 'g',lw=4, markersize = 15, markeredgecolor = 'k',markerfacecolor = 'r',markevery=10000)
+        line, = ax20.plot([], [], 'o-',color = 'g',markersize = 3, markerfacecolor = 'k',lw=2, markevery=100000, markeredgecolor = 'k')   # line for Earth
+        line1, = ax20.plot([], [], 'o-',color = 'r',markersize = 8, markerfacecolor = 'b',lw=2, markevery=100000, markeredgecolor = 'k')   # line for Jupiter
+        line2, = ax20.plot([], [], 'o-',color = 'k',markersize = 8, markerfacecolor = 'r',lw=1, markevery=1000000, markeredgecolor = 'k')  
+
+
+
+        time_template = 't= %.1fs'
+        time_text = ax20.text(0.05,0.9,'',transform=ax20.transAxes)
+
+
+        def init():
+            line.set_data([],[])
+            line1.set_data([],[])
+            line2.set_data([], [])
+            time_text.set_text('')
+            
+            return line, time_text, line1,
+
+        def animatepd(i):
+            #trail1 =  16
+            trail2 = 1100   
+            
+            line.set_data([x0[i],x1[i]],[y0[i],y1[i]])
+            line1.set_data([x1[i],x2[i]],[y1[i],y2[i]])
+            line2.set_data(x2[i:max(1,i-trail2):-1], y2[i:max(1,i-trail2):-1])
+            time_text.set_text(time_template % timpd[i])
+            
+            return line, time_text, line1,
+
+        ani_apd = animation.FuncAnimation(figanpd, animatepd, \
+                 np.arange(1,len(timpd)), \
+                 interval=1,blit=False,init_func=init)
+        
+      
 window.close()
