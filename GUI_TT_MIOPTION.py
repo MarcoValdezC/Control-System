@@ -730,7 +730,7 @@ def draw_figure(canvas, figure):
 
 ##-----DEFAULT SETTINGS----------------------------------##
 bw: dict = {'size': (20, 20), 'font': ('Franklin Gothic Book', 60), 'button_color': ("blue", "#F8F8F8")}
-bt: dict = {'size': (6, 1),'font': ('Franklin Gothic Book', 14,'bold italic'), }
+bt: dict = {'size': (20, 1),'font': ('Franklin Gothic Book', 14,'bold italic'), }
 bo: dict = {'size': (15, 2), 'font': ('Arial', 24), 'button_color': ("black", "#ECA527"), 'focus': True}
 
 layouthome= [[sg.Text('CONTROL PID CON OPTIMIZACIÓN MULTIOBJETIVO',justification='center', 
@@ -741,43 +741,43 @@ layouthome= [[sg.Text('CONTROL PID CON OPTIMIZACIÓN MULTIOBJETIVO',justificatio
              [sg.Button('Salir',button_color='red',size=(5,2),border_width=5,key='Exit')]]
 
 layouts=[[sg.Text('Péndulo Simple:',text_color='white', font=('Franklin Gothic Book', 28, 'bold')) ],
-            [sg.Text('Masa (m):', text_color='black', font=('Franklin Gothic Book', 12, 'bold'),size=(24,1)), sg.Input('',key='masaps')],
-            [sg.Text('Longitud (l):', text_color='black', font=('Franklin Gothic Book', 12, 'bold'),size=(24,1)), sg.InputText('',key='lps')],
-            [sg.Text('Longitud al centro masa (lc):', text_color='black', font=('Franklin Gothic Book', 12, 'bold'),size=(24,1)), sg.InputText('',key='lcps')],
-            [sg.Text('Fricción (D):', text_color='black', font=('Franklin Gothic Book', 12, 'bold '),size=(24,1)), sg.InputText(key='bps')],
-            [sg.Text('Momento de inercia (I):', text_color='black', font=('Franklin Gothic Book', 12, 'bold'),size=(24,1)), sg.InputText('',key='ips')],
-            [sg.Text('Set point (rad):', text_color='black', font=('Franklin Gothic Book', 12, 'bold italic'),size=(24,1)), sg.InputText('',key='sps')],
+            [sg.Text('Masa (m):', text_color='black', font=('Franklin Gothic Book', 12, 'bold'),size=(24,1)), sg.Input('',key='masaps'),sg.Text('kg', text_color='black', font=('Franklin Gothic Book', 12, 'bold'))],
+            [sg.Text('Longitud (l):', text_color='black', font=('Franklin Gothic Book', 12, 'bold'),size=(24,1)), sg.InputText('',key='lps'),sg.Text('m', text_color='black', font=('Franklin Gothic Book', 12, 'bold'))],
+            [sg.Text('Longitud al centro masa (lc):', text_color='black', font=('Franklin Gothic Book', 12, 'bold'),size=(24,1)), sg.InputText('',key='lcps'),sg.Text('m', text_color='black', font=('Franklin Gothic Book', 12, 'bold'))],
+            [sg.Text('Fricción (D):', text_color='black', font=('Franklin Gothic Book', 12, 'bold '),size=(24,1)), sg.InputText(key='bps'),sg.Text('Ns/m', text_color='black', font=('Franklin Gothic Book', 12, 'bold'))],
+            [sg.Text('Momento de inercia (I):', text_color='black', font=('Franklin Gothic Book', 12, 'bold'),size=(24,1)), sg.InputText('',key='ips'),sg.Text('kgm^2', text_color='black', font=('Franklin Gothic Book', 12, 'bold'))],
+            [sg.Text('Set point (rad):', text_color='black', font=('Franklin Gothic Book', 12, 'bold italic'),size=(24,1)), sg.InputText('',key='sps'),sg.Text('rad', text_color='black', font=('Franklin Gothic Book', 12, 'bold'))],
             [sg.Text('Seleccione el algoritmo metaheurístico:',text_color='white', font=('Franklin Gothic Book', 28, 'bold'))],
             [sg.Button('DE',button_color='blue',border_width=5,key='deps',**bt),sg.Button('GE',button_color='blue',border_width=5,key='geps',**bt),sg.Button('PSO',button_color='blue',border_width=5,key='psops',**bt)],
             [sg.Button(image_filename='D:\TT2\home.png', key='Homeps',image_subsample=8,button_color=(sg.theme_background_color(), sg.theme_background_color()))]
             ]
 
 layouti=[[sg.Text('Péndulo Invertido:',text_color='white', font=('Franklin Gothic Book', 28, 'bold')) ],
-            [sg.Text('Masa del péndulo(m):', text_color='black', font=('Franklin Gothic Book', 12, 'bold'),size=(24,1)), sg.Input('',key='masapi')],
-            [sg.Text('Masa del carrito(M):', text_color='black', font=('Franklin Gothic Book', 12, 'bold'),size=(24,1)), sg.Input('',key='masaca')],
-            [sg.Text('Longitud (l):', text_color='black', font=('Franklin Gothic Book', 12, 'bold'),size=(24,1)), sg.InputText('',key='lpi')],
-            [sg.Text('Longitud al centro masa (lc):', text_color='black', font=('Franklin Gothic Book', 12, 'bold'),size=(24,1)), sg.InputText('',key='lcpi')],
-            [sg.Text('Fricción del péndulo(b1):', text_color='black', font=('Franklin Gothic Book', 12, 'bold'),size=(24,1)), sg.InputText(key='bpi')],
-            [sg.Text('Fricción del carrito(b2):', text_color='black', font=('Franklin Gothic Book', 12, 'bold'),size=(24,1)), sg.InputText(key='bca')],
-            [sg.Text('Momento de inercia (I):', text_color='black', font=('Franklin Gothic Book', 12, 'bold'),size=(24,1)), sg.InputText('',key='ipi')],
-            [sg.Text('Set point del péndulo (rad):', text_color='black', font=('Franklin Gothic Book', 12, 'bold italic'),size=(24,1)), sg.InputText('',key='spi')],
-            [sg.Text('Set point del carrito:', text_color='black', font=('Franklin Gothic Book', 12, 'bold italic'),size=(24,1)), sg.InputText('',key='spc')],
+            [sg.Text('Masa del péndulo(m):', text_color='black', font=('Franklin Gothic Book', 12, 'bold'),size=(24,1)), sg.Input('',key='masapi'),sg.Text('kg', text_color='black', font=('Franklin Gothic Book', 12, 'bold'))],
+            [sg.Text('Masa del carrito(M):', text_color='black', font=('Franklin Gothic Book', 12, 'bold'),size=(24,1)), sg.Input('',key='masaca'),sg.Text('kg', text_color='black', font=('Franklin Gothic Book', 12, 'bold'))],
+            [sg.Text('Longitud (l):', text_color='black', font=('Franklin Gothic Book', 12, 'bold'),size=(24,1)), sg.InputText('',key='lpi'),sg.Text('m', text_color='black', font=('Franklin Gothic Book', 12, 'bold'))],
+            [sg.Text('Longitud al centro masa (lc):', text_color='black', font=('Franklin Gothic Book', 12, 'bold'),size=(24,1)), sg.InputText('',key='lcpi'),sg.Text('m', text_color='black', font=('Franklin Gothic Book', 12, 'bold'))],
+            [sg.Text('Fricción del péndulo(b1):', text_color='black', font=('Franklin Gothic Book', 12, 'bold'),size=(24,1)), sg.InputText(key='bpi'),sg.Text('Ns/m', text_color='black', font=('Franklin Gothic Book', 12, 'bold'))],
+            [sg.Text('Fricción del carrito(b2):', text_color='black', font=('Franklin Gothic Book', 12, 'bold'),size=(24,1)), sg.InputText(key='bca'),sg.Text('Ns/m', text_color='black', font=('Franklin Gothic Book', 12, 'bold'))],
+            [sg.Text('Momento de inercia (I):', text_color='black', font=('Franklin Gothic Book', 12, 'bold'),size=(24,1)), sg.InputText('',key='ipi'),sg.Text('kgm^2', text_color='black', font=('Franklin Gothic Book', 12, 'bold'))],
+            [sg.Text('Set point del péndulo (rad):', text_color='black', font=('Franklin Gothic Book', 12, 'bold italic'),size=(24,1)), sg.InputText('',key='spi'),sg.Text('rad', text_color='black', font=('Franklin Gothic Book', 12, 'bold'))],
+            [sg.Text('Set point del carrito:', text_color='black', font=('Franklin Gothic Book', 12, 'bold italic'),size=(24,1)), sg.InputText('',key='spc'),sg.Text('m', text_color='black', font=('Franklin Gothic Book', 12, 'bold'))],
             [sg.Text('Seleccione el algoritmo metaheurístico:',text_color='white', font=('Franklin Gothic Book', 28, 'bold'))],
             [sg.Button('DE',button_color='blue',border_width=5,key='depi',**bt),sg.Button('GE',button_color='blue',border_width=5,key='gepi',**bt),sg.Button('PSO',button_color='blue',border_width=5,key='psopi',**bt)],
             [sg.Button(image_filename='D:\TT2\home.png', key='Homepi',image_subsample=8,button_color=(sg.theme_background_color(), sg.theme_background_color()))]
             ]
 
 layoutd=[[sg.Text('Péndulo Doble:',text_color='white', font=('Franklin Gothic Book', 28, 'bold')) ],
-            [sg.Text('Masa del brazo 1(m1):', text_color='black', font=('Franklin Gothic Book', 12, 'bold'),size=(28,1)), sg.Input('',key='masapd1')],
-            [sg.Text('Masa del brazo 2(m1):', text_color='black', font=('Franklin Gothic Book', 12, 'bold'),size=(28,1)), sg.Input('',key='masapd2')],
-            [sg.Text('Longitud del brazo 1 (l1):', text_color='black', font=('Franklin Gothic Book', 12, 'bold'),size=(28,1)), sg.InputText('',key='lpd1')],
-            [sg.Text('Longitud al centro masa 1(lc1):', text_color='black', font=('Franklin Gothic Book', 12, 'bold'),size=(28,1)), sg.InputText('',key='lcpd1')],
-            [sg.Text('Longitud del brazo 2 (l2):', text_color='black', font=('Franklin Gothic Book', 12, 'bold'),size=(28,1)), sg.InputText('',key='lpd2')],
-            [sg.Text('Longitud al centro masa 2(lc2):', text_color='black', font=('Franklin Gothic Book', 12, 'bold'),size=(28,1)), sg.InputText('',key='lcpd2')],
-            [sg.Text('Fricción del brazo 1(b1):', text_color='black', font=('Franklin Gothic Book', 12, 'bold'),size=(28,1)), sg.InputText(key='bpd1')],
-            [sg.Text('Fricción del brazo 2(b2):', text_color='black', font=('Franklin Gothic Book', 12, 'bold'),size=(28,1)), sg.InputText(key='bpd2')],
-            [sg.Text('Momento de inercia  brazo 1(I1):', text_color='black', font=('Franklin Gothic Book', 12, 'bold'),size=(28,1)), sg.InputText('',key='ipd1')],
-            [sg.Text('Momento de inercia  brazo 2(I2):', text_color='black', font=('Franklin Gothic Book', 12, 'bold'),size=(28,1)), sg.InputText('',key='ipd2')],
+            [sg.Text('Masa del brazo 1(m1):', text_color='black', font=('Franklin Gothic Book', 12, 'bold'),size=(28,1)), sg.Input('',key='masapd1'),sg.Text('kg', text_color='black', font=('Franklin Gothic Book', 12, 'bold'))],
+            [sg.Text('Masa del brazo 2(m1):', text_color='black', font=('Franklin Gothic Book', 12, 'bold'),size=(28,1)), sg.Input('',key='masapd2'),sg.Text('kg', text_color='black', font=('Franklin Gothic Book', 12, 'bold'))],
+            [sg.Text('Longitud del brazo 1 (l1):', text_color='black', font=('Franklin Gothic Book', 12, 'bold'),size=(28,1)), sg.InputText('',key='lpd1'),sg.Text('m', text_color='black', font=('Franklin Gothic Book', 12, 'bold'))],
+            [sg.Text('Longitud al centro masa 1(lc1):', text_color='black', font=('Franklin Gothic Book', 12, 'bold'),size=(28,1)), sg.InputText('',key='lcpd1'),sg.Text('m', text_color='black', font=('Franklin Gothic Book', 12, 'bold'))],
+            [sg.Text('Longitud del brazo 2 (l2):', text_color='black', font=('Franklin Gothic Book', 12, 'bold'),size=(28,1)), sg.InputText('',key='lpd2'),sg.Text('m', text_color='black', font=('Franklin Gothic Book', 12, 'bold'))],
+            [sg.Text('Longitud al centro masa 2(lc2):', text_color='black', font=('Franklin Gothic Book', 12, 'bold'),size=(28,1)), sg.InputText('',key='lcpd2'),sg.Text('m', text_color='black', font=('Franklin Gothic Book', 12, 'bold'))],
+            [sg.Text('Fricción del brazo 1(b1):', text_color='black', font=('Franklin Gothic Book', 12, 'bold'),size=(28,1)), sg.InputText(key='bpd1'),sg.Text('Ns/m', text_color='black', font=('Franklin Gothic Book', 12, 'bold'))],
+            [sg.Text('Fricción del brazo 2(b2):', text_color='black', font=('Franklin Gothic Book', 12, 'bold'),size=(28,1)), sg.InputText(key='bpd2'),sg.Text('Ns/m', text_color='black', font=('Franklin Gothic Book', 12, 'bold'))],
+            [sg.Text('Momento de inercia  brazo 1(I1):', text_color='black', font=('Franklin Gothic Book', 12, 'bold'),size=(28,1)), sg.InputText('',key='ipd1'),sg.Text('kg/m^2', text_color='black', font=('Franklin Gothic Book', 12, 'bold'))],
+            [sg.Text('Momento de inercia  brazo 2(I2):', text_color='black', font=('Franklin Gothic Book', 12, 'bold'),size=(28,1)), sg.InputText('',key='ipd2'),sg.Text('kgm^2', text_color='black', font=('Franklin Gothic Book', 12, 'bold'))],
             [sg.Text('Seleccione el algoritmo metaheurístico:',text_color='white', font=('Franklin Gothic Book', 28, 'bold'))],
             [sg.Button('DE',button_color='blue',border_width=5,key='depd',**bt),sg.Button('GE',button_color='blue',border_width=5,key='gepd',**bt),sg.Button('PSO',button_color='blue',border_width=5,key='psopd',**bt)],
             [sg.Button(image_filename='D:\TT2\home.png', key='Homepd',image_subsample=8,button_color=(sg.theme_background_color(), sg.theme_background_color()))]
@@ -856,9 +856,10 @@ while True:
             
             # dina=val_conver(dinps)
             #llamado de la función main de DE
+            sg.popup('Ejecución de evolución diferencial, espera para poder observar el resultado (Conjunto de ganancias para el controlador PID).Las ganancias permitiran al péndulo llegar de la posición inial a la deseada .Presiona ok para continuar con la ejecución')
             var=main(pendulum_s, limit, poblacion, f_mut, recombination, generaciones,dinps,D,M,AMAX)
         
-            sg.popup('Ejecución de evolución diferencial, espera para poder observar el resultado (Conjunto de ganancias para el controlador PID).Las ganancias permitiran al péndulo llegar de la posición inial a la deseada .Presiona ok para continuar con la ejecución')
+            
             valu=np.zeros((len(var[0]),5))
         
             t=var[0]
@@ -940,6 +941,8 @@ while True:
         
         x0 = np.zeros(len(tim))
         y0 = np.zeros(len(tim))
+        xl=np.linspace(-1.8,1.8,len(tim))
+        yl=np.linspace(-1.2,1.2,len(tim))
         
         l=dinps[1]
      
@@ -948,17 +951,22 @@ while True:
         line, = ax1.plot([], [], 'o-', color='orange', lw=4, \
                 markersize=6, markeredgecolor='k', \
                 markerfacecolor='k')
+        
         time_template = 't= %.1fs'
         time_text = ax1.text(0.05, 0.9, '', transform=ax1.transAxes)
         def init():
             
             line.set_data([], [])
+            
             time_text.set_text('')
             return line, time_text
         def animate(i):
             line.set_data([x0[i], x1[i]], [y0[i], y1[i]])
+           
             time_text.set_text(time_template % tim[i])
             return line, time_text,
+        ax1.plot(xl,y0,'k')
+        ax1.plot(x0,yl,'k')
         ani_a = animation.FuncAnimation(figan, animate, \
                                 np.arange(1, len(tim)), \
                                 interval=40, blit=False)
@@ -1042,7 +1050,7 @@ while True:
         torpi=penpi[3]
         timpi=penpi[4]
         
-        figanpi = plt.figure(figsize=(8, 6))
+        figanpi = plt.figure(figsize=(8, 5))
         ax10 = figanpi.add_subplot(111, autoscale_on=False,xlim=(-1.8, 1.8), ylim=(-1.2, 1.2))
         ax10.set_xlabel('x')
         ax10.set_ylabel('y')
@@ -1050,7 +1058,7 @@ while True:
         
       
         
-        figgrapspi = plt.figure(figsize=(7, 6))
+        figgrapspi = plt.figure(figsize=(8, 5))
         ax11 = figgrapspi.add_subplot(321)
         ax11.set_xlabel('Tiempo')
         ax11.set_ylabel('Posición del carro')
@@ -1090,10 +1098,12 @@ while True:
         
         fig_graps = draw_figure(window['cangrapi'].TKCanvas, figgrapspi)
         
-        
+        x0 = np.zeros(len(timpi))
+        y0 = np.zeros(len(timpi))
         x1 = posipi[:, 0]
         y1 = np.zeros(len(timpi))
-        
+        xlpi=np.linspace(-1.8,1.8,len(timpi))
+        ylpi=np.linspace(-1.2,1.2,len(timpi))
         l=dinpi[2]
      
         x2 = l * np.cos(posipi[:, 1]) + x1
@@ -1121,7 +1131,8 @@ while True:
             time_text.set_text(time_template % timpi[i])
             return mass1, line, time_text
         
-        
+        ax10.plot(xlpi,y0,'k')
+        ax10.plot(x0,ylpi,'k')
         ani_api = animation.FuncAnimation(figanpi, animatepi, \
                                 np.arange(1, len(timpi)), \
                                 interval=40, blit=False)
@@ -1151,7 +1162,7 @@ while True:
         
         try:
             dinpd=np.asarray([m1,m2,l1,lc1,l2,lc2,b1,b2,isd1,isd2], dtype=np.float64, order='C')
-            sg.popup('Ejecución de evolución diferencial, espera para poder observar el resultado (Conjunto de ganancias para el controlador PID).Las ganancias permitiran al péndulo llegar de la posición inial a la deseada .Presiona ok para continuar con la ejecución')
+            sg.popup('Ejecución de evolución diferencial, espera para poder observar el resultado (Conjunto de ganancias para el controlador PID).Las ganancias permitiran al péndulo seguir una trayectoria deseada .Presiona ok para continuar con la ejecución')
             # dina=val_conver(dinps)
         
             #llamado de la función main de DE
@@ -1259,6 +1270,9 @@ while True:
         
         x0=np.zeros(len(timpd))
         y0=np.zeros(len(timpd))
+        
+        xlpd=np.linspace(-2.8,2.8,len(timpd))
+        ylpd=np.linspace(-2.2,2.2,len(timpd))
 
         x1=l1*np.sin(posipd[:,0])
         y1=-l1*np.cos(posipd[:,0])
@@ -1295,6 +1309,8 @@ while True:
             time_text.set_text(time_template % timpd[i])
             
             return line, time_text, line1,
+        ax20.plot(x0,ylpd, 'k',lw=1)
+        ax20.plot(xlpd, y0,'k',lw=1)
 
         ani_apd = animation.FuncAnimation(figanpd, animatepd, \
                  np.arange(1,len(timpd)), \
