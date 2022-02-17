@@ -382,7 +382,7 @@ def main(function, limites, poblacion, f_mut, recombination, generaciones,pardyn
 
 
 #-----------------Péndulo invertido----------------
-limitpi=[(0,10),(0,5),(0,5),(0,20),(0,10),(0,10)]       # Limites inferior y superior
+limitpi=[(0,10),(0,5),(0,5),(0,10),(0,10),(0,5)]       # Limites inferior y superior
 poblacionpi = 200                    # Tamaño de la población, mayor >= 4
 f_mutpi = 0.5                        # Factor de mutacion [0,2]
 recombinationpi = 0.7                # Tasa de  recombinacion [0,1]
@@ -492,14 +492,14 @@ def inverted_pendulum(r,dimpi):
         ise=ise_next+(e_th**2)*dt+(e_x**2)*dt
         iadu=iadu_next+ (abs(u[0,c]-u[0,c-1]))*dt+(abs(u[1,c]-u[1,c-1]))*dt
         g=0
-        if(ise>=100):
-            ie=100
+        if(ise>=300):
+            ie=300
             g+=1
         else:
             ie=ise
             g+=0
-        if(iadu>=2):
-            ia=2
+        if(iadu>=20):
+            ia=20
             g+=1
         else:
             ia=iadu
@@ -534,7 +534,7 @@ def double_pendulum(h,dinde):
     '''Time parameters''' #Parametros temporales
     dt = 0.005  # Tiempo de muestreo (5ms)
     ti = 0.0  # Tiempo inicial de la simulación (0s)
-    tf =10  # Tiempo final de la simulación (12.25s)
+    tf =15  # Tiempo final de la simulación (12.25s)
     n = int((tf - ti) / dt) + 1  # Número de muestras
     t = np.linspace(ti, tf, n)  # Vector con los intsntes de tiempo (en Matlab 0:0.005:10)
     
@@ -874,7 +874,7 @@ while True:
             filename="afa.csv" 
             myFile=open(filename,'w') 
             myFile.write("kp,kd,ki,f1, f2 \n") 
-            for l in range(len(f_a)): 
+            for l in range(len(t)): 
                 myFile.write(str(s[l, 0])+","+str(s[l, 1])+","+str(s[l, 2])+","+str(t[l, 0])+","+str(t[l, 1])+"\n") 
             myFile.close()
         
@@ -1243,7 +1243,7 @@ while True:
       
       
         
-        figgrapspd = plt.figure(figsize=(7, 7))
+        figgrapspd = plt.figure(figsize=(7, 6))
         ax21 = figgrapspd.add_subplot(321)
         ax21.set_xlabel('Tiempo')
         ax21.set_ylabel('Posición de la barra 1 ')
