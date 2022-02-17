@@ -37,7 +37,7 @@ limit=[(0,10),(0,10),(0,10)]       # Limites inferior y superior
 poblacion = 200                    # Tamaño de la población, mayor >= 4
 f_mut = 0.5                        # Factor de mutacion [0,2]
 recombination = 0.7                # Tasa de  recombinacion [0,1]
-generaciones =10                 # Número de generaciones
+generaciones =10                   # Número de generaciones
 D = 3                              # Dimensionalidad O número de variables de diseño 
 M = 2                              # Numero de objetivos
 AMAX = 30                          # Numero maximo de soluciones en el archivo
@@ -785,7 +785,7 @@ layoutd=[[sg.Text('Péndulo Doble:',text_color='white', font=('Franklin Gothic B
 
 
 layoutpfps=[[sg.Text('Seleccione un conjunto de ganancias del controlador  PID',text_color='white', font=('Franklin Gothic Book', 20, 'bold'))],
-            [sg.Table(values=[['Espera','estamos','ejecutando','código','......'],['Espera','estamos','ejecutando','código','......']] ,headings=['Kp' , 'Kd' ,' Ki','ISE','IADU'],auto_size_columns=True,right_click_selects=True,enable_click_events=True, key='Tabl',vertical_scroll_only=False,num_rows=25 ), sg.Canvas(key='can')],
+            [sg.Table(values=[['Espere','se está','ejecutando','código','......'],['Espera','estamos','ejecutando','código','......']] ,headings=['Kp' , 'Kd' ,' Ki','ISE','IADU'],auto_size_columns=True,right_click_selects=True,enable_click_events=True, key='Tabl',vertical_scroll_only=False,num_rows=25 ), sg.Canvas(key='can')],
             [sg.Button('Simular',key='Simups')]]
 
 layoutpfpi=[[sg.Text('Seleccione un conjunto de ganancias del controlador  PID',text_color='white', font=('Franklin Gothic Book', 20, 'bold'))],
@@ -800,19 +800,19 @@ layoutpfpd=[[sg.Text('Seleccione un conjunto de ganancias del controlador  PID',
 layoutsimpan=[[sg.Canvas(key='canani')]]
 layoutsimpgra=[[sg.Canvas(key='cangraps')]]
 
-layouttap=[[sg.TabGroup([[sg.Tab('Animación',layoutsimpan),sg.Tab('Graficas', layoutsimpgra)]],tab_location='centertop',border_width=5)],
+layouttap=[[sg.TabGroup([[sg.Tab('Animación',layoutsimpan),sg.Tab('Gráficas', layoutsimpgra)]],tab_location='centertop',border_width=5)],
            [sg.Button(image_filename='D:\TT2\home.png', key='Homesimups',image_subsample=8,button_color=(sg.theme_background_color(), sg.theme_background_color())),sg.Button('Salir',button_color='red',size=(3,2),border_width=5,key='Exit0')]]
 
 layoutinvpan=[[sg.Canvas(key='cananipi')]]
 layoutinvpgra=[[sg.Canvas(key='cangrapi')]]
 
-layouttappi=[[sg.TabGroup([[sg.Tab('Animación',layoutinvpan),sg.Tab('Graficas', layoutinvpgra)]],tab_location='centertop',border_width=5)],
+layouttappi=[[sg.TabGroup([[sg.Tab('Animación',layoutinvpan),sg.Tab('Gráficas', layoutinvpgra)]],tab_location='centertop',border_width=5)],
            [sg.Button(image_filename='D:\TT2\home.png', key='Homesimupi',image_subsample=8,button_color=(sg.theme_background_color(), sg.theme_background_color())),sg.Button('Salir',button_color='red',size=(3,2),border_width=5,key='Exit1')]]
 
 layoutanpd=[[sg.Canvas(key='cananipd')]]
 layoutgrapd=[[sg.Canvas(key='cangrapd')]]
 
-layouttappd=[[sg.TabGroup([[sg.Tab('Animación',layoutanpd),sg.Tab('Graficas', layoutgrapd)]],tab_location='centertop',border_width=5)],
+layouttappd=[[sg.TabGroup([[sg.Tab('Animación',layoutanpd),sg.Tab('Gráficas', layoutgrapd)]],tab_location='centertop',border_width=5)],
            [sg.Button(image_filename='D:\TT2\home.png', key='Homesimupd',image_subsample=8,button_color=(sg.theme_background_color(), sg.theme_background_color())),sg.Button('Salir',button_color='red',size=(3,2),border_width=5,key='Exit2')]]
 
 layout1=[[sg.Column(layouthome,key='Home'),sg.Column(layouts, visible=False,key='Sim'),sg.Column(layoutpfps,key='pfps',visible=False),sg.Column(layouttap,key='resps',visible=False),sg.Column(layouti,key='Inve',visible=False),sg.Column(layoutpfpi,key='pfpi',visible=False),sg.Column(layouttappi,key='respi',visible=False),sg.Column(layoutd,key='Dob',visible=False),sg.Column(layoutpfpd,key='pfpd',visible=False),sg.Column(layouttappd,key='respd',visible=False)]]
@@ -856,7 +856,7 @@ while True:
             
             # dina=val_conver(dinps)
             #llamado de la función main de DE
-            sg.popup('Ejecución de evolución diferencial, espera para poder observar el resultado (Conjunto de ganancias para el controlador PID).Las ganancias permitiran al péndulo llegar de la posición inial a la deseada .Presiona ok para continuar con la ejecución')
+            sg.popup('Ejecución de Evolución Diferencial, espere para poder observar el resultado (conjunto de ganancias para el controlador PID). Las ganancias permitirán al péndulo llegar de la posición inicial a la deseada. Presione ok para continuar con la ejecución')
             var=main(pendulum_s, limit, poblacion, f_mut, recombination, generaciones,dinps,D,M,AMAX)
         
             
@@ -875,7 +875,7 @@ while True:
             fig = plt.figure(figsize=(6, 5))
         
             ax = fig.add_subplot(111)
-            ax.set_title('Aproximación al frente de Pareto')
+            ax.set_title('Aproximación al Frente de Pareto')
             ax.set_xlabel('ISE')
             ax.set_ylabel('IADU')
         
@@ -888,7 +888,7 @@ while True:
             #After making changes, fig_agg.draw()Reflect the change with.
             fig_agg.draw()
         except:
-            sg.popup('Todos los datos ingresados deben ser númericos, presiona ok y prueba de nuevo')
+            sg.popup('Todos los datos ingresados deben ser númericos, presione ok e intente de nuevo')
             window['pfps'].update(visible=False)
             window['Sim'].update(visible=True)
        
@@ -994,7 +994,7 @@ while True:
         try:
             
             dinpi=np.asarray([mi,mc,li,lci,bi,bc,isi,sti,stc], dtype=np.float64, order='C')
-            sg.popup('Ejecución de evolución diferencial, espera para poder observar el resultado (Conjunto de ganancias para el controlador PID).Las ganancias permitiran al péndulo llegar de la posición inial a la deseada .Presiona ok para continuar con la ejecución')
+            sg.popup('Ejecución de Evolución Diferencial, espere para poder observar el resultado (conjunto de ganancias para el controlador PID).Las ganancias permitirán al péndulo llegar de la posición inicial a la deseada. Presione ok para continuar con la ejecución')
             # dina=val_conver(dinps)
        
             #llamado de la función main de DE
@@ -1017,7 +1017,7 @@ while True:
             figpi = plt.figure(figsize=(6, 5))
         
             ax6 = figpi.add_subplot(111)
-            ax6.set_title('Aproximación al frente de Pareto')
+            ax6.set_title('Aproximación al Frente de Pareto')
             ax6.set_xlabel('ISE')
             ax6.set_ylabel('IADU')
         
@@ -1030,7 +1030,7 @@ while True:
             #After making changes, fig_agg.draw()Reflect the change with.
             fig_aggpi.draw()
         except:
-            sg.popup('Todos los datos ingresados deben ser númericos, presiona ok y prueba de nuevo')
+            sg.popup('Todos los datos ingresados deben ser númericos, presione ok e intente de nuevo')
             window['pfpi'].update(visible=False)
             window['Inve'].update(visible=True)
             
@@ -1162,7 +1162,7 @@ while True:
         
         try:
             dinpd=np.asarray([m1,m2,l1,lc1,l2,lc2,b1,b2,isd1,isd2], dtype=np.float64, order='C')
-            sg.popup('Ejecución de evolución diferencial, espera para poder observar el resultado (Conjunto de ganancias para el controlador PID).Las ganancias permitiran al péndulo seguir una trayectoria deseada .Presiona ok para continuar con la ejecución')
+            sg.popup('Ejecución de Evolución Diferencial, espere para poder observar el resultado (conjunto de ganancias para el controlador PID). Las ganancias permitirán al péndulo seguir la trayectoria deseada. Presione ok para continuar con la ejecución')
             # dina=val_conver(dinps)
         
             #llamado de la función main de DE
@@ -1197,7 +1197,7 @@ while True:
             #After making changes, fig_agg.draw()Reflect the change with.
             fig_aggpd.draw()
         except:
-            sg.popup('Todos los datos ingresados deben ser númericos, presiona ok y prueba de nuevo')
+            sg.popup('Todos los datos ingresados deben ser númericos, presione ok e intente de nuevo')
             window['pfpd'].update(visible=False)
             window['Dob'].update(visible=True)
             
