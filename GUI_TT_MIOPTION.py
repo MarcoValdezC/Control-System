@@ -870,6 +870,13 @@ while True:
             valu[:,2]=s[:,2]
             valu[:,3]=t[:,0]
             valu[:,4]=t[:,1]
+            
+            filename="afa.csv" 
+            myFile=open(filename,'w') 
+            myFile.write("kp,kd,ki,f1, f2 \n") 
+            for l in range(len(f_a)): 
+                myFile.write(str(s[l, 0])+","+str(s[l, 1])+","+str(s[l, 2])+","+str(t[l, 0])+","+str(t[l, 1])+"\n") 
+            myFile.close()
         
             #Create a fig for embedding.
             fig = plt.figure(figsize=(6, 5))
@@ -907,6 +914,7 @@ while True:
         posi=pen[2]
         tor=pen[3]
         tim=pen[4]
+        
         
         figan = plt.figure(figsize=(7, 6))
         ax1 = figan.add_subplot(111, autoscale_on=False,xlim=(-1.8, 1.8), ylim=(-1.2, 1.2))
@@ -1012,6 +1020,13 @@ while True:
             valupi[:,5]=spi[:,5]
             valupi[:,6]=tpi[:,0]
             valupi[:,7]=tpi[:,1]
+            
+            filename="pifa.csv" 
+            myFile=open(filename,'w') 
+            myFile.write("kp,kd,ki,kp1,kd1,ki1,f1, f2 \n") 
+            for l in range(len(tpi)): 
+                myFile.write(str(spi[l, 0])+","+str(spi[l, 1])+","+str(spi[l, 2])+","+str(spi[l, 3])+","+str(spi[l, 4])+","+str(spi[l, 5])+","+str(tpi[l, 0])+","+str(tpi[l, 1])+"\n") 
+            myFile.close()
         
             #Create a fig for embedding.
             figpi = plt.figure(figsize=(6, 5))
@@ -1179,6 +1194,14 @@ while True:
             valupd[:,3]=spd[:,3]
             valupd[:,4]=tpd[:,0]
             valupd[:,5]=tpd[:,1]
+            
+            filename="pdfa.csv" 
+            myFile=open(filename,'w') 
+            myFile.write("kp,kd,kp1,kd1,f1, f2 \n") 
+            for l in range(len(tpd)): 
+                myFile.write(str(spd[l, 0])+","+str(spd[l, 1])+","+str(spd[l, 2])+","+str(spd[l, 3])+","+str(tpd[l, 0])+","+str(tpd[l, 1])+"\n") 
+            myFile.close()
+        
         
             #Create a fig for embedding.
             figpd = plt.figure(figsize=(6, 5))
