@@ -20,27 +20,23 @@ from numpy.linalg import inv
 import os
 from scipy import linalg
 from scipy.integrate import odeint 
-
 import time
 import pylab as py
-
 from matplotlib import animation, rc
 from IPython.display import HTML
 from matplotlib import pyplot as plt
 
 
-
-
-
 #---------------------Parametros DEPS-----------------------------#
 limit=[(0,10),(0,10),(0,10)]       # Limites inferior y superior
-poblacion = 200                    # Tamaño de la población, mayor >= 4
+#poblacion = 200                    # Tamaño de la población, mayor >= 4
 f_mut = 0.5                        # Factor de mutacion [0,2]
 recombination = 0.7                # Tasa de  recombinacion [0,1]
-generaciones =10                   # Número de generaciones
+#generaciones =10                   # Número de generaciones
 D = 3                              # Dimensionalidad O número de variables de diseño 
 M = 2                              # Numero de objetivos
-AMAX = 30                          # Numero maximo de soluciones en el archivo
+
+#AMAX = 30                          # Numero maximo de soluciones en el archivo
 #----------------------------------------------------------------
 
 #---------------Función de dominancia------#
@@ -198,14 +194,7 @@ def main(function, limites, poblacion, f_mut, recombination, generaciones,pardyn
     g_a = np.empty(0)  # Valor de funcion objetivo para cada elemento del archivo
     #---------------------------------------------------------------------------
     
-    # #--------------------Inicialización de la población-------------------------
-    # for i in range(0,poblacion): # cambiar tam_poblacion
-    #     indv = []
-    #     for j in range(len(limites)):
-    #         #print(len(limites)
-    #         population[0][i][j]=random.uniform(limites[j][0],limites[j][1])
-    #         population_next[0][i][j]=random.uniform(limites[j][0],limites[j][1])
-    # #-------------------------------------------------------------------------------
+   
     li=np.array(limites)
     population[0]=li[:,0] + np.random.rand(poblacion, D) * (li[:,1] - li[:,0])  # Inicializa poblacion
     population_next[0]=li[:,0] + np.random.rand(poblacion, D) * (li[:,1] - li[:,0])
@@ -360,36 +349,20 @@ def main(function, limites, poblacion, f_mut, recombination, generaciones,pardyn
             while len(a) != AMAX:
                 a = np.delete(a, 0, 0)
                 f_a = np.delete(f_a, 0, 0)
-    # print(a)
-    # print(f_a)
-    # #-------Guardar en archivo excel-----------------------------------------
-  
-    # filename="afa.csv" 
-    # myFile=open(filename,'w') 
-    # myFile.write("kp,kd,ki,f1, f2 \n") 
-    # for l in range(len(f_a)): 
-    #     myFile.write(str(a[l, 0])+","+str(a[l, 1])+","+str(a[l, 2])+","+str(f_a[l, 0])+","+str(f_a[l, 1])+"\n") 
-    # myFile.close()
-    # #------------Gráfica del Frente de Pareto-----------------------
-    # plt.figure(1)
-    # plt.title('Aproximacion al frente de Pareto')
-    # plt.scatter(f_a[:, 0], f_a[:, 1])
-    # plt.xlabel('f1')
-    # plt.ylabel('f2')
-    # plt.show()
+
     
     return f_a,a
 
 
 #-----------------Péndulo invertido----------------
-limitpi=[(0,10),(0,5),(0,5),(0,10),(0,10),(0,5)]       # Limites inferior y superior
-poblacionpi = 200                    # Tamaño de la población, mayor >= 4
+limitpi=[(0,10),(0,5),(0,5),(0,10),(0,5),(0,5)]       # Limites inferior y superior
+#poblacionpi = 200                    # Tamaño de la población, mayor >= 4
 f_mutpi = 0.5                        # Factor de mutacion [0,2]
 recombinationpi = 0.7                # Tasa de  recombinacion [0,1]
-generacionespi =5                 # Número de generaciones
+#generacionespi =5                 # Número de generaciones
 Dpi = 6                             # Dimensionalidad O número de variables de diseño 
 Mpi = 2                              # Numero de objetivos
-AMAXpi = 30     
+#AMAXpi = 30     
 
 def inverted_pendulum(r,dimpi):
     
@@ -492,14 +465,14 @@ def inverted_pendulum(r,dimpi):
         ise=ise_next+(e_th**2)*dt+(e_x**2)*dt
         iadu=iadu_next+ (abs(u[0,c]-u[0,c-1]))*dt+(abs(u[1,c]-u[1,c-1]))*dt
         g=0
-        if(ise>=300):
-            ie=300
+        if(ise>=800):
+            ie=800
             g+=1
         else:
             ie=ise
             g+=0
-        if(iadu>=20):
-            ia=20
+        if(iadu>=50):
+            ia=50
             g+=1
         else:
             ia=iadu
@@ -519,13 +492,13 @@ def inverted_pendulum(r,dimpi):
 
 #---------------------Parametros DE-----------------------------#
 limitpd=[[0,8],[0,5],[0,5],[0,5]]       # Limites inferior y superior
-poblacionpd = 200                    # Tamaño de la población, mayor >= 4
+#poblacionpd = 200                    # Tamaño de la población, mayor >= 4
 f_mutpd = 0.5                        # Factor de mutacion [0,2]
 recombinationpd = 0.7                # Tasa de  recombinacion [0,1]
-generacionespd =  4               # Número de generaciones
+#generacionespd =  4               # Número de generaciones
 Dpd = 4                             # Dimensionalidad O número de variables de diseño 
 Mpd = 2                              # Numero de objetivos
-AMAXpd = 30                          # Numero maximo de soluciones en el archivo
+#AMAXpd = 30                          # Numero maximo de soluciones en el archivo
 #----------------------------------------------------------------
 
 
@@ -534,7 +507,7 @@ def double_pendulum(h,dinde):
     '''Time parameters''' #Parametros temporales
     dt = 0.005  # Tiempo de muestreo (5ms)
     ti = 0.0  # Tiempo inicial de la simulación (0s)
-    tf =15  # Tiempo final de la simulación (12.25s)
+    tf =20  # Tiempo final de la simulación (12.25s)
     n = int((tf - ti) / dt) + 1  # Número de muestras
     t = np.linspace(ti, tf, n)  # Vector con los intsntes de tiempo (en Matlab 0:0.005:10)
     
@@ -741,59 +714,86 @@ layouthome= [[sg.Text('CONTROL PID CON OPTIMIZACIÓN MULTIOBJETIVO',justificatio
              [sg.Button('Salir',button_color='red',size=(5,2),border_width=5,key='Exit')]]
 
 layouts=[[sg.Text('Péndulo Simple:',text_color='white', font=('Franklin Gothic Book', 28, 'bold')) ],
-            [sg.Text('Masa (m):', text_color='black', font=('Franklin Gothic Book', 12, 'bold'),size=(24,1)), sg.Input('',key='masaps'),sg.Text('kg', text_color='black', font=('Franklin Gothic Book', 12, 'bold'))],
-            [sg.Text('Longitud (l):', text_color='black', font=('Franklin Gothic Book', 12, 'bold'),size=(24,1)), sg.InputText('',key='lps'),sg.Text('m', text_color='black', font=('Franklin Gothic Book', 12, 'bold'))],
-            [sg.Text('Longitud al centro masa (lc):', text_color='black', font=('Franklin Gothic Book', 12, 'bold'),size=(24,1)), sg.InputText('',key='lcps'),sg.Text('m', text_color='black', font=('Franklin Gothic Book', 12, 'bold'))],
-            [sg.Text('Fricción (D):', text_color='black', font=('Franklin Gothic Book', 12, 'bold '),size=(24,1)), sg.InputText(key='bps'),sg.Text('Ns/m', text_color='black', font=('Franklin Gothic Book', 12, 'bold'))],
-            [sg.Text('Momento de inercia (I):', text_color='black', font=('Franklin Gothic Book', 12, 'bold'),size=(24,1)), sg.InputText('',key='ips'),sg.Text('kgm^2', text_color='black', font=('Franklin Gothic Book', 12, 'bold'))],
-            [sg.Text('Set point (rad):', text_color='black', font=('Franklin Gothic Book', 12, 'bold italic'),size=(24,1)), sg.InputText('',key='sps'),sg.Text('rad', text_color='black', font=('Franklin Gothic Book', 12, 'bold'))],
+            [sg.Text('Masa (m):', text_color='black', font=('Franklin Gothic Book', 12, 'bold'),size=(24,1)), sg.Input('0.5',key='masaps'),sg.Text('kg', text_color='black', font=('Franklin Gothic Book', 12, 'bold'))],
+            [sg.Text('Longitud (l):', text_color='black', font=('Franklin Gothic Book', 12, 'bold'),size=(24,1)), sg.InputText('1',key='lps'),sg.Text('m', text_color='black', font=('Franklin Gothic Book', 12, 'bold'))],
+            [sg.Text('Longitud al centro masa (lc):', text_color='black', font=('Franklin Gothic Book', 12, 'bold'),size=(24,1)), sg.InputText('0.3',key='lcps'),sg.Text('m', text_color='black', font=('Franklin Gothic Book', 12, 'bold'))],
+            [sg.Text('Fricción (b):', text_color='black', font=('Franklin Gothic Book', 12, 'bold '),size=(24,1)), sg.InputText('0.05',key='bps'),sg.Text('Ns/m', text_color='black', font=('Franklin Gothic Book', 12, 'bold'))],
+            [sg.Text('Momento de inercia (I):', text_color='black', font=('Franklin Gothic Book', 12, 'bold'),size=(24,1)), sg.InputText('0.006',key='ips'),sg.Text('kgm^2', text_color='black', font=('Franklin Gothic Book', 12, 'bold'))],
+            [sg.Text('Set point (rad):', text_color='black', font=('Franklin Gothic Book', 12, 'bold italic'),size=(24,1)), sg.InputText('3.1416',key='sps'),sg.Text('rad', text_color='black', font=('Franklin Gothic Book', 12, 'bold'))],
             [sg.Text('Seleccione el algoritmo metaheurístico:',text_color='white', font=('Franklin Gothic Book', 28, 'bold'))],
             [sg.Button('DE',button_color='blue',border_width=5,key='deps',**bt),sg.Button('GE',button_color='blue',border_width=5,key='geps',**bt),sg.Button('PSO',button_color='blue',border_width=5,key='psops',**bt)],
             [sg.Button(image_filename='D:\TT2\home.png', key='Homeps',image_subsample=8,button_color=(sg.theme_background_color(), sg.theme_background_color()))]
             ]
 
 layouti=[[sg.Text('Péndulo Invertido:',text_color='white', font=('Franklin Gothic Book', 28, 'bold')) ],
-            [sg.Text('Masa del péndulo(m):', text_color='black', font=('Franklin Gothic Book', 12, 'bold'),size=(24,1)), sg.Input('',key='masapi'),sg.Text('kg', text_color='black', font=('Franklin Gothic Book', 12, 'bold'))],
-            [sg.Text('Masa del carrito(M):', text_color='black', font=('Franklin Gothic Book', 12, 'bold'),size=(24,1)), sg.Input('',key='masaca'),sg.Text('kg', text_color='black', font=('Franklin Gothic Book', 12, 'bold'))],
-            [sg.Text('Longitud (l):', text_color='black', font=('Franklin Gothic Book', 12, 'bold'),size=(24,1)), sg.InputText('',key='lpi'),sg.Text('m', text_color='black', font=('Franklin Gothic Book', 12, 'bold'))],
-            [sg.Text('Longitud al centro masa (lc):', text_color='black', font=('Franklin Gothic Book', 12, 'bold'),size=(24,1)), sg.InputText('',key='lcpi'),sg.Text('m', text_color='black', font=('Franklin Gothic Book', 12, 'bold'))],
-            [sg.Text('Fricción del péndulo(b1):', text_color='black', font=('Franklin Gothic Book', 12, 'bold'),size=(24,1)), sg.InputText(key='bpi'),sg.Text('Ns/m', text_color='black', font=('Franklin Gothic Book', 12, 'bold'))],
-            [sg.Text('Fricción del carrito(b2):', text_color='black', font=('Franklin Gothic Book', 12, 'bold'),size=(24,1)), sg.InputText(key='bca'),sg.Text('Ns/m', text_color='black', font=('Franklin Gothic Book', 12, 'bold'))],
-            [sg.Text('Momento de inercia (I):', text_color='black', font=('Franklin Gothic Book', 12, 'bold'),size=(24,1)), sg.InputText('',key='ipi'),sg.Text('kgm^2', text_color='black', font=('Franklin Gothic Book', 12, 'bold'))],
-            [sg.Text('Set point del péndulo (rad):', text_color='black', font=('Franklin Gothic Book', 12, 'bold italic'),size=(24,1)), sg.InputText('',key='spi'),sg.Text('rad', text_color='black', font=('Franklin Gothic Book', 12, 'bold'))],
-            [sg.Text('Set point del carrito:', text_color='black', font=('Franklin Gothic Book', 12, 'bold italic'),size=(24,1)), sg.InputText('',key='spc'),sg.Text('m', text_color='black', font=('Franklin Gothic Book', 12, 'bold'))],
+            [sg.Text('Masa del péndulo(m):', text_color='black', font=('Franklin Gothic Book', 12, 'bold'),size=(24,1)), sg.Input('0.5',key='masapi'),sg.Text('kg', text_color='black', font=('Franklin Gothic Book', 12, 'bold'))],
+            [sg.Text('Masa del carrito(M):', text_color='black', font=('Franklin Gothic Book', 12, 'bold'),size=(24,1)), sg.Input('0.7',key='masaca'),sg.Text('kg', text_color='black', font=('Franklin Gothic Book', 12, 'bold'))],
+            [sg.Text('Longitud (l):', text_color='black', font=('Franklin Gothic Book', 12, 'bold'),size=(24,1)), sg.InputText('1.0',key='lpi'),sg.Text('m', text_color='black', font=('Franklin Gothic Book', 12, 'bold'))],
+            [sg.Text('Longitud al centro masa (lc):', text_color='black', font=('Franklin Gothic Book', 12, 'bold'),size=(24,1)), sg.InputText('0.3',key='lcpi'),sg.Text('m', text_color='black', font=('Franklin Gothic Book', 12, 'bold'))],
+            [sg.Text('Fricción del péndulo (b1):', text_color='black', font=('Franklin Gothic Book', 12, 'bold'),size=(24,1)), sg.InputText('0.05',key='bpi'),sg.Text('Ns/m', text_color='black', font=('Franklin Gothic Book', 12, 'bold'))],
+            [sg.Text('Fricción del carrito (b2):', text_color='black', font=('Franklin Gothic Book', 12, 'bold'),size=(24,1)), sg.InputText('0.06',key='bca'),sg.Text('Ns/m', text_color='black', font=('Franklin Gothic Book', 12, 'bold'))],
+            [sg.Text('Momento de inercia (I):', text_color='black', font=('Franklin Gothic Book', 12, 'bold'),size=(24,1)), sg.InputText('0.006',key='ipi'),sg.Text('kgm^2', text_color='black', font=('Franklin Gothic Book', 12, 'bold'))],
+            [sg.Text('Set point del péndulo (rad):', text_color='black', font=('Franklin Gothic Book', 12, 'bold italic'),size=(24,1)), sg.InputText('1.57',key='spi'),sg.Text('rad', text_color='black', font=('Franklin Gothic Book', 12, 'bold'))],
+            [sg.Text('Set point del carrito:', text_color='black', font=('Franklin Gothic Book', 12, 'bold italic'),size=(24,1)), sg.InputText('0',key='spc'),sg.Text('m', text_color='black', font=('Franklin Gothic Book', 12, 'bold'))],
             [sg.Text('Seleccione el algoritmo metaheurístico:',text_color='white', font=('Franklin Gothic Book', 28, 'bold'))],
             [sg.Button('DE',button_color='blue',border_width=5,key='depi',**bt),sg.Button('GE',button_color='blue',border_width=5,key='gepi',**bt),sg.Button('PSO',button_color='blue',border_width=5,key='psopi',**bt)],
             [sg.Button(image_filename='D:\TT2\home.png', key='Homepi',image_subsample=8,button_color=(sg.theme_background_color(), sg.theme_background_color()))]
             ]
 
 layoutd=[[sg.Text('Péndulo Doble:',text_color='white', font=('Franklin Gothic Book', 28, 'bold')) ],
-            [sg.Text('Masa del brazo 1(m1):', text_color='black', font=('Franklin Gothic Book', 12, 'bold'),size=(28,1)), sg.Input('',key='masapd1'),sg.Text('kg', text_color='black', font=('Franklin Gothic Book', 12, 'bold'))],
-            [sg.Text('Masa del brazo 2(m1):', text_color='black', font=('Franklin Gothic Book', 12, 'bold'),size=(28,1)), sg.Input('',key='masapd2'),sg.Text('kg', text_color='black', font=('Franklin Gothic Book', 12, 'bold'))],
-            [sg.Text('Longitud del brazo 1 (l1):', text_color='black', font=('Franklin Gothic Book', 12, 'bold'),size=(28,1)), sg.InputText('',key='lpd1'),sg.Text('m', text_color='black', font=('Franklin Gothic Book', 12, 'bold'))],
-            [sg.Text('Longitud al centro masa 1(lc1):', text_color='black', font=('Franklin Gothic Book', 12, 'bold'),size=(28,1)), sg.InputText('',key='lcpd1'),sg.Text('m', text_color='black', font=('Franklin Gothic Book', 12, 'bold'))],
-            [sg.Text('Longitud del brazo 2 (l2):', text_color='black', font=('Franklin Gothic Book', 12, 'bold'),size=(28,1)), sg.InputText('',key='lpd2'),sg.Text('m', text_color='black', font=('Franklin Gothic Book', 12, 'bold'))],
-            [sg.Text('Longitud al centro masa 2(lc2):', text_color='black', font=('Franklin Gothic Book', 12, 'bold'),size=(28,1)), sg.InputText('',key='lcpd2'),sg.Text('m', text_color='black', font=('Franklin Gothic Book', 12, 'bold'))],
-            [sg.Text('Fricción del brazo 1(b1):', text_color='black', font=('Franklin Gothic Book', 12, 'bold'),size=(28,1)), sg.InputText(key='bpd1'),sg.Text('Ns/m', text_color='black', font=('Franklin Gothic Book', 12, 'bold'))],
-            [sg.Text('Fricción del brazo 2(b2):', text_color='black', font=('Franklin Gothic Book', 12, 'bold'),size=(28,1)), sg.InputText(key='bpd2'),sg.Text('Ns/m', text_color='black', font=('Franklin Gothic Book', 12, 'bold'))],
-            [sg.Text('Momento de inercia  brazo 1(I1):', text_color='black', font=('Franklin Gothic Book', 12, 'bold'),size=(28,1)), sg.InputText('',key='ipd1'),sg.Text('kg/m^2', text_color='black', font=('Franklin Gothic Book', 12, 'bold'))],
-            [sg.Text('Momento de inercia  brazo 2(I2):', text_color='black', font=('Franklin Gothic Book', 12, 'bold'),size=(28,1)), sg.InputText('',key='ipd2'),sg.Text('kgm^2', text_color='black', font=('Franklin Gothic Book', 12, 'bold'))],
+            [sg.Text('Masa del brazo 1 (m1):', text_color='black', font=('Franklin Gothic Book', 12, 'bold'),size=(28,1)), sg.Input('0.5',key='masapd1'),sg.Text('kg', text_color='black', font=('Franklin Gothic Book', 12, 'bold'))],
+            [sg.Text('Masa del brazo 2 (m1):', text_color='black', font=('Franklin Gothic Book', 12, 'bold'),size=(28,1)), sg.Input('0.5',key='masapd2'),sg.Text('kg', text_color='black', font=('Franklin Gothic Book', 12, 'bold'))],
+            [sg.Text('Longitud del brazo 1 (l1):', text_color='black', font=('Franklin Gothic Book', 12, 'bold'),size=(28,1)), sg.InputText('1',key='lpd1'),sg.Text('m', text_color='black', font=('Franklin Gothic Book', 12, 'bold'))],
+            [sg.Text('Longitud al centro masa 1 (lc1):', text_color='black', font=('Franklin Gothic Book', 12, 'bold'),size=(28,1)), sg.InputText('0.5',key='lcpd1'),sg.Text('m', text_color='black', font=('Franklin Gothic Book', 12, 'bold'))],
+            [sg.Text('Longitud del brazo 2 (l2):', text_color='black', font=('Franklin Gothic Book', 12, 'bold'),size=(28,1)), sg.InputText('1.0',key='lpd2'),sg.Text('m', text_color='black', font=('Franklin Gothic Book', 12, 'bold'))],
+            [sg.Text('Longitud al centro masa 2 (lc2):', text_color='black', font=('Franklin Gothic Book', 12, 'bold'),size=(28,1)), sg.InputText('0.3',key='lcpd2'),sg.Text('m', text_color='black', font=('Franklin Gothic Book', 12, 'bold'))],
+            [sg.Text('Fricción del brazo 1 (b1):', text_color='black', font=('Franklin Gothic Book', 12, 'bold'),size=(28,1)), sg.InputText('0.05',key='bpd1'),sg.Text('Ns/m', text_color='black', font=('Franklin Gothic Book', 12, 'bold'))],
+            [sg.Text('Fricción del brazo 2 (b2):', text_color='black', font=('Franklin Gothic Book', 12, 'bold'),size=(28,1)), sg.InputText('0.02',key='bpd2'),sg.Text('Ns/m', text_color='black', font=('Franklin Gothic Book', 12, 'bold'))],
+            [sg.Text('Momento de inercia  brazo 1 (I1):', text_color='black', font=('Franklin Gothic Book', 12, 'bold'),size=(28,1)), sg.InputText('0.006',key='ipd1'),sg.Text('kg/m^2', text_color='black', font=('Franklin Gothic Book', 12, 'bold'))],
+            [sg.Text('Momento de inercia  brazo 2 (I2):', text_color='black', font=('Franklin Gothic Book', 12, 'bold'),size=(28,1)), sg.InputText('0.004',key='ipd2'),sg.Text('kgm^2', text_color='black', font=('Franklin Gothic Book', 12, 'bold'))],
             [sg.Text('Seleccione el algoritmo metaheurístico:',text_color='white', font=('Franklin Gothic Book', 28, 'bold'))],
             [sg.Button('DE',button_color='blue',border_width=5,key='depd',**bt),sg.Button('GE',button_color='blue',border_width=5,key='gepd',**bt),sg.Button('PSO',button_color='blue',border_width=5,key='psopd',**bt)],
             [sg.Button(image_filename='D:\TT2\home.png', key='Homepd',image_subsample=8,button_color=(sg.theme_background_color(), sg.theme_background_color()))]
             ]
 
+layoutde=[[sg.Text('Evolución diferencial',text_color='white', font=('Franklin Gothic Book', 28, 'bold'))],
+          [sg.Text('Ingresa los siguientes  parámetros: ',text_color='white', font=('Franklin Gothic Book', 18, 'bold'))],
+          [sg.Text('Tamaño de la población:', text_color='black', font=('Franklin Gothic Book', 12, 'bold'),size=(25,1)), sg.Input('200',key='popb')],
+          [sg.Text('Número de generaciones:', text_color='black', font=('Franklin Gothic Book', 12, 'bold'),size=(25,1)), sg.Input('10',key='gen')],
+          [sg.Text('Tamaño del archivo:', text_color='black', font=('Franklin Gothic Book', 12, 'bold'),size=(25,1)), sg.Input('30',key='Am')],
+          [sg.Button(image_filename=r'D:\TT2\b1.png', key='rep',image_subsample=8,button_color=(sg.theme_background_color(), sg.theme_background_color())),sg.Button(image_filename='D:\TT2\home.png', key='Homede',image_subsample=8,button_color=(sg.theme_background_color(), sg.theme_background_color())),sg.Button('Continuar',size=(10,2),border_width=5,key='con',button_color='blue')]
+          ]
+
+layoutdepi=[[sg.Text('Evolución diferencial',text_color='white', font=('Franklin Gothic Book', 28, 'bold'))],
+          [sg.Text('Ingresa los siguientes  parámetros: ',text_color='white', font=('Franklin Gothic Book', 18, 'bold'))],
+          [sg.Text('Tamaño de la población:', text_color='black', font=('Franklin Gothic Book', 12, 'bold'),size=(25,1)), sg.Input('200',key='popbpi')],
+          [sg.Text('Número de generaciones:', text_color='black', font=('Franklin Gothic Book', 12, 'bold'),size=(25,1)), sg.Input('10',key='genpi')],
+          [sg.Text('Tamaño del archivo:', text_color='black', font=('Franklin Gothic Book', 12, 'bold'),size=(25,1)), sg.Input('30',key='Ampi')],
+          [sg.Button(image_filename=r'D:\TT2\b1.png', key='reppi',image_subsample=8,button_color=(sg.theme_background_color(), sg.theme_background_color())),sg.Button(image_filename='D:\TT2\home.png', key='Homedepi',image_subsample=8,button_color=(sg.theme_background_color(), sg.theme_background_color())),sg.Button('Continuar',size=(10,2),border_width=5,key='conpi',button_color='blue')]
+          ]
+
+layoutdepd=[[sg.Text('Evolución diferencial',text_color='white', font=('Franklin Gothic Book', 28, 'bold'))],
+          [sg.Text('Ingresa los siguientes  parámetros: ',text_color='white', font=('Franklin Gothic Book', 18, 'bold'))],
+          [sg.Text('Tamaño de la población:', text_color='black', font=('Franklin Gothic Book', 12, 'bold'),size=(25,1)), sg.Input('200',key='popbpd')],
+          [sg.Text('Número de generaciones:', text_color='black', font=('Franklin Gothic Book', 12, 'bold'),size=(25,1)), sg.Input('10',key='genpd')],
+          [sg.Text('Tamaño del archivo:', text_color='black', font=('Franklin Gothic Book', 12, 'bold'),size=(25,1)), sg.Input('30',key='Ampd')],
+          [sg.Button(image_filename=r'D:\TT2\b1.png', key='reppd',image_subsample=8,button_color=(sg.theme_background_color(), sg.theme_background_color())),sg.Button(image_filename='D:\TT2\home.png', key='Homedepd',image_subsample=8,button_color=(sg.theme_background_color(), sg.theme_background_color())),sg.Button('Continuar',size=(10,2),border_width=5,key='conpd',button_color='blue')]
+          ]
+
+tapsv=[['Espere','se está','ejecutando','código','......'],['Espera','estamos','ejecutando','código','......']]
 
 layoutpfps=[[sg.Text('Seleccione un conjunto de ganancias del controlador  PID',text_color='white', font=('Franklin Gothic Book', 20, 'bold'))],
-            [sg.Table(values=[['Espere','se está','ejecutando','código','......'],['Espera','estamos','ejecutando','código','......']] ,headings=['Kp' , 'Kd' ,' Ki','ISE','IADU'],auto_size_columns=True,right_click_selects=True,enable_click_events=True, key='Tabl',vertical_scroll_only=False,num_rows=25 ), sg.Canvas(key='can')],
+            [sg.Table(values=tapsv ,headings=['Kp' , 'Kd' ,' Ki','ISE','IADU'],auto_size_columns=True,right_click_selects=True,enable_click_events=True, key='Tabl',vertical_scroll_only=False,num_rows=25 ), sg.Canvas(key='can')],
             [sg.Button('Simular',key='Simups')]]
 
+tapiv=[['Espera','estamos','ejecutando','código','......','......','......','......'],['Espera','estamos','ejecutando','código','......','......','......','......']]
 layoutpfpi=[[sg.Text('Seleccione un conjunto de ganancias del controlador  PID',text_color='white', font=('Franklin Gothic Book', 20, 'bold'))],
-            [sg.Table(values=[['Espera','estamos','ejecutando','código','......','......','......','......'],['Espera','estamos','ejecutando','código','......','......','......','......']] ,headings=['Kpcar' , 'Kdcar' ,'Kicar','Kppénd' , 'Kdpén' ,' Kipén','ISE','IADU'],auto_size_columns=True,right_click_selects=True,enable_click_events=True, key='Tablpi',vertical_scroll_only=False,num_rows=25 ), sg.Canvas(key='canpfpi')],
+            [sg.Table(values=tapiv ,headings=['Kpcar' , 'Kdcar' ,'Kicar','Kppénd' , 'Kdpén' ,' Kipén','ISE','IADU'],auto_size_columns=True,right_click_selects=True,enable_click_events=True, key='Tablpi',vertical_scroll_only=False,num_rows=25 ), sg.Canvas(key='canpfpi')],
             [sg.Button('Simular',key='Simupi')]]
+tapdv=[['Espera','estamos','ejecutando','código','......','......'],['Espera','estamos','ejecutando','código','......','......']]
 
 layoutpfpd=[[sg.Text('Seleccione un conjunto de ganancias del controlador  PID',text_color='white', font=('Franklin Gothic Book', 20, 'bold'))],
-            [sg.Table(values=[['Espera','estamos','ejecutando','código','......','......'],['Espera','estamos','ejecutando','código','......','......']] ,headings=['Kp1' , 'Kd1' ,'Kp2' , 'Kd2' ,'ISE','IADU'],auto_size_columns=True,right_click_selects=True,enable_click_events=True, key='Tablpd',vertical_scroll_only=False,num_rows=25 ), sg.Canvas(key='canpfpd')],
+            [sg.Table(values=tapdv ,headings=['Kp1' , 'Kd1' ,'Kp2' , 'Kd2' ,'ISE','IADU'],auto_size_columns=True,right_click_selects=True,enable_click_events=True, key='Tablpd',vertical_scroll_only=False,num_rows=25 ), sg.Canvas(key='canpfpd')],
             [sg.Button('Simular',key='Simupd')]]
 
 
@@ -801,30 +801,75 @@ layoutsimpan=[[sg.Canvas(key='canani')]]
 layoutsimpgra=[[sg.Canvas(key='cangraps')]]
 
 layouttap=[[sg.TabGroup([[sg.Tab('Animación',layoutsimpan),sg.Tab('Gráficas', layoutsimpgra)]],tab_location='centertop',border_width=5)],
-           [sg.Button(image_filename='D:\TT2\home.png', key='Homesimups',image_subsample=8,button_color=(sg.theme_background_color(), sg.theme_background_color())),sg.Button('Salir',button_color='red',size=(3,2),border_width=5,key='Exit0')]]
+           [sg.Button(image_filename=r'D:\TT2\b1.png', key='Returnps',image_subsample=8,button_color=(sg.theme_background_color(), sg.theme_background_color())),sg.Button(image_filename='D:\TT2\home.png', key='Homesimups',image_subsample=8,button_color=(sg.theme_background_color(), sg.theme_background_color())),sg.Button('Salir',button_color='red',size=(3,2),border_width=5,key='Exit0')]]
 
 layoutinvpan=[[sg.Canvas(key='cananipi')]]
 layoutinvpgra=[[sg.Canvas(key='cangrapi')]]
 
 layouttappi=[[sg.TabGroup([[sg.Tab('Animación',layoutinvpan),sg.Tab('Gráficas', layoutinvpgra)]],tab_location='centertop',border_width=5)],
-           [sg.Button(image_filename='D:\TT2\home.png', key='Homesimupi',image_subsample=8,button_color=(sg.theme_background_color(), sg.theme_background_color())),sg.Button('Salir',button_color='red',size=(3,2),border_width=5,key='Exit1')]]
+           [sg.Button(image_filename=r'D:\TT2\b1.png', key='Returnpi',image_subsample=8,button_color=(sg.theme_background_color(), sg.theme_background_color())),sg.Button(image_filename='D:\TT2\home.png', key='Homesimupi',image_subsample=8,button_color=(sg.theme_background_color(), sg.theme_background_color())),sg.Button('Salir',button_color='red',size=(3,2),border_width=5,key='Exit1')]]
 
 layoutanpd=[[sg.Canvas(key='cananipd')]]
 layoutgrapd=[[sg.Canvas(key='cangrapd')]]
 
 layouttappd=[[sg.TabGroup([[sg.Tab('Animación',layoutanpd),sg.Tab('Gráficas', layoutgrapd)]],tab_location='centertop',border_width=5)],
-           [sg.Button(image_filename='D:\TT2\home.png', key='Homesimupd',image_subsample=8,button_color=(sg.theme_background_color(), sg.theme_background_color())),sg.Button('Salir',button_color='red',size=(3,2),border_width=5,key='Exit2')]]
+           [sg.Button(image_filename=r'D:\TT2\b1.png', key='Returnpd',image_subsample=8,button_color=(sg.theme_background_color(), sg.theme_background_color())),sg.Button(image_filename='D:\TT2\home.png', key='Homesimupd',image_subsample=8,button_color=(sg.theme_background_color(), sg.theme_background_color())),sg.Button('Salir',button_color='red',size=(3,2),border_width=5,key='Exit2')]]
 
-layout1=[[sg.Column(layouthome,key='Home'),sg.Column(layouts, visible=False,key='Sim'),sg.Column(layoutpfps,key='pfps',visible=False),sg.Column(layouttap,key='resps',visible=False),sg.Column(layouti,key='Inve',visible=False),sg.Column(layoutpfpi,key='pfpi',visible=False),sg.Column(layouttappi,key='respi',visible=False),sg.Column(layoutd,key='Dob',visible=False),sg.Column(layoutpfpd,key='pfpd',visible=False),sg.Column(layouttappd,key='respd',visible=False)]]
+layout1=[[sg.Column(layouthome,key='Home'),sg.Column(layouts, visible=False,key='Sim'),sg.Column(layoutde,key='depara',visible=False),sg.Column(layoutpfps,key='pfps',visible=False),sg.Column(layouttap,key='resps',visible=False),
+          sg.Column(layouti,key='Inve',visible=False),sg.Column(layoutdepi,key='deparapi',visible=False),sg.Column(layoutpfpi,key='pfpi',visible=False),sg.Column(layouttappi,key='respi',visible=False),
+          sg.Column(layoutd,key='Dob',visible=False),sg.Column(layoutdepd,key='deparapd',visible=False),sg.Column(layoutpfpd,key='pfpd',visible=False),sg.Column(layouttappd,key='respd',visible=False)]]
         
-# #Create a fig for embedding.
-# fig = plt.figure(figsize=(5, 4))
-# ax = fig.add_subplot(111)
-
-
 
 window = sg.Window('Swapping the contents of a window', layout1, finalize=True,resizable=True)
 #Associate fig with Canvas.
+fig = plt.figure(figsize=(6, 5))
+ax = fig.add_subplot(111)
+fig_agg = draw_figure(window['can'].TKCanvas, fig)
+
+figan = plt.figure(figsize=(7, 6))
+ax1 = figan.add_subplot(111, autoscale_on=False,xlim=(-1.8, 1.8), ylim=(-1.2, 1.2))
+ax1.set_xlabel('x [m]')
+ax1.set_ylabel('y [m]')
+fig_anima = draw_figure(window['canani'].TKCanvas, figan)
+
+figgraps = plt.figure(figsize=(7, 6))
+ax2 = figgraps.add_subplot(221)
+ax3 = figgraps.add_subplot(222)
+ax4 = figgraps.add_subplot(223)
+fig_graps = draw_figure(window['cangraps'].TKCanvas, figgraps)
+
+figpi = plt.figure(figsize=(6, 5))
+ax6 = figpi.add_subplot(111)
+fig_aggpi = draw_figure(window['canpfpi'].TKCanvas, figpi)
+
+figanpi = plt.figure(figsize=(8, 6))
+ax10 = figanpi.add_subplot(111, autoscale_on=False,xlim=(-1.8, 1.8), ylim=(-1.2, 1.2))
+fig_animapi = draw_figure(window['cananipi'].TKCanvas, figanpi)
+
+figgrapspi = plt.figure(figsize=(8, 6))
+ax11 = figgrapspi.add_subplot(321)
+ax12 = figgrapspi.add_subplot(322)
+ax13 = figgrapspi.add_subplot(323)
+ax14 = figgrapspi.add_subplot(324)
+ax15 = figgrapspi.add_subplot(325)
+ax16 = figgrapspi.add_subplot(326)
+fig_grapspi = draw_figure(window['cangrapi'].TKCanvas, figgrapspi)
+
+figpd = plt.figure(figsize=(6, 5))
+ax30 = figpd.add_subplot(111) 
+fig_aggpd = draw_figure(window['canpfpd'].TKCanvas, figpd)
+figgrapspd = plt.figure(figsize=(7, 6))
+ax21 = figgrapspd.add_subplot(321)
+ax22 = figgrapspd.add_subplot(322)
+ax23 = figgrapspd.add_subplot(323)
+ax24 = figgrapspd.add_subplot(324)
+ax25 = figgrapspd.add_subplot(325)
+ax26 = figgrapspd.add_subplot(326)
+fig_grapd = draw_figure(window['cangrapd'].TKCanvas, figgrapspd)
+
+figanpd = plt.figure(figsize=(7, 6))
+ax20 = figanpd.add_subplot(111, autoscale_on=False,xlim=(-2.8,2.8),ylim=(-2.2,2.2))
+fig_animapd = draw_figure(window['cananipd'].TKCanvas, figanpd)
 
 layout = 1  # The currently visible layout
 while True:
@@ -843,7 +888,7 @@ while True:
         window['Sim'].update(visible=True)
     if event == 'deps':
         window['Sim'].update(visible=False)
-        window['pfps'].update(visible=True)
+        window['depara'].update(visible=True)
         
         ms=values['masaps']
         ls=values['lps']
@@ -854,12 +899,26 @@ while True:
         try: 
             dinps=np.asarray([ms,ls,lcs,bs,iss,ss], dtype=np.float64, order='C')
             
-            # dina=val_conver(dinps)
+            
+            
+        except:
+            sg.popup('Todos los datos ingresados deben ser númericos, presione ok e intente de nuevo')
+            window['depara'].update(visible=False)
+            window['Sim'].update(visible=True)
+            
+    elif event =='con':
+        window['depara'].update(visible=False)
+        window['pfps'].update(visible=True)
+        
+        try: 
+        
+            poblacion=int(values['popb'])
+            generaciones=int(values['gen'])
+            AMAX=int(values['Am'])
+            
             #llamado de la función main de DE
             sg.popup('Ejecución de Evolución Diferencial, espere para poder observar el resultado (conjunto de ganancias para el controlador PID). Las ganancias permitirán al péndulo llegar de la posición inicial a la deseada. Presione ok para continuar con la ejecución')
             var=main(pendulum_s, limit, poblacion, f_mut, recombination, generaciones,dinps,D,M,AMAX)
-        
-            
             valu=np.zeros((len(var[0]),5))
         
             t=var[0]
@@ -870,8 +929,10 @@ while True:
             valu[:,2]=s[:,2]
             valu[:,3]=t[:,0]
             valu[:,4]=t[:,1]
+            indexso=np.argsort(t[:,0])
+            valu=valu[indexso]
             
-            filename="afa.csv" 
+            filename="afa.txt" 
             myFile=open(filename,'w') 
             myFile.write("kp,kd,ki,f1, f2 \n") 
             for l in range(len(t)): 
@@ -879,31 +940,33 @@ while True:
             myFile.close()
         
             #Create a fig for embedding.
-            fig = plt.figure(figsize=(6, 5))
-        
-            ax = fig.add_subplot(111)
+            ax.cla()
             ax.set_title('Aproximación al Frente de Pareto')
             ax.set_xlabel('ISE')
             ax.set_ylabel('IADU')
-        
+         
             #plot
-            ax.scatter(t[:,0], t[:,1])
-        
-            fig_agg = draw_figure(window['can'].TKCanvas, fig)
-        
+            ax.scatter(t[:,0], t[:,1])   
             window['Tabl'].update(values=valu)
             #After making changes, fig_agg.draw()Reflect the change with.
             fig_agg.draw()
         except:
             sg.popup('Todos los datos ingresados deben ser númericos, presione ok e intente de nuevo')
             window['pfps'].update(visible=False)
-            window['Sim'].update(visible=True)
-       
-        
-       
+            window['depara'].update(visible=True)
+    elif event =='rep':
+        window['depara'].update(visible=False)
+        window['Sim'].update(visible=True)
+    elif event =='Homede':
+        window['depara'].update(visible=False)
+        window['Home'].update(visible=True)
+
     elif event=='Homeps':
         window['Sim'].update(visible=False)
         window['Home'].update(visible=True)
+        
+        
+        
     elif event=='Simups':
         window['pfps'].update(visible=False)
         window['resps'].update(visible=True)
@@ -915,38 +978,25 @@ while True:
         tor=pen[3]
         tim=pen[4]
         
-        
-        figan = plt.figure(figsize=(7, 6))
-        ax1 = figan.add_subplot(111, autoscale_on=False,xlim=(-1.8, 1.8), ylim=(-1.2, 1.2))
-        ax1.set_xlabel('x')
-        ax1.set_ylabel('y')
-        fig_anima = draw_figure(window['canani'].TKCanvas, figan)
-        
-      
-        
-        figgraps = plt.figure(figsize=(7, 6))
-        ax2 = figgraps.add_subplot(221)
-        ax2.set_xlabel('Time')
-        ax2.set_ylabel('Posición del péndulo')
+        ax2.set_xlabel('Time [s]')
+        ax2.set_ylabel('Posición del péndulo [rad]')
         ax2.plot(tim, posi[:, 0], 'k',label=r'$\theta$',lw=1)
         ax2.legend()
         
-        ax3 = figgraps.add_subplot(222)
-        ax3.set_xlabel('Time')
-        ax3.set_ylabel('Velocidad del péndulo')
+        
+        ax3.set_xlabel('Time [s]')
+        ax3.set_ylabel('Velocidad del péndulo [rad/s]')
         ax3.plot(tim, posi[:, 1], 'b',label=r'$\dot{\theta}$',lw=1)
         ax3.legend()
         
-        ax4 = figgraps.add_subplot(223)
-        ax4.set_xlabel('Time')
-        ax4.set_ylabel('Señal de control')
+        
+        ax4.set_xlabel('Time [s]')
+        ax4.set_ylabel('Señal de control [Nm]')
         ax4.plot(tim, tor[:, 0], 'r',label=r'$u$',lw=1)
         ax4.legend()
         
-        
-        fig_graps = draw_figure(window['cangraps'].TKCanvas, figgraps)
-        
-        
+        fig_graps.draw()
+    
         x0 = np.zeros(len(tim))
         y0 = np.zeros(len(tim))
         xl=np.linspace(-1.8,1.8,len(tim))
@@ -956,11 +1006,12 @@ while True:
      
         x1 = l * np.sin(posi[:, 0])
         y1 = -l * np.cos(posi[:, 0])
+        ax1.cla()
         line, = ax1.plot([], [], 'o-', color='orange', lw=4, \
                 markersize=6, markeredgecolor='k', \
                 markerfacecolor='k')
         
-        time_template = 't= %.1fs'
+        time_template = 't= %.1f s'
         time_text = ax1.text(0.05, 0.9, '', transform=ax1.transAxes)
         def init():
             
@@ -973,21 +1024,45 @@ while True:
            
             time_text.set_text(time_template % tim[i])
             return line, time_text,
+        
         ax1.plot(xl,y0,'k')
         ax1.plot(x0,yl,'k')
         ani_a = animation.FuncAnimation(figan, animate, \
                                 np.arange(1, len(tim)), \
                                 interval=40, blit=False)
+        ani_a.new_frame_seq()
             
+        
+
+        
+    elif event=='Returnps':
+        window['resps'].update(visible=False)
+        window['pfps'].update(visible=True)
+        
+        ax2.cla()
+        ax3.cla()
+        ax4.cla()
+        ani_a.event_source.stop()
+        
+        
+ 
     elif event=='Homesimups':
         window['resps'].update(visible=False)
         window['Home'].update(visible=True)
+        ax.cla()  
+        ax2.cla()
+        ax3.cla()
+        ax4.cla()
+        ani_a.new_frame_seq() 
+        window['Tabl'].update(values=tapsv)
+        
     elif event=='Invertido':
         window['Home'].update(visible=False)
         window['Inve'].update(visible=True)
+        
     elif event == 'depi':
         window['Inve'].update(visible=False)
-        window['pfpi'].update(visible=True)
+        window['deparapi'].update(visible=True)
         
         mi=values['masapi']
         mc=values['masaca']
@@ -1002,8 +1077,35 @@ while True:
         try:
             
             dinpi=np.asarray([mi,mc,li,lci,bi,bc,isi,sti,stc], dtype=np.float64, order='C')
+            
+        except:
+            sg.popup('Todos los datos ingresados deben ser númericos, presione ok e intente de nuevo')
+            window['deparapi'].update(visible=False)
+            window['Inve'].update(visible=True)
+    elif event =='reppi':
+        window['deparapi'].update(visible=False)
+        window['Inve'].update(visible=True)
+    elif event =='Homedepi':
+        window['deparapi'].update(visible=False)
+        window['Home'].update(visible=True)
+    elif event=='conpi':
+        window['deparapi'].update(visible=False)
+        window['pfpi'].update(visible=True)
+        try:
+            
+            poblacionpi=int(values['popbpi'])
+            generacionespi=int(values['genpi'])
+            AMAXpi=int(values['Ampi'])
+            
+            
+        except:
+            sg.popup('Todos los datos ingresados deben ser númericos, presione ok e intente de nuevo')
+            window['pfpi'].update(visible=False)
+            window['deparapi'].update(visible=True)
+        try:
+            
+            
             sg.popup('Ejecución de Evolución Diferencial, espere para poder observar el resultado (conjunto de ganancias para el controlador PID).Las ganancias permitirán al péndulo llegar de la posición inicial a la deseada. Presione ok para continuar con la ejecución')
-            # dina=val_conver(dinps)
        
             #llamado de la función main de DE
             varpi=main(inverted_pendulum, limitpi, poblacionpi, f_mutpi, recombinationpi, generacionespi,dinpi,Dpi,Mpi,AMAXpi)
@@ -1021,35 +1123,31 @@ while True:
             valupi[:,6]=tpi[:,0]
             valupi[:,7]=tpi[:,1]
             
+            indexsopi=np.argsort(tpi[:,0])
+            valupi=valupi[indexsopi]
+            
             filename="pifa.csv" 
             myFile=open(filename,'w') 
             myFile.write("kp,kd,ki,kp1,kd1,ki1,f1, f2 \n") 
             for l in range(len(tpi)): 
                 myFile.write(str(spi[l, 0])+","+str(spi[l, 1])+","+str(spi[l, 2])+","+str(spi[l, 3])+","+str(spi[l, 4])+","+str(spi[l, 5])+","+str(tpi[l, 0])+","+str(tpi[l, 1])+"\n") 
             myFile.close()
-        
-            #Create a fig for embedding.
-            figpi = plt.figure(figsize=(6, 5))
-        
-            ax6 = figpi.add_subplot(111)
+
             ax6.set_title('Aproximación al Frente de Pareto')
             ax6.set_xlabel('ISE')
             ax6.set_ylabel('IADU')
         
-            #plot
             ax6.scatter(tpi[:,0], tpi[:,1])
-        
-            fig_aggpi = draw_figure(window['canpfpi'].TKCanvas, figpi)
         
             window['Tablpi'].update(values=valupi)
             #After making changes, fig_agg.draw()Reflect the change with.
             fig_aggpi.draw()
+            
         except:
-            sg.popup('Todos los datos ingresados deben ser númericos, presione ok e intente de nuevo')
+            sg.popup('Algo salio mal , presione ok e intente de nuevo')
             window['pfpi'].update(visible=False)
-            window['Inve'].update(visible=True)
-            
-            
+            window['deparapi'].update(visible=True)
+        
     elif event=='Homepi':
         window['Inve'].update(visible=False)
         window['Home'].update(visible=True)
@@ -1065,54 +1163,52 @@ while True:
         torpi=penpi[3]
         timpi=penpi[4]
         
-        figanpi = plt.figure(figsize=(8, 5))
-        ax10 = figanpi.add_subplot(111, autoscale_on=False,xlim=(-1.8, 1.8), ylim=(-1.2, 1.2))
-        ax10.set_xlabel('x')
-        ax10.set_ylabel('y')
-        fig_animapi = draw_figure(window['cananipi'].TKCanvas, figanpi)
+        ax10.cla()
+        ax10.set_xlabel('x [m]')
+        ax10.set_ylabel('y [m]')
         
-      
         
-        figgrapspi = plt.figure(figsize=(8, 5))
-        ax11 = figgrapspi.add_subplot(321)
-        ax11.set_xlabel('Tiempo')
-        ax11.set_ylabel('Posición del carro')
+        ax11.set_xlabel('Tiempo [s]')
+        ax11.set_ylabel('Posición del carro [m]')
         ax11.plot(timpi, posipi[:, 0], 'k',label=r'$x$',lw=1)
         ax11.legend()
-        
-        ax12 = figgrapspi.add_subplot(322)
-        ax12.set_xlabel('Tiempo')
-        ax12.set_ylabel('Posición del péndulo')
+
+        ax12.set_xlabel('Tiempo [s]')
+        ax12.set_ylabel('Posición del péndulo [m]')
         ax12.plot(timpi, posipi[:, 1], 'b',label=r'$\theta$',lw=1)
         ax12.legend()
         
-        ax13 = figgrapspi.add_subplot(323)
-        ax13.set_xlabel('Tiempo')
-        ax13.set_ylabel('Velocidad del carrito')
+        
+        ax13.set_xlabel('Tiempo [s]')
+        ax13.set_ylabel('Velocidad del carrito [m/s]')
         ax13.plot(timpi, posipi[:, 2], 'r',label=r'$\dot{x}$',lw=1)
         ax13.legend()
-        
-        ax14 = figgrapspi.add_subplot(324)
-        ax14.set_xlabel('Tiempo')
-        ax14.set_ylabel('Velocidad del péndulo')
+
+        ax14.set_xlabel('Tiempo [s]')
+        ax14.set_ylabel('Velocidad del péndulo [m/s]')
         ax14.plot(timpi, posipi[:, 3], 'k',label=r'$\dot{\theta}$',lw=1)
         ax14.legend()
         
-        ax15 = figgrapspi.add_subplot(325)
-        ax15.set_xlabel('Tiempo')
-        ax15.set_ylabel('$u_{car}$')
+    
+        ax15.set_xlabel('Tiempo [s]')
+        ax15.set_ylabel('$u_{car}$ [Nm]')
         ax15.plot(timpi, torpi[0, :], 'b',label=r'$u_{car}$',lw=1)
         ax15.legend()
         
-        ax16 = figgrapspi.add_subplot(326)
-        ax16.set_xlabel('Tiempo')
-        ax16.set_ylabel('$u_{pendulum}$')
+        
+        ax16.set_xlabel('Tiempo [s]')
+        ax16.set_ylabel('$u_{pendulum}$ [Nm]')
         ax16.plot(timpi, torpi[1, :], 'r',label=r'$u_{pendulum}$',lw=1)
         ax16.legend()
         
-        
-        fig_graps = draw_figure(window['cangrapi'].TKCanvas, figgrapspi)
-        
+        plt.subplots_adjust(left=0.125,
+                    bottom=0.1, 
+                    right=0.9, 
+                    top=0.9, 
+                    wspace=0.2, 
+                    hspace=0.35)
+        fig_grapspi.draw()
+
         x0 = np.zeros(len(timpi))
         y0 = np.zeros(len(timpi))
         x1 = posipi[:, 0]
@@ -1123,14 +1219,14 @@ while True:
      
         x2 = l * np.cos(posipi[:, 1]) + x1
         y2 = l * np.sin(posipi[:, 1])
-        
+        ax10.cla()
         mass1, = ax10.plot([], [], linestyle='None', marker='s', \
                  markersize=10, markeredgecolor='k', \
                  color='green', markeredgewidth=2)
         line, = ax10.plot([], [], 'o-', color='green', lw=4, \
                 markersize=6, markeredgecolor='k', \
                 markerfacecolor='k')
-        time_template = 't= %.1fs'
+        time_template = 't= %.1f s'
         time_text = ax10.text(0.05, 0.9, '', transform=ax10.transAxes)
         def init():
             
@@ -1151,9 +1247,42 @@ while True:
         ani_api = animation.FuncAnimation(figanpi, animatepi, \
                                 np.arange(1, len(timpi)), \
                                 interval=40, blit=False)
+            
+    elif event=='Returnpi':
+        window['respi'].update(visible=False)
+        window['pfpi'].update(visible=True)
+        
+        ax11.cla()
+        ax12.cla()
+        ax13.cla()
+        ax14.cla()
+        ax15.cla()
+        ax16.cla()
+        ani_api.event_source.stop()
+        plt.subplots_adjust(left=0.125,
+                    bottom=0.1, 
+                    right=0.9, 
+                    top=0.9, 
+                    wspace=0.2, 
+                    hspace=0.35)
     elif event=='Homesimupi':
         window['respi'].update(visible=False)
         window['Home'].update(visible=True)
+        ax6.cla()
+        ax11.cla()
+        ax12.cla()
+        ax13.cla()
+        ax14.cla()
+        ax15.cla()
+        ax16.cla()
+        ani_api.new_frame_seq() 
+        window['Tablpi'].update(values=tapiv)
+        plt.subplots_adjust(left=0.125,
+                    bottom=0.1, 
+                    right=0.9, 
+                    top=0.9, 
+                    wspace=0.2, 
+                    hspace=0.35)
         
     elif event == 'Doble':
     
@@ -1162,7 +1291,7 @@ while True:
         
     elif event == 'depd':
         window['Dob'].update(visible=False)
-        window['pfpd'].update(visible=True)
+        window['deparapd'].update(visible=True)
         
         m1=values['masapd1']
         m2=values['masapd2']
@@ -1177,8 +1306,29 @@ while True:
         
         try:
             dinpd=np.asarray([m1,m2,l1,lc1,l2,lc2,b1,b2,isd1,isd2], dtype=np.float64, order='C')
+            
+        except:
+            sg.popup('Todos los datos ingresados deben ser númericos, presione ok e intente de nuevo')
+            window['deparapd'].update(visible=False)
+            window['Dob'].update(visible=True)
+    
+    elif event =='reppd':
+        window['deparapd'].update(visible=False)
+        window['Dob'].update(visible=True)
+    elif event =='Homedepd':
+        window['deparapd'].update(visible=False)
+        window['Home'].update(visible=True)       
+    elif event=='conpd':
+        
+        window['deparapd'].update(visible=False)
+        window['pfpd'].update(visible=True)
+        try:
+            
+            poblacionpd=int(values['popbpd'])
+            generacionespd=int(values['genpd'])
+            AMAXpd=int(values['Ampd'])
             sg.popup('Ejecución de Evolución Diferencial, espere para poder observar el resultado (conjunto de ganancias para el controlador PID). Las ganancias permitirán al péndulo seguir la trayectoria deseada. Presione ok para continuar con la ejecución')
-            # dina=val_conver(dinps)
+            
         
             #llamado de la función main de DE
             varpd=main(double_pendulum, limitpd, poblacionpd, f_mutpd, recombinationpd, generacionespd,dinpd,Dpd,Mpd,AMAXpd)
@@ -1195,37 +1345,33 @@ while True:
             valupd[:,4]=tpd[:,0]
             valupd[:,5]=tpd[:,1]
             
+            indexsopd=np.argsort(tpd[:,0])
+            valupd=valupd[indexsopd]
+            
             filename="pdfa.csv" 
             myFile=open(filename,'w') 
             myFile.write("kp,kd,kp1,kd1,f1, f2 \n") 
             for l in range(len(tpd)): 
                 myFile.write(str(spd[l, 0])+","+str(spd[l, 1])+","+str(spd[l, 2])+","+str(spd[l, 3])+","+str(tpd[l, 0])+","+str(tpd[l, 1])+"\n") 
             myFile.close()
-        
-        
+
             #Create a fig for embedding.
-            figpd = plt.figure(figsize=(6, 5))
-        
-            ax30 = figpd.add_subplot(111) 
+            
             ax30.set_title('Aproximación al frente de Pareto')
             ax30.set_xlabel('ISE')
             ax30.set_ylabel('IADU')
         
             #plot
             ax30.scatter(tpd[:,0], tpd[:,1])
-        
-            fig_aggpd = draw_figure(window['canpfpd'].TKCanvas, figpd)
-        
+
             window['Tablpd'].update(values=valupd)
             #After making changes, fig_agg.draw()Reflect the change with.
             fig_aggpd.draw()
         except:
             sg.popup('Todos los datos ingresados deben ser númericos, presione ok e intente de nuevo')
             window['pfpd'].update(visible=False)
-            window['Dob'].update(visible=True)
-            
-            
-    
+            window['deparapd'].update(visible=True)
+        
     elif event=='Homepd':
         window['Dob'].update(visible=False)
         window['Home'].update(visible=True)
@@ -1240,54 +1386,56 @@ while True:
         torpd=penpd[3]
         timpd=penpd[4]
         
-      
-      
-        
-        figgrapspd = plt.figure(figsize=(7, 6))
-        ax21 = figgrapspd.add_subplot(321)
+     
         ax21.set_xlabel('Tiempo')
         ax21.set_ylabel('Posición de la barra 1 ')
         ax21.plot(timpd, posipd[:, 0], 'k',label=r'$\theta_1$',lw=1)
         ax21.legend()
         
-        ax22 = figgrapspd.add_subplot(322)
+        
         ax22.set_xlabel('Tiempo')
         ax22.set_ylabel('Posición de la barra 2')
         ax22.plot(timpd, posipd[:, 1], 'b',label=r'$\theta_2$',lw=1)
         ax22.legend()
         
-        ax23 = figgrapspd.add_subplot(323)
+
         ax23.set_xlabel('Tiempo')
         ax23.set_ylabel('Velocidad de la barra 1')
         ax23.plot(timpd, posipd[:, 2], 'r',label=r'$\dot{\theta_1}$',lw=1)
         ax23.legend()
         
-        ax24 = figgrapspd.add_subplot(324)
+        
         ax24.set_xlabel('Tiempo')
         ax24.set_ylabel('Velocidad de la barra 2')
         ax24.plot(timpd, posipd[:, 3], 'k',label=r'$\dot{\theta_1}$',lw=1)
         ax24.legend()
         
-        ax25 = figgrapspd.add_subplot(325)
+        
         ax25.set_xlabel('Tiempo')
         ax25.set_ylabel('$u_{1}$')
-        ax25.plot(timpd, torpd[0, :], 'b',label=r'$u_{1}$',lw=1)
+        ax25.plot(timpd[:2995], torpd[0, :2995], 'b',label=r'$u_{1}$',lw=1)
         ax25.legend()
         
-        ax26 = figgrapspd.add_subplot(326)
+        
         ax26.set_xlabel('Tiempo')
         ax26.set_ylabel('$u_{2}$')
-        ax26.plot(timpd, torpd[1, :], 'r',label=r'$u_{2}$',lw=1)
+        ax26.plot(timpd[:2995], torpd[1,:2995], 'r',label=r'$u_{2}$',lw=1)
         ax26.legend()
         
-        fig_grapd = draw_figure(window['cangrapd'].TKCanvas, figgrapspd)
+        plt.subplots_adjust(left=0.125,
+                    bottom=0.1, 
+                    right=0.9, 
+                    top=0.9, 
+                    wspace=0.2, 
+                    hspace=0.35)
         
-        figanpd = plt.figure(figsize=(7, 6))
-        ax20 = figanpd.add_subplot(111, autoscale_on=False,xlim=(-2.8,2.8),ylim=(-2.2,2.2))
+        fig_grapd.draw()
+    
+        ax20.cla()
         ax20.set_xlabel('x')
         ax20.set_ylabel('y')
         
-        fig_animapd = draw_figure(window['cananipd'].TKCanvas, figanpd)
+    
         l1=dinpd[2]
         l2=dinpd[4]
         
@@ -1310,7 +1458,7 @@ while True:
 
 
 
-        time_template = 't= %.1fs'
+        time_template = 't= %.1f s'
         time_text = ax20.text(0.05,0.9,'',transform=ax20.transAxes)
 
 
@@ -1331,13 +1479,51 @@ while True:
             line2.set_data(x2[i:max(1,i-trail2):-1], y2[i:max(1,i-trail2):-1])
             time_text.set_text(time_template % timpd[i])
             
-            return line, time_text, line1,
+            return line, time_text, line1,line2
         ax20.plot(x0,ylpd, 'k',lw=1)
         ax20.plot(xlpd, y0,'k',lw=1)
 
         ani_apd = animation.FuncAnimation(figanpd, animatepd, \
                  np.arange(1,len(timpd)), \
                  interval=1,blit=False,init_func=init)
+        ani_apd.new_frame_seq() 
         
+        
+    elif event=='Returnpd':
+        window['respd'].update(visible=False)
+        window['pfpd'].update(visible=True)
+        
+        ax21.cla()
+        ax22.cla()
+        ax23.cla()
+        ax24.cla()
+        ax25.cla()
+        ax26.cla()
+      
+        ani_apd.event_source.stop()
+        plt.subplots_adjust(left=0.125,
+                    bottom=0.1, 
+                    right=0.9, 
+                    top=0.9, 
+                    wspace=0.2, 
+                    hspace=0.35)
+    elif event=='Homesimupd':
+        window['respd'].update(visible=False)
+        window['Home'].update(visible=True)
+        ax30.cla()
+        ax21.cla()
+        ax22.cla()
+        ax23.cla()
+        ax24.cla()
+        ax25.cla()
+        ax6.cla()
+        ani_apd.new_frame_seq() 
+        window['Tablpd'].update(values=tapdv)
+        plt.subplots_adjust(left=0.125,
+                    bottom=0.1, 
+                    right=0.9, 
+                    top=0.9, 
+                    wspace=0.2, 
+                    hspace=0.35)
       
 window.close()
