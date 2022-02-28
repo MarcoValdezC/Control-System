@@ -197,11 +197,6 @@ def main(function, limites, poblacion, f_mut, recombination, generaciones):
         print ('Generación:',i) 
         for j in range(0, poblacion):
             
-            #Mutacion 
-            # Seleccionamos 4 posiciones de vector aleatorios, range = [0, poblacion)
-            # candidatos = range(0,poblacion)
-            # print()
-            # random_index = random.sample(candidatos, 4)
             
             r1 = j
             r2 = j
@@ -222,13 +217,11 @@ def main(function, limites, poblacion, f_mut, recombination, generaciones):
             x_3 = population[i][r3]
             x_t = population[i][j]
         
-            # # Restamos x3 de x2, y creamos un nuevo vector (x_diff)
-            # x_diff =[x_2_i - x_3_i for x_2_i, x_3_i in zip(x_2, x_3)]
-
-            # # Multiplicamos x_diff por el factor de mutacion(F) y sumamos x_1
-            # v_mutante =   [x_1_i + f_mut * x_diff_i for x_1_i, x_diff_i in zip(x_1, x_diff)]
+           
             
             v_mutante = x_1 + f_mut * (x_2 - x_3)
+            print(v_mutante)
+            break
             v_mutante = asegurar_limites(v_mutante, limites)
             #print(v_mutante)
             #Vector hijo

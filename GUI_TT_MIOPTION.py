@@ -9,7 +9,7 @@ import PySimpleGUI as sg
 import math 
 import numpy as np 
 import random
-import numpy as np 
+
 import math
 import matplotlib.pyplot as plt
 from drawnow import *
@@ -235,11 +235,6 @@ def main(function, limites, poblacion, f_mut, recombination, generaciones,pardyn
             x_3 = population[i][r3]
             x_t = population[i][j]
         
-            # # Restamos x3 de x2, y creamos un nuevo vector (x_diff)
-            # x_diff =[x_2_i - x_3_i for x_2_i, x_3_i in zip(x_2, x_3)]
-
-            # # Multiplicamos x_diff por el factor de mutacion(F) y sumamos x_1
-            # v_mutante =   [x_1_i + f_mut * x_diff_i for x_1_i, x_diff_i in zip(x_1, x_diff)]
             
             v_mutante = x_1 + f_mut * (x_2 - x_3)
             v_mutante = asegurar_limites(v_mutante, limites)
@@ -319,7 +314,9 @@ def main(function, limites, poblacion, f_mut, recombination, generaciones,pardyn
                 # f_x_fil.append(f_x_1)
                 f_a_fil = np.append(f_a_fil, [f_a_1], axis=0)
                 a_fil = np.append(a_fil, [a[i1]], axis=0)
-
+            
+            
+    
         a = a_fil
         f_a = f_a_fil
         #print(a)
