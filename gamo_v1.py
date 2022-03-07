@@ -1,7 +1,13 @@
 # -*- coding: utf-8 -*-
 """
-Created on Thu Feb 24 10:59:52 2022
+Created on Sun Mar  6 21:55:15 2022
 
+@author: marco
+"""
+
+# -*- coding: utf-8 -*-
+"""
+Created on Thu Feb 24 10:59:52 2022
 @author: marco
 """
 import numpy as np
@@ -162,9 +168,6 @@ f_a = np.empty((0, M))  # Valor de funcion objetivo para cada elemento del archi
 g_a = np.empty(0)  # Valor de funcion objetivo para cada elemento del archivo
 #---------------------------------------------------------------------------
 
- 
-
-print(f_x[0][:], g_x[0][:])
 def selec(f,g,po):
     pop_r=np.empty((0,D))
     f_x_r=np.empty((0,M))
@@ -232,89 +235,46 @@ def selec(f,g,po):
     g_x_r = g_x_f
     return f_x_r,pop_x_r,g_x_r
 
-def crossov(p1,p2,eta,llo,lup):
-    esp=1e-14
-    
+def crossov(p1,p2,eta):
+    #print(len(p1))
     for i, (x1, x2) in enumerate(zip(p1, p2)):
+        print(i)
+        print(p1[i])
         rand = random.random()
         if rand <= 0.5:
-            if(abs(p1[i]-p2[i])>esp):
-                if(p1[i]<p2[i]):
-                    y1=p1[i]
-                    y2=p2[i]
-                else:
-                    y1=p2[i]
-                    y2=p1[i]
-                lb=llo[i]
-                up=lup[i]
-                ran = random.random()
-                beta =1.0+ ((2. *(y1-lb))/(y2-y1))
-                alpha = 2.0 - ((beta)**(-(eta + 1.0)))
-                if (ran <= (1.0 / alpha)):
-                    betaq = (ran * alpha)**((1.0 / (eta + 1.0)))
-                else:
-                    betaq = (1.0 / (2.0 - ran * alpha))**(1.0 / (eta + 1.0))
-                c1 = 0.5 * (y1 + y2 - betaq * (y2 - y1))
-                beta = 1.0 + (2.0 * (up - y2) / (y2 - y1))
-                alpha = 2.0 - (beta)**(-(eta + 1.0))
-                
-                if (ran <= (1.0 / alpha)):
-                    betaq = ((ran * alpha))**((1.0 / (eta + 1.0)))
-                else:
-                    betaq = (1.0 / (2.0 - ran * alpha))**( 1.0 / (eta + 1.0))
-                c2 = 0.5 * (y1 + y2 + betaq * (y2 - y1))
-                if (c1 > up):
-                    c1 = up
-                if (c1 < lb):
-                    c1 = lb
-                if (c2 > up):
-                    c2 = up
-                if (c2 < lb):
-                    c2 = lb
-                
-                if (random.random() <= 0.5):
-                   p1[i]=c2
-                   p2[i]=c1
-                else:
-                    p1[i]=c1
-                    p2[i]=c2
-            else:
-                p1[i]=p1[i]
-                p2[i]=p2[i]
+            beta = 2. * rand
         else:
-            p1[i]=p1[i]
-            p2[i]=p2[i]
-            
+            beta = 1. / (2. * (1. - rand))
+        beta **= 1. / (eta + 1.)
+        p1[i] = 0.5 * (((1 + beta) * x1) + ((1 - beta) * x2))
+        p2[i] = 0.5 * (((1 - beta) * x1) + ((1 + beta) * x2))
+
     return p1, p2
-def mutPolynomial(individual, eta,lb,up):
-    
+def mutPolynomial(individual, eta):
+   
     size = len(individual)
-    pm=1/D
+    print(individual)
 
     for i in range(size):
-        for k in range(D):
-            if random.random() <= pm:
-                x = individual[i][k]
-                yl = lb[i][k]
-                yu=up[i][k]
-                if yl == yu:
-                    x = yl
-                else:
-                    delta1 = (x - yl) / (yu - yl)
-                    delta2 = (yu - x) / (yu - yl)
-                    ra = random.random()
-                    mut_pow = 1.0 / (eta + 1.)
-                    if ra <= 0.5:
-                        xy = 1.0 - delta1
-                        val = 2.0 * ra + (1.0 - 2.0 * ra) * ((xy)**( eta + 1.0))
-                        delta_q = (val)**( mut_pow) - 1.0
-                    else:
-                        xy = 1.0 - delta2
-                        val = 2.0 * (1.0 - ra) + 2.0 * (ra - 0.5) * ((xy)**(eta + 1.0))
-                   
-                        delta_q = 1.0 - (val)**(mut_pow)
-                    x = x + delta_q *(yu - yl)
-                    individual[i][k] = x
+        
+        x = individual[i]
+        delta_1 =0.9
+            
+        rand = random.random()
+        mut_pow = 1.0 / (eta + 1.)
+
+        if rand < 0.5:
+            
+            val = 2.0 * rand 
+            delta_q = val ** mut_pow - 1.0
+        else:
+            
+            val = 2.0 * (1.0 - rand) 
+            delta_q = 1.0 - val ** mut_pow
+
+        x = x + delta_q * delta_1
+        
+        individual[i] = x
     return np.array(individual)
 
 li=np.array(limit)
@@ -345,8 +305,7 @@ for i in range(0,gen-1):
         p1.append(popu_x_s[r1,0])
         p1.append(popu_x_s[r1,1])
         p1.append(popu_x_s[r1,2])
-    lb=np.zeros((len(f_x_s),D))
-    up=np.ones((len(f_x_s),D))   
+        
     for j in range(math.floor(len(popu_x_s)/2)):
         
         r1=j
@@ -366,14 +325,14 @@ for i in range(0,gen-1):
         p2.append(popu_x_s[r2,2])
         
         eta=1
-        c=crossov(p1,p2,eta,lb[j],up[j])
+        c=crossov(p1,p2,eta)
         cross.append(c[0])
         cross.append(c[1])
     cro=np.array(cross)
-    mut=mutPolynomial(cro,1,lb,up)
+    mut=mutPolynomial(cro,1)
     f_x_off=np.zeros((len(mut),M))
     g_x_off=np.zeros(len(mut))
-    print(len(f_x_off))
+    #print(len(f_x_off))
     for r in range(len(mut)):
         mut[r]=asegurar_limites(mut[r],limit)
         val=pendulum_s(mut[r],pardyna)
@@ -485,14 +444,3 @@ plt.scatter(f_a[:, 0], f_a[:, 1])
 plt.xlabel('f1')
 plt.ylabel('f2')
 plt.show()
-        
-    
-    
-    
-    
-
-        
-    
-    
-        
-

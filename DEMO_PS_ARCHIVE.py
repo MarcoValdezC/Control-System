@@ -13,10 +13,10 @@ from drawnow import *
 
 #---------------------Parametros DE-----------------------------#
 limit=[(0,10),(0,10),(0,10)]       # Limites inferior y superior
-poblacion = 200                    # Tamaño de la población, mayor >= 4
+poblacion = 100                    # Tamaño de la población, mayor >= 4
 f_mut = 0.5                        # Factor de mutacion [0,2]
 recombination = 0.7                # Tasa de  recombinacion [0,1]
-generaciones =10                 # Número de generaciones
+generaciones =2                # Número de generaciones
 D = 3                              # Dimensionalidad O número de variables de diseño 
 M = 2                              # Numero de objetivos
 AMAX = 30                          # Numero maximo de soluciones en el archivo
@@ -110,14 +110,14 @@ def pendulum_s(r):
         ise=ise_next+(e_th**2)*dt
         iadu=iadu_next+ (abs(u[o]-u[o-1]))*dt
         g=0
-        if(ise>=2):
-            ie=2
+        if(ise>=3):
+            ie=3
             g+=1
         else:
             ie=ise
             g+=0
-        if(iadu>=0.8):
-            ia=0.8
+        if(iadu>=3):
+            ia=3
             g+=1
         else:
             ia=iadu
@@ -174,14 +174,6 @@ def main(function, limites, poblacion, f_mut, recombination, generaciones):
     g_a = np.empty(0)  # Valor de funcion objetivo para cada elemento del archivo
     #---------------------------------------------------------------------------
     
-    # #--------------------Inicialización de la población-------------------------
-    # for i in range(0,poblacion): # cambiar tam_poblacion
-    #     indv = []
-    #     for j in range(len(limites)):
-    #         #print(len(limites)
-    #         population[0][i][j]=random.uniform(limites[j][0],limites[j][1])
-    #         population_next[0][i][j]=random.uniform(limites[j][0],limites[j][1])
-    # #-------------------------------------------------------------------------------
     li=np.array(limites)
     population[0]=li[:,0] + np.random.rand(poblacion, D) * (li[:,1] - li[:,0])  # Inicializa poblacion
     population_next[0]=li[:,0] + np.random.rand(poblacion, D) * (li[:,1] - li[:,0])
@@ -197,6 +189,7 @@ def main(function, limites, poblacion, f_mut, recombination, generaciones):
         print ('Generación:',i) 
         for j in range(0, poblacion):
             
+    
             
             r1 = j
             r2 = j
@@ -218,10 +211,7 @@ def main(function, limites, poblacion, f_mut, recombination, generaciones):
             x_t = population[i][j]
         
            
-            
             v_mutante = x_1 + f_mut * (x_2 - x_3)
-            print(v_mutante)
-            break
             v_mutante = asegurar_limites(v_mutante, limites)
             #print(v_mutante)
             #Vector hijo
@@ -275,7 +265,6 @@ def main(function, limites, poblacion, f_mut, recombination, generaciones):
         f_x[i+1] = np.copy(f_x_next[i])
         population[i+1] = np.copy(population_next[i])
         g_x[i+1] = np.copy(g_x_next[i])
-        
     #-------------------------Archivo--------------------------------------------------------------------
         # Actualiza archivo (unicamente con soluciones factibles)
         for r, g_x_i in enumerate(g_x[i+1,:]):
@@ -327,8 +316,7 @@ def main(function, limites, poblacion, f_mut, recombination, generaciones):
             while len(a) != AMAX:
                 a = np.delete(a, 0, 0)
                 f_a = np.delete(f_a, 0, 0)
-    print(a)
-    print(f_a)
+    
     #-------Guardar en archivo excel-----------------------------------------
   
     filename="afa.csv" 
