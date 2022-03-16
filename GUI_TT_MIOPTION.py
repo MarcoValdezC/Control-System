@@ -462,14 +462,14 @@ def inverted_pendulum(r,dimpi):
         ise=ise_next+(e_th**2)*dt+(e_x**2)*dt
         iadu=iadu_next+ (abs(u[0,c]-u[0,c-1]))*dt+(abs(u[1,c]-u[1,c-1]))*dt
         g=0
-        if(ise>=800):
-            ie=800
+        if(ise>=20):
+            ie=20
             g+=1
         else:
             ie=ise
             g+=0
-        if(iadu>=50):
-            ia=50
+        if(iadu>=1.2):
+            ia=1.2
             g+=1
         else:
             ia=iadu

@@ -12,7 +12,7 @@ import random
 import math
 
 pop=100
-gen=50
+gen=10
 limit=[(0,10),(0,10),(0,10)] 
 D = 3                              
 M = 2   

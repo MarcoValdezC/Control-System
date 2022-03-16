@@ -10,7 +10,7 @@ import math
 import matplotlib.pyplot as plt
 
 pop=100
-gen=50
+gen=10
 limit=[(0,10),(0,10),(0,10)] 
 D = 3                              
 M = 2   
@@ -164,43 +164,12 @@ g_a = np.empty(0)  # Valor de funcion objetivo para cada elemento del archivo
 
  
 
-print(f_x[0][:], g_x[0][:])
+
 def selec(f,g,po):
     pop_r=np.empty((0,D))
     f_x_r=np.empty((0,M))
     g_x_r=np.empty(0)
-    # for p in range(len(f)):
-    #     for q in range(len(f)):
-    #         flag_ui=True
-    #         if g[p] == 0 and g[q]== 0 and p !=:
-    #             # Selecciona el individuo que pasa a la siguiente generacion
-    #             if dominates(f[p], f[q]):
-    #                 flag_ui=True
-    #             elif dominates(f[q], f[p]):
-    #                 flag_ui=False
-    #             else:
-    #                 if random.uniform(0, 1) < 0.5:
-    #                     flag_ui=True
-    #                 else:
-    #                     flag_ui=False
-    #         elif g[p] > g[q]:
-    #             flag_ui=False
-    #         elif g[p] < g[q]:
-    #             flag_ui=True
-    #         else:
-    #             if random.uniform(0, 1) < 0.5:
-    #                 flag_ui=True
-    #             else:
-    #                 flag_ui=False
-    #         if flag_ui:
-    #             f_x_next[p,:] = np.copy(f[p])
-    #             pop_next[p,:] = np.copy(po[p])
-    #             g_x_next[p]= np.copy(g[p])
-    #         else:
-    #             f_x_next[p,:] = np.copy(f[q])
-    #             pop_next[p,:] = np.copy(po[q])
-    #             g_x_next[p] = np.copy(g[q])
-    # Actualiza archivo (unicamente con soluciones factibles)
+    
     for r, g_x_i in enumerate(g):
         if g_x_i == 0:
             f_x_r = np.append(f_x_r, [f[r]], axis=0)
@@ -332,7 +301,7 @@ for i in range(0,gen-1):
     population_next[i][:]=population[i][:]
     g_x_next[i][:]=g_x[i][:]
     
-    print ('Generación:',i) 
+    #print ('Generación:',i) 
     selecc=selec(f_x[i,:],g_x[i,:],population[i])
     f_x_s=selecc[0]
     popu_x_s=selecc[1]
@@ -373,7 +342,7 @@ for i in range(0,gen-1):
     mut=mutPolynomial(cro,1,lb,up)
     f_x_off=np.zeros((len(mut),M))
     g_x_off=np.zeros(len(mut))
-    print(len(f_x_off))
+   
     for r in range(len(mut)):
         mut[r]=asegurar_limites(mut[r],limit)
         val=pendulum_s(mut[r],pardyna)
