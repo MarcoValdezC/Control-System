@@ -176,7 +176,7 @@ def asegurar_limites(vec, limit):
         
     return vec_new
 #---------------------------------------------------------------------------------------------------
-def selec(f,g,po):
+def selec(f,g,po,D,M):
     pop_r=np.empty((0,D))
     f_x_r=np.empty((0,M))
     g_x_r=np.empty(0)
@@ -267,7 +267,7 @@ def crossov(p1,p2,eta,llo,lup):
             
     return p1, p2
 #------------------------------------------------------------------------------------
-def mutPolynomial(individual, eta,lb,up):
+def mutPolynomial(individual, eta,lb,up,D):
     size = len(individual)
     pm=1/D
 
@@ -332,7 +332,7 @@ def moga( limites, poblacion,eta, generaciones,D,M,AMAX,function,pardyna):
         g_x_next[i][:]=g_x[i][:]
     
         #print ('Generación:',i) 
-        selecc=selec(f_x[i,:],g_x[i,:],population[i])
+        selecc=selec(f_x[i,:],g_x[i,:],population[i],D,M)
         f_x_s=selecc[0]
         popu_x_s=selecc[1]
         g_x_s=selecc[2]
@@ -341,12 +341,7 @@ def moga( limites, poblacion,eta, generaciones,D,M,AMAX,function,pardyna):
         if len(f_x_s) % 2 != 0:
             r1 = random.randint(0, len(popu_x_s)-1)
             p1=popu_x_s[r1,:]
-            # p1.append(popu_x_s[r1,0])
-            # p1.append(popu_x_s[r1,1])
-            # p1.append(popu_x_s[r1,2])
-            # p1.append(popu_x_s[r1,3])
-            # p1.append(popu_x_s[r1,4])
-            # p1.append(popu_x_s[r1,5])
+            
             
         lb=np.zeros((len(f_x_s),D))
         up=np.ones((len(f_x_s),D))   
@@ -361,26 +356,12 @@ def moga( limites, poblacion,eta, generaciones,D,M,AMAX,function,pardyna):
                 r2 = random.randint(0, len(popu_x_s)-1)
             p1=popu_x_s[r1,:]
             p2=popu_x_s[r2,:]
-            # p1.append(popu_x_s[r1,0])
-            # p1.append(popu_x_s[r1,1])
-            # p1.append(popu_x_s[r1,2])
-            # p1.append(popu_x_s[r1,3])
-            # p1.append(popu_x_s[r1,4])
-            # p1.append(popu_x_s[r1,5])
-            # p2=[]
-            # p2.append(popu_x_s[r2,0])
-            # p2.append(popu_x_s[r2,1])
-            # p2.append(popu_x_s[r2,2])
-            # p2.append(popu_x_s[r2,3])
-            # p2.append(popu_x_s[r2,4])
-            # p2.append(popu_x_s[r2,5])
         
-          
             c=crossov(p1,p2,eta,lb[j],up[j])
             cross.append(c[0])
             cross.append(c[1])
         cro=np.array(cross)
-        mut=mutPolynomial(cro,eta,lb,up)
+        mut=mutPolynomial(cro,eta,lb,up,D)
         f_x_off=np.zeros((len(mut),M))
         g_x_off=np.zeros(len(mut))
         
