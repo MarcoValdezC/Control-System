@@ -150,8 +150,8 @@ def asegurar_limites(vec, limit):
             vec_new.append(vec[i])
         
     return vec_new
-#---------------------------------------------------------------------------------------------------
-def selec(f,g,po,D,M):
+#---------------------------------Selección elitista------------------------------------------
+def selecga(f,g,po,D,M):
     pop_r=np.empty((0,D))
     f_x_r=np.empty((0,M))
     g_x_r=np.empty(0)
@@ -186,7 +186,7 @@ def selec(f,g,po,D,M):
     f_x_r = f_x_f
     g_x_r = g_x_f
     return f_x_r,pop_x_r,g_x_r
-#------------------------------------------------------------------------------------
+#-------------------------SBX------------------------------------------
 def crossov(p1,p2,eta,llo,lup):
     esp=1e-14
     
@@ -241,7 +241,7 @@ def crossov(p1,p2,eta,llo,lup):
             p2[i]=p2[i]
             
     return p1, p2
-#------------------------------------------------------------------------------------
+#-----------------Mutación Polinomial----------------------------------------------------
 def mutPolynomial(individual, eta,lb,up,D):
     size = len(individual)
     pm=1/D
@@ -272,7 +272,7 @@ def mutPolynomial(individual, eta,lb,up,D):
                     individual[i][k] = x
     return np.array(individual)
 
-
+#--------------- Algoritmo génetico
 def moga( limites, poblacion,eta, generaciones,D,M,AMAX,function,pardyna):
     
     #-----Poblacion------------------------------------------------------------#
@@ -307,7 +307,7 @@ def moga( limites, poblacion,eta, generaciones,D,M,AMAX,function,pardyna):
         g_x_next[i][:]=g_x[i][:]
     
         #print ('Generación:',i) 
-        selecc=selec(f_x[i,:],g_x[i,:],population[i],D,M)
+        selecc=selecga(f_x[i,:],g_x[i,:],population[i],D,M)
         f_x_s=selecc[0]
         popu_x_s=selecc[1]
         g_x_s=selecc[2]
@@ -435,15 +435,7 @@ def moga( limites, poblacion,eta, generaciones,D,M,AMAX,function,pardyna):
             while len(a) != AMAX:
                 a = np.delete(a, 0, 0)
                 f_a = np.delete(f_a, 0, 0)
-    plt.figure(1)
-    plt.title('Aproximacion al frente de Pareto')
-
-    plt.scatter(f_a[:, 0], f_a[:, 1])
-    #plt.xlim([0,1])
-
-    plt.xlabel('f1')
-    plt.ylabel('f2')
-    plt.show()
-    return a,f_a
+   
+    return f_a,a
 
 var= moga( limit, pop,eta, gen,D,M,AMAX,pendulum_s,pardyna)
