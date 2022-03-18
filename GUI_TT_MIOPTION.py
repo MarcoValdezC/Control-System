@@ -1089,7 +1089,7 @@ tapdv=[['Espera','estamos','ejecutando','código','......','......'],['Espera','
 
 layoutpfpd=[[sg.Text('Seleccione un conjunto de ganancias del controlador  PID',text_color='white', font=('Franklin Gothic Book', 20, 'bold'))],
             [sg.Table(values=tapdv ,headings=['Kp1' , 'Kd1' ,'Kp2' , 'Kd2' ,'ISE','IADU'],auto_size_columns=True,right_click_selects=True,enable_click_events=True, key='Tablpd',vertical_scroll_only=False,num_rows=25 ), sg.Canvas(key='canpfpd')],
-            [sg.Button('Simular',key='Simupd')]]
+            [sg.Button('Simular',key='Simupd'),sg.Button('Simular',key='Simupdga'),sg.Button('Simular',key='Simupdpso')]]
 
 
 layoutsimpan=[[sg.Canvas(key='canani')]]
@@ -1114,7 +1114,10 @@ layoutanpd=[[sg.Canvas(key='cananipd')]]
 layoutgrapd=[[sg.Canvas(key='cangrapd')]]
 
 layouttappd=[[sg.TabGroup([[sg.Tab('Animación',layoutanpd),sg.Tab('Gráficas', layoutgrapd)]],tab_location='centertop',border_width=5)],
-           [sg.Button(image_filename=r'D:\TT2\b1.png', key='Returnpd',image_subsample=8,button_color=(sg.theme_background_color(), sg.theme_background_color())),sg.Button(image_filename='D:\TT2\home.png', key='Homesimupd',image_subsample=8,button_color=(sg.theme_background_color(), sg.theme_background_color())),sg.Button('Salir',button_color='red',size=(3,2),border_width=5,key='Exit2')]]
+           [sg.Column([[sg.Button(image_filename=r'D:\TT2\b1.png', key='Returnpd',image_subsample=8,button_color=(sg.theme_background_color(), sg.theme_background_color())),sg.Button(image_filename='D:\TT2\home.png', key='Homesimupd',image_subsample=8,button_color=(sg.theme_background_color(), sg.theme_background_color())),sg.Button('Salir',button_color='red',size=(3,2),border_width=5,key='Exit2')]],key='tappdde'),
+           sg.Column([[sg.Button(image_filename=r'D:\TT2\b1.png', key='Returnpdga',image_subsample=8,button_color=(sg.theme_background_color(), sg.theme_background_color())),sg.Button(image_filename='D:\TT2\home.png', key='Homesimupdga',image_subsample=8,button_color=(sg.theme_background_color(), sg.theme_background_color())),sg.Button('Salir',button_color='red',size=(3,2),border_width=5,key='Exit21')]],key='tappdga'),
+           sg.Column([[sg.Button(image_filename=r'D:\TT2\b1.png', key='Returnpdpso',image_subsample=8,button_color=(sg.theme_background_color(), sg.theme_background_color())),sg.Button(image_filename='D:\TT2\home.png', key='Homesimupdpso',image_subsample=8,button_color=(sg.theme_background_color(), sg.theme_background_color())),sg.Button('Salir',button_color='red',size=(3,2),border_width=5,key='Exit2')]],key='tappdpso'),
+           ]]
 
 layout1=[[sg.Column(layouthome,key='Home'),sg.Column(layouts, visible=False,key='Sim'),sg.Column(layoutde,key='depara',visible=False),sg.Column(layoutpfps,key='pfps',visible=False),sg.Column(layouttap,key='resps',visible=False),
           sg.Column(layoutga,key='gapara',visible=False),
@@ -2051,6 +2054,10 @@ while True:
         
         window['deparapd'].update(visible=False)
         window['pfpd'].update(visible=True)
+        window['Simupd'].update(visible=True)
+        window['Simupdpso'].update(visible=False)
+        window['Simupdga'].update(visible=False)
+
         try:
             
             poblacionpd=int(values['popbpd'])
@@ -2107,6 +2114,9 @@ while True:
     elif event=='Simupd':
         window['pfpd'].update(visible=False)
         window['respd'].update(visible=True)
+        window['tappdde'].update(visible=True)
+        window['tappdga'].update(visible=False)
+        window['tappdpso'].update(visible=False)
         
         afepd=values['Tablpd']
        
@@ -2246,6 +2256,258 @@ while True:
         ax24.cla()
         ax25.cla()
         ax6.cla()
+        ani_apd.event_source.stop()
+        ani_apd.new_frame_seq() 
+        window['Tablpd'].update(values=tapdv)
+        plt.subplots_adjust(left=0.125,
+                    bottom=0.1, 
+                    right=0.9, 
+                    top=0.9, 
+                    wspace=0.2, 
+                    hspace=0.35)
+
+    #---------------------Genético ------------------------------------------------------------------
+    elif event == 'gepd2':
+        window['Dob'].update(visible=False)
+        window['gapara'].update(visible=True)
+        window['gepips'].update(visible=False)
+        window['gepi'].update(visible=False)
+        window['gepd'].update(visible=True)
+        
+        m1=values['masapd1']
+        m2=values['masapd2']
+        l1=values['lpd1']
+        lc1=values['lcpd1']
+        l2=values['lpd2']
+        lc2=values['lcpd2']
+        b1=values['bpd1']
+        b2=values['bpd2']
+        isd1=values['ipd1']
+        isd2=values['ipd2']
+        
+        try:
+            dinpd=np.asarray([m1,m2,l1,lc1,l2,lc2,b1,b2,isd1,isd2], dtype=np.float64, order='C')
+            
+        except:
+            sg.popup('Todos los datos ingresados deben ser númericos, presione ok e intente de nuevo')
+            window['deparapd'].update(visible=False)
+            window['Dob'].update(visible=True)
+    
+    elif event =='repgapd':
+        window['gapara'].update(visible=False)
+        window['Dob'].update(visible=True)
+    elif event =='Homegapd':
+        window['gapara'].update(visible=False)
+        window['Home'].update(visible=True) 
+    
+    elif event=='congapd':
+        
+        window['gapara'].update(visible=False)
+        window['pfpd'].update(visible=True)
+        window['Simupd'].update(visible=False)
+        window['Simupdpso'].update(visible=False)
+        window['Simupdga'].update(visible=True)
+        try:
+            
+            poblacionpd=int(values['popga'])
+            generacionespd=int(values['genga'])
+            AMAXpd=int(values['Amga'])
+            eta=int(values['eta'])
+            sg.popup('Ejecución de Evolución Diferencial, espere para poder observar el resultado (conjunto de ganancias para el controlador PID). Las ganancias permitirán al péndulo seguir la trayectoria deseada. Presione ok para continuar con la ejecución')
+            
+        
+            #llamado de la función main de DE
+            varpd=moga(limitpd, poblacionpd,eta, generacionespd,Dpd,Mpd,AMAXpd,double_pendulum,dinpd)
+        
+            valupd=np.zeros((len(varpd[0]),(Dpd+Mpd)))
+            tpd=varpd[0]
+            spd=varpd[1]
+        
+            valupd[:,0]=spd[:,0]
+            valupd[:,1]=spd[:,1]
+            valupd[:,2]=spd[:,2]
+            valupd[:,3]=spd[:,3]
+            valupd[:,4]=tpd[:,0]
+            valupd[:,5]=tpd[:,1]
+            
+            indexsopd=np.argsort(tpd[:,0])
+            valupd=valupd[indexsopd]
+            
+            filename="pdfaga.csv" 
+            myFile=open(filename,'w') 
+            myFile.write("kp,kd,kp1,kd1,f1, f2 \n") 
+            for l in range(len(tpd)): 
+                myFile.write(str(spd[l, 0])+","+str(spd[l, 1])+","+str(spd[l, 2])+","+str(spd[l, 3])+","+str(tpd[l, 0])+","+str(tpd[l, 1])+"\n") 
+            myFile.close()
+
+            #Create a fig for embedding.
+            
+            ax30.set_title('Aproximación al frente de Pareto')
+            ax30.set_xlabel('ISE')
+            ax30.set_ylabel('IADU')
+        
+            #plot
+            ax30.scatter(tpd[:,0], tpd[:,1])
+
+            window['Tablpd'].update(values=valupd)
+            #After making changes, fig_agg.draw()Reflect the change with.
+            fig_aggpd.draw()
+        except:
+            sg.popup('Todos los datos ingresados deben ser númericos, presione ok e intente de nuevo')
+            window['pfpd'].update(visible=False)
+            window['deparapd'].update(visible=True)
+        
+    elif event=='Homepd':
+        window['Dob'].update(visible=False)
+        window['Home'].update(visible=True)
+    
+    elif event=='Simupdga':
+        window['pfpd'].update(visible=False)
+        window['respd'].update(visible=True)
+        window['tappdde'].update(visible=False)
+        window['tappdga'].update(visible=True)
+        window['tappdpso'].update(visible=False)
+        
+        
+        afepd=values['Tablpd']
+       
+        penpd=double_pendulum(spd[afepd[0],:], dinpd)
+        posipd=penpd[2]
+        torpd=penpd[3]
+        timpd=penpd[4]
+        
+     
+        ax21.set_xlabel('Tiempo')
+        ax21.set_ylabel('Posición de la barra 1 ')
+        ax21.plot(timpd, posipd[:, 0], 'k',label=r'$\theta_1$',lw=1)
+        ax21.legend()
+        
+        
+        ax22.set_xlabel('Tiempo')
+        ax22.set_ylabel('Posición de la barra 2')
+        ax22.plot(timpd, posipd[:, 1], 'b',label=r'$\theta_2$',lw=1)
+        ax22.legend()
+        
+
+        ax23.set_xlabel('Tiempo')
+        ax23.set_ylabel('Velocidad de la barra 1')
+        ax23.plot(timpd, posipd[:, 2], 'r',label=r'$\dot{\theta_1}$',lw=1)
+        ax23.legend()
+        
+        
+        ax24.set_xlabel('Tiempo')
+        ax24.set_ylabel('Velocidad de la barra 2')
+        ax24.plot(timpd, posipd[:, 3], 'k',label=r'$\dot{\theta_1}$',lw=1)
+        ax24.legend()
+        
+        
+        ax25.set_xlabel('Tiempo')
+        ax25.set_ylabel('$u_{1}$')
+        ax25.plot(timpd[:2995], torpd[0, :2995], 'b',label=r'$u_{1}$',lw=1)
+        ax25.legend()
+        
+        
+        ax26.set_xlabel('Tiempo')
+        ax26.set_ylabel('$u_{2}$')
+        ax26.plot(timpd[:2995], torpd[1,:2995], 'r',label=r'$u_{2}$',lw=1)
+        ax26.legend()
+        
+        plt.subplots_adjust(left=0.125,
+                    bottom=0.1, 
+                    right=0.9, 
+                    top=0.9, 
+                    wspace=0.2, 
+                    hspace=0.35)
+        
+        fig_grapd.draw()
+    
+        ax20.cla()
+        ax20.set_xlabel('x')
+        ax20.set_ylabel('y')
+        
+    
+        l1=dinpd[2]
+        l2=dinpd[4]
+        
+        x0=np.zeros(len(timpd))
+        y0=np.zeros(len(timpd))
+        
+        xlpd=np.linspace(-2.8,2.8,len(timpd))
+        ylpd=np.linspace(-2.2,2.2,len(timpd))
+
+        x1=l1*np.sin(posipd[:,0])
+        y1=-l1*np.cos(posipd[:,0])
+
+        x2=l1*np.sin(posipd[:,0])+ l2*np.sin(posipd[:,0]+posipd[:,1])
+        y2=-l1*np.cos(posipd[:,0])- l2*np.cos(posipd[:,0]+posipd[:,1])
+   
+        #line1, = ax.plot([], [], 'o-',color = 'g',lw=4, markersize = 15, markeredgecolor = 'k',markerfacecolor = 'r',markevery=10000)
+        line, = ax20.plot([], [], 'o-',color = 'g',markersize = 3, markerfacecolor = 'k',lw=2, markevery=100000, markeredgecolor = 'k')   # line for Earth
+        line1, = ax20.plot([], [], 'o-',color = 'r',markersize = 8, markerfacecolor = 'b',lw=2, markevery=100000, markeredgecolor = 'k')   # line for Jupiter
+        line2, = ax20.plot([], [], 'o-',color = 'k',markersize = 8, markerfacecolor = 'r',lw=1, markevery=1000000, markeredgecolor = 'k')  
+
+
+
+        time_template = 't= %.1f s'
+        time_text = ax20.text(0.05,0.9,'',transform=ax20.transAxes)
+
+
+        def init():
+            line.set_data([],[])
+            line1.set_data([],[])
+            line2.set_data([], [])
+            time_text.set_text('')
+            
+            return line, time_text, line1,
+
+        def animatepd(i):
+            #trail1 =  16
+            trail2 = 1100   
+            
+            line.set_data([x0[i],x1[i]],[y0[i],y1[i]])
+            line1.set_data([x1[i],x2[i]],[y1[i],y2[i]])
+            line2.set_data(x2[i:max(1,i-trail2):-1], y2[i:max(1,i-trail2):-1])
+            time_text.set_text(time_template % timpd[i])
+            
+            return line, time_text, line1,line2
+        ax20.plot(x0,ylpd, 'k',lw=1)
+        ax20.plot(xlpd, y0,'k',lw=1)
+
+        ani_apd = animation.FuncAnimation(figanpd, animatepd, \
+                 np.arange(1,len(timpd)), \
+                 interval=1,blit=False,init_func=init)
+        ani_apd.new_frame_seq() 
+        
+        
+    elif event=='Returnpdga':
+        window['respd'].update(visible=False)
+        window['pfpd'].update(visible=True)
+        
+        ax21.cla()
+        ax22.cla()
+        ax23.cla()
+        ax24.cla()
+        ax25.cla()
+        ax26.cla()
+      
+        ani_apd.event_source.stop()
+        plt.subplots_adjust(left=0.125,
+                    bottom=0.1, 
+                    right=0.9, 
+                    top=0.9, 
+                    wspace=0.2, 
+                    hspace=0.35)
+    elif event=='Homesimupdga':
+        window['respd'].update(visible=False)
+        window['Home'].update(visible=True)
+        ax30.cla()
+        ax21.cla()
+        ax22.cla()
+        ax23.cla()
+        ax24.cla()
+        ax25.cla()
+        ax6.cla()
+        ani_apd.event_source.stop()
         ani_apd.new_frame_seq() 
         window['Tablpd'].update(values=tapdv)
         plt.subplots_adjust(left=0.125,
