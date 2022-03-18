@@ -474,8 +474,11 @@ def mutPolynomial(individual, eta,lb,up,D):
     return np.array(individual)
 
 #--------------- Algoritmo génetico
-def moga( limites, poblacion,eta, generaciones,D,M,AMAX,function,pardyna):
-    
+def moga( limites, pop,eta, gen,D,M,AMAX,function,pardyna):
+    D=D
+    M=M
+    AMAX=AMAX
+    print(D)
     #-----Poblacion------------------------------------------------------------#
     population =  np.zeros((gen,pop, D)) #poblacion actual
     population_next= np.zeros((gen,pop, D)) #poblacion siguiente 
@@ -493,7 +496,8 @@ def moga( limites, poblacion,eta, generaciones,D,M,AMAX,function,pardyna):
     g_a = np.empty(0)  # Valor de funcion objetivo para cada elemento del archivo
     #---------------------------------------------------------------------------
     
-    li=np.array(limit)
+    li=np.array(limites)
+  
     population[0]=li[:,0] + np.random.rand(pop, D) * (li[:,1] - li[:,0])  # Inicializa poblacion
     population_next[0]=li[:,0] + np.random.rand(pop, D) * (li[:,1] - li[:,0])
     
@@ -528,14 +532,8 @@ def moga( limites, poblacion,eta, generaciones,D,M,AMAX,function,pardyna):
 
             while r2 == r1 or r2 == j:
                 r2 = random.randint(0, len(popu_x_s)-1)
-            p1=[]
-            p1.append(popu_x_s[r1,0])
-            p1.append(popu_x_s[r1,1])
-            p1.append(popu_x_s[r1,2])
-            p2=[]
-            p2.append(popu_x_s[r2,0])
-            p2.append(popu_x_s[r2,1])
-            p2.append(popu_x_s[r2,2])
+            p1=popu_x_s[r1,:]
+            p2=popu_x_s[r2,:]
         
           
             c=crossov(p1,p2,eta,lb[j],up[j])
@@ -547,7 +545,7 @@ def moga( limites, poblacion,eta, generaciones,D,M,AMAX,function,pardyna):
         g_x_off=np.zeros(len(mut))
         
         for r in range(len(mut)):
-            mut[r]=asegurar_limites(mut[r],limit)
+            mut[r]=asegurar_limites(mut[r],limites)
             val=function(mut[r],pardyna)
             f_x_off[r]=val[0]
             g_x_off[r]=val[1]
@@ -1023,7 +1021,7 @@ layouti=[[sg.Text('Péndulo Invertido:',text_color='white', font=('Franklin Goth
             [sg.Text('Set point del péndulo (rad):', text_color='black', font=('Franklin Gothic Book', 12, 'bold italic'),size=(24,1)), sg.InputText('1.57',key='spi'),sg.Text('rad', text_color='black', font=('Franklin Gothic Book', 12, 'bold'))],
             [sg.Text('Set point del carrito:', text_color='black', font=('Franklin Gothic Book', 12, 'bold italic'),size=(24,1)), sg.InputText('0',key='spc'),sg.Text('m', text_color='black', font=('Franklin Gothic Book', 12, 'bold'))],
             [sg.Text('Seleccione el algoritmo metaheurístico:',text_color='white', font=('Franklin Gothic Book', 28, 'bold'))],
-            [sg.Button('DE',button_color='blue',border_width=5,key='depi',**bt),sg.Button('GE',button_color='blue',border_width=5,key='gepi',**bt),sg.Button('PSO',button_color='blue',border_width=5,key='psopi',**bt)],
+            [sg.Button('DE',button_color='blue',border_width=5,key='depi',**bt),sg.Button('GE',button_color='blue',border_width=5,key='gepipi',**bt),sg.Button('PSO',button_color='blue',border_width=5,key='psopi',**bt)],
             [sg.Button(image_filename='D:\TT2\home.png', key='Homepi',image_subsample=8,button_color=(sg.theme_background_color(), sg.theme_background_color()))]
             ]
 
@@ -1056,7 +1054,9 @@ layoutga=[[sg.Text('Algoritmo génetico',text_color='white', font=('Franklin Got
           [sg.Text('Número de generaciones:', text_color='black', font=('Franklin Gothic Book', 12, 'bold'),size=(25,1)), sg.Input('10',key='genga')],
           [sg.Text('Tamaño del archivo:', text_color='black', font=('Franklin Gothic Book', 12, 'bold'),size=(25,1)), sg.Input('30',key='Amga')],
           [sg.Text('Eta :', text_color='black', font=('Franklin Gothic Book', 12, 'bold'),size=(25,1)), sg.Input('1',key='eta')],
-          [sg.Button(image_filename=r'D:\TT2\b1.png', key='repgaps',image_subsample=8,button_color=(sg.theme_background_color(), sg.theme_background_color())),sg.Button(image_filename='D:\TT2\home.png', key='Homegaps',image_subsample=8,button_color=(sg.theme_background_color(), sg.theme_background_color())),sg.Button('Continuar',size=(10,2),border_width=5,key='congaps',button_color='blue')]
+          [sg.Column([[sg.Button(image_filename=r'D:\TT2\b1.png', key='repgaps',image_subsample=8,button_color=(sg.theme_background_color(), sg.theme_background_color())),sg.Button(image_filename='D:\TT2\home.png', key='Homegaps',image_subsample=8,button_color=(sg.theme_background_color(), sg.theme_background_color())),sg.Button('Continuar',size=(10,2),border_width=5,key='congaps',button_color='blue')]],key='gepips'),
+           sg.Column([[sg.Button(image_filename=r'D:\TT2\b1.png', key='repgapi',image_subsample=8,button_color=(sg.theme_background_color(), sg.theme_background_color())),sg.Button(image_filename='D:\TT2\home.png', key='Homegapi',image_subsample=8,button_color=(sg.theme_background_color(), sg.theme_background_color())),sg.Button('Continuar',size=(10,2),border_width=5,key='congapi',button_color='blue')]],key='gepi'),
+           sg.Column([[sg.Button(image_filename=r'D:\TT2\b1.png', key='repgapd',image_subsample=8,button_color=(sg.theme_background_color(), sg.theme_background_color())),sg.Button(image_filename='D:\TT2\home.png', key='Homegapd',image_subsample=8,button_color=(sg.theme_background_color(), sg.theme_background_color())),sg.Button('Continuar',size=(10,2),border_width=5,key='congapd',button_color='blue')]],key='gepd')]
           ]
 
 layoutdepi=[[sg.Text('Evolución diferencial',text_color='white', font=('Franklin Gothic Book', 28, 'bold'))],
@@ -1084,7 +1084,7 @@ layoutpfps=[[sg.Text('Seleccione un conjunto de ganancias del controlador  PID',
 tapiv=[['Espera','estamos','ejecutando','código','......','......','......','......'],['Espera','estamos','ejecutando','código','......','......','......','......']]
 layoutpfpi=[[sg.Text('Seleccione un conjunto de ganancias del controlador  PID',text_color='white', font=('Franklin Gothic Book', 20, 'bold'))],
             [sg.Table(values=tapiv ,headings=['Kpcar' , 'Kdcar' ,'Kicar','Kppénd' , 'Kdpén' ,' Kipén','ISE','IADU'],auto_size_columns=True,right_click_selects=True,enable_click_events=True, key='Tablpi',vertical_scroll_only=False,num_rows=25 ), sg.Canvas(key='canpfpi')],
-            [sg.Button('Simular',key='Simupi')]]
+            [sg.Button('Simular',key='Simupi'), sg.Button('Simular',key='Simupiga'),sg.Button('Simular',key='Simupipso')]]
 tapdv=[['Espera','estamos','ejecutando','código','......','......'],['Espera','estamos','ejecutando','código','......','......']]
 
 layoutpfpd=[[sg.Text('Seleccione un conjunto de ganancias del controlador  PID',text_color='white', font=('Franklin Gothic Book', 20, 'bold'))],
@@ -1096,16 +1096,19 @@ layoutsimpan=[[sg.Canvas(key='canani')]]
 layoutsimpgra=[[sg.Canvas(key='cangraps')]]
 
 layouttap=[[sg.TabGroup([[sg.Tab('Animación',layoutsimpan),sg.Tab('Gráficas', layoutsimpgra)]],tab_location='centertop',border_width=5)],
-           [sg.Button(image_filename=r'D:\TT2\b1.png', key='Returnps',image_subsample=8,button_color=(sg.theme_background_color(), sg.theme_background_color())),sg.Button(image_filename='D:\TT2\home.png', key='Homesimups',image_subsample=8,button_color=(sg.theme_background_color(), sg.theme_background_color())),sg.Button('Salir',button_color='red',size=(3,2),border_width=5,key='Exit0'),
-           sg.Button(image_filename=r'D:\TT2\b1.png', key='Returnpsga',image_subsample=8,button_color=(sg.theme_background_color(), sg.theme_background_color())),sg.Button(image_filename='D:\TT2\home.png', key='Homesimupsga',image_subsample=8,button_color=(sg.theme_background_color(), sg.theme_background_color())),sg.Button('Salir',button_color='red',size=(3,2),border_width=5,key='Exit10'),
-           sg.Button(image_filename=r'D:\TT2\b1.png', key='Returnpspso',image_subsample=8,button_color=(sg.theme_background_color(), sg.theme_background_color())),sg.Button(image_filename='D:\TT2\home.png', key='Homesimupspso',image_subsample=8,button_color=(sg.theme_background_color(), sg.theme_background_color())),sg.Button('Salir',button_color='red',size=(3,2),border_width=5,key='Exit20')]
-           ]
+           [sg.Column([[sg.Button(image_filename=r'D:\TT2\b1.png', key='Returnps',image_subsample=8,button_color=(sg.theme_background_color(), sg.theme_background_color())),sg.Button(image_filename='D:\TT2\home.png', key='Homesimups',image_subsample=8,button_color=(sg.theme_background_color(), sg.theme_background_color())),sg.Button('Salir',button_color='red',size=(3,2),border_width=5,key='Exit0')]],key='paps'),
+           sg.Column([[sg.Button(image_filename=r'D:\TT2\b1.png', key='Returnpsga',image_subsample=8,button_color=(sg.theme_background_color(), sg.theme_background_color())),sg.Button(image_filename='D:\TT2\home.png', key='Homesimupsga',image_subsample=8,button_color=(sg.theme_background_color(), sg.theme_background_color())),sg.Button('Salir',button_color='red',size=(3,2),border_width=5,key='Exit10')]],key='gapaps'),
+           sg.Column([[sg.Button(image_filename=r'D:\TT2\b1.png', key='Returnpspso',image_subsample=8,button_color=(sg.theme_background_color(), sg.theme_background_color())),sg.Button(image_filename='D:\TT2\home.png', key='Homesimupspso',image_subsample=8,button_color=(sg.theme_background_color(), sg.theme_background_color())),sg.Button('Salir',button_color='red',size=(3,2),border_width=5,key='Exit20')]],key='psopaps')
+           ]]
 
 layoutinvpan=[[sg.Canvas(key='cananipi')]]
 layoutinvpgra=[[sg.Canvas(key='cangrapi')]]
 
 layouttappi=[[sg.TabGroup([[sg.Tab('Animación',layoutinvpan),sg.Tab('Gráficas', layoutinvpgra)]],tab_location='centertop',border_width=5)],
-           [sg.Button(image_filename=r'D:\TT2\b1.png', key='Returnpi',image_subsample=8,button_color=(sg.theme_background_color(), sg.theme_background_color())),sg.Button(image_filename='D:\TT2\home.png', key='Homesimupi',image_subsample=8,button_color=(sg.theme_background_color(), sg.theme_background_color())),sg.Button('Salir',button_color='red',size=(3,2),border_width=5,key='Exit1')]]
+           [sg.Column([[sg.Button(image_filename=r'D:\TT2\b1.png', key='Returnpi',image_subsample=8,button_color=(sg.theme_background_color(), sg.theme_background_color())),sg.Button(image_filename='D:\TT2\home.png', key='Homesimupi',image_subsample=8,button_color=(sg.theme_background_color(), sg.theme_background_color())),sg.Button('Salir',button_color='red',size=(3,2),border_width=5,key='Exit1')]],key='pide'),
+            sg.Column([[sg.Button(image_filename=r'D:\TT2\b1.png', key='Returnpiga',image_subsample=8,button_color=(sg.theme_background_color(), sg.theme_background_color())),sg.Button(image_filename='D:\TT2\home.png', key='Homesimupiga',image_subsample=8,button_color=(sg.theme_background_color(), sg.theme_background_color())),sg.Button('Salir',button_color='red',size=(3,2),border_width=5,key='Exit11')]],key='gapi'),
+            sg.Column([[sg.Button(image_filename=r'D:\TT2\b1.png', key='Returnpipso',image_subsample=8,button_color=(sg.theme_background_color(), sg.theme_background_color())),sg.Button(image_filename='D:\TT2\home.png', key='Homesimupipso',image_subsample=8,button_color=(sg.theme_background_color(), sg.theme_background_color())),sg.Button('Salir',button_color='red',size=(3,2),border_width=5,key='Exit2')]],key='psooppi')
+            ]]
 
 layoutanpd=[[sg.Canvas(key='cananipd')]]
 layoutgrapd=[[sg.Canvas(key='cangrapd')]]
@@ -1179,7 +1182,7 @@ while True:
     
     #u=float(p)
     #e=eval(values[0])
-    if event in (None, 'Exit','Exit0','Exit1','Exit2','Exit10','Exit20'):
+    if event in (None, 'Exit','Exit0','Exit1','Exit2','Exit10','Exit20','Exit11','Exit12'):
         break
     if event == 'Simple':
         
@@ -1209,6 +1212,7 @@ while True:
         
     
         window['pfps'].update(visible=True)
+        window['Simups'].update(visible=True)
         window['Simupsga'].update(visible=False)
         window['Simupspso'].update(visible=False)
         
@@ -1272,12 +1276,10 @@ while True:
     elif event=='Simups':
         window['pfps'].update(visible=False)
         window['resps'].update(visible=True)
-        window['Returnpsga'].update(visible=False)
-        window['Returnpspso'].update(visible=False)
-        window['Homesimupsga'].update(visible=False)
-        window['Homesimupspso'].update(visible=False)
-        window['Exit10'].update(visible=False)
-        window['Exit20'].update(visible=False)
+        window['paps'].update(visible=True)
+        window['gapaps'].update(visible=False)
+        window['psopaps'].update(visible=False)
+        
         
         afe=values['Tabl']
         #print(s[afe[0],:])
@@ -1369,6 +1371,9 @@ while True:
     if event == 'geps':
         window['Sim'].update(visible=False)
         window['gapara'].update(visible=True)
+        window['gepips'].update(visible=True)
+        window['gepi'].update(visible=False)
+        window['gepd'].update(visible=False)
         
         ms=values['masaps']
         ls=values['lps']
@@ -1450,16 +1455,10 @@ while True:
         window['pfps'].update(visible=False)
         
         window['resps'].update(visible=True)
-        window['Returnps'].update(visible=False)
-        window['Returnpspso'].update(visible=False)
-        window['Homesimups'].update(visible=False)
-        window['Homesimupspso'].update(visible=False)
-        window['Exit0'].update(visible=False)
-        window['Exit20'].update(visible=False)
-        window['Returnpsga'].update(visible=True)
-        window['Homesimupsga'].update(visible=True)
-        window['Exit10'].update(visible=True)
-      
+        window['paps'].update(visible=False)
+        window['gapaps'].update(visible=True)
+        window['psopaps'].update(visible=False)
+        
         
         afe=values['Tabl']
         #print(s[afe[0],:])
@@ -1545,7 +1544,7 @@ while True:
         ani_a.event_source.stop()
         window['Tabl'].update(values=tapsv)
          
-    #----------------------------------------------
+    #---------------Invertido-------------------------
     elif event=='Invertido':
         window['Home'].update(visible=False)
         window['Inve'].update(visible=True)
@@ -1581,6 +1580,9 @@ while True:
     elif event=='conpi':
         window['deparapi'].update(visible=False)
         window['pfpi'].update(visible=True)
+        window['Simupi'].update(visible=True)
+        window['Simupiga'].update(visible=False)
+        window['Simupipso'].update(visible=False)
         try:
             
             poblacionpi=int(values['popbpi'])
@@ -1645,7 +1647,9 @@ while True:
     elif event=='Simupi':
         window['pfpi'].update(visible=False)
         window['respi'].update(visible=True)
-        
+        window['pide'].update(visible=True)
+        window['gapi'].update(visible=False)
+        window['psooppi'].update(visible=False)
         afepi=values['Tablpi']
        
         penpi=inverted_pendulum(spi[afepi[0],:], dinpi)
@@ -1766,6 +1770,7 @@ while True:
         ax15.cla()
         ax16.cla()
         ani_api.new_frame_seq() 
+        ani_api.event_source.stop()
         window['Tablpi'].update(values=tapiv)
         plt.subplots_adjust(left=0.125,
                     bottom=0.1, 
@@ -1773,6 +1778,240 @@ while True:
                     top=0.9, 
                     wspace=0.2, 
                     hspace=0.35)
+        
+    #-------genético-----------------------------------------------------------
+    
+    elif event == 'gepipi':
+        window['Inve'].update(visible=False)
+        window['gapara'].update(visible=True)
+        window['gepips'].update(visible=False)
+        window['gepi'].update(visible=True)
+        window['gepd'].update(visible=False)
+        
+        mi=values['masapi']
+        mc=values['masaca']
+        li=values['lpi']
+        lci=values['lcpi']
+        bi=values['bpi']
+        bc=values['bca']
+        isi=values['ipi']
+        sti=values['spi']
+        stc=values['spc']
+        
+        try:
+            
+            dinpi=np.asarray([mi,mc,li,lci,bi,bc,isi,sti,stc], dtype=np.float64, order='C')
+            
+        except:
+            sg.popup('Todos los datos ingresados deben ser númericos, presione ok e intente de nuevo')
+            window['gapara'].update(visible=False)
+            window['Inve'].update(visible=True)
+    
+    elif event =='repgapi':
+        window['gapara'].update(visible=False)
+        window['Inve'].update(visible=True)
+    elif event =='Homegapi':
+        window['gapara'].update(visible=False)
+        window['Home'].update(visible=True)
+    elif event=='congapi':
+        window['gapara'].update(visible=False)
+        window['pfpi'].update(visible=True)
+        window['Simupi'].update(visible=False)
+        window['Simupiga'].update(visible=True)
+        window['Simupipso'].update(visible=False)
+        try:
+            
+            poblacionpi=int(values['popga'])
+            generacionespi=int(values['genga'])
+            AMAXpi=int(values['Amga'])
+            eta=int(values['eta'])
+            
+        except:
+            sg.popup('Todos los datos ingresados deben ser númericos, presione ok e intente de nuevo')
+            window['pfpi'].update(visible=False)
+            window['gapara'].update(visible=True)
+        try:
+            
+            
+            sg.popup('Ejecución de Algoritmo genético, espere para poder observar el resultado (conjunto de ganancias para el controlador PID).Las ganancias permitirán al péndulo llegar de la posición inicial a la deseada. Presione ok para continuar con la ejecución')
+           
+            #llamado de la función main de DE
+            varpi=moga(limitpi, poblacionpi,eta, generacionespi,Dpi,Mpi,AMAXpi,inverted_pendulum,dinpi)
+            valupi=np.zeros((len(varpi[0]),(Dpi+Mpi)))
+    
+            tpi=varpi[0]
+            spi=varpi[1]
+            
+            valupi[:,0]=spi[:,0]
+            valupi[:,1]=spi[:,1]
+            valupi[:,2]=spi[:,2]
+            valupi[:,3]=spi[:,3]
+            valupi[:,4]=spi[:,4]
+            valupi[:,5]=spi[:,5]
+            valupi[:,6]=tpi[:,0]
+            valupi[:,7]=tpi[:,1]
+                
+            indexsopi=np.argsort(tpi[:,0])
+            valupi=valupi[indexsopi]
+                
+            filename="pifaga.csv" 
+            myFile=open(filename,'w') 
+            myFile.write("kp,kd,ki,kp1,kd1,ki1,f1, f2 \n") 
+            for l in range(len(tpi)): 
+                myFile.write(str(spi[l, 0])+","+str(spi[l, 1])+","+str(spi[l, 2])+","+str(spi[l, 3])+","+str(spi[l, 4])+","+str(spi[l, 5])+","+str(tpi[l, 0])+","+str(tpi[l, 1])+"\n") 
+            myFile.close()
+    
+            ax6.set_title('Aproximación al Frente de Pareto')
+            ax6.set_xlabel('ISE')
+            ax6.set_ylabel('IADU')
+            
+            ax6.scatter(tpi[:,0], tpi[:,1])
+            
+            window['Tablpi'].update(values=valupi)
+            #After making changes, fig_agg.draw()Reflect the change with.
+            fig_aggpi.draw()
+            
+        except:
+            sg.popup('Algo salio mal , presione ok e intente de nuevooooo')
+            window['pfpi'].update(visible=False)
+            window['deparapi'].update(visible=True)
+    elif event=='Simupiga':
+        window['pfpi'].update(visible=False)
+        window['respi'].update(visible=True)
+        window['pide'].update(visible=False)
+        window['gapi'].update(visible=True)
+        window['psooppi'].update(visible=False)
+        
+        afepi=values['Tablpi']
+       
+        penpi=inverted_pendulum(spi[afepi[0],:], dinpi)
+        posipi=penpi[2]
+        torpi=penpi[3]
+        timpi=penpi[4]
+        
+        ax10.cla()
+        ax10.set_xlabel('x [m]')
+        ax10.set_ylabel('y [m]')
+        
+        
+        ax11.set_xlabel('Tiempo [s]')
+        ax11.set_ylabel('Posición del carro [m]')
+        ax11.plot(timpi, posipi[:, 0], 'k',label=r'$x$',lw=1)
+        ax11.legend()
+
+        ax12.set_xlabel('Tiempo [s]')
+        ax12.set_ylabel('Posición del péndulo [m]')
+        ax12.plot(timpi, posipi[:, 1], 'b',label=r'$\theta$',lw=1)
+        ax12.legend()
+        
+        
+        ax13.set_xlabel('Tiempo [s]')
+        ax13.set_ylabel('Velocidad del carrito [m/s]')
+        ax13.plot(timpi, posipi[:, 2], 'r',label=r'$\dot{x}$',lw=1)
+        ax13.legend()
+
+        ax14.set_xlabel('Tiempo [s]')
+        ax14.set_ylabel('Velocidad del péndulo [m/s]')
+        ax14.plot(timpi, posipi[:, 3], 'k',label=r'$\dot{\theta}$',lw=1)
+        ax14.legend()
+        
+    
+        ax15.set_xlabel('Tiempo [s]')
+        ax15.set_ylabel('$u_{car}$ [Nm]')
+        ax15.plot(timpi, torpi[0, :], 'b',label=r'$u_{car}$',lw=1)
+        ax15.legend()
+        
+        
+        ax16.set_xlabel('Tiempo [s]')
+        ax16.set_ylabel('$u_{pendulum}$ [Nm]')
+        ax16.plot(timpi, torpi[1, :], 'r',label=r'$u_{pendulum}$',lw=1)
+        ax16.legend()
+        
+        plt.subplots_adjust(left=0.125,
+                    bottom=0.1, 
+                    right=0.9, 
+                    top=0.9, 
+                    wspace=0.2, 
+                    hspace=0.35)
+        fig_grapspi.draw()
+
+        x0 = np.zeros(len(timpi))
+        y0 = np.zeros(len(timpi))
+        x1 = posipi[:, 0]
+        y1 = np.zeros(len(timpi))
+        xlpi=np.linspace(-1.8,1.8,len(timpi))
+        ylpi=np.linspace(-1.2,1.2,len(timpi))
+        l=dinpi[2]
+     
+        x2 = l * np.cos(posipi[:, 1]) + x1
+        y2 = l * np.sin(posipi[:, 1])
+        ax10.cla()
+        mass1, = ax10.plot([], [], linestyle='None', marker='s', \
+                 markersize=10, markeredgecolor='k', \
+                 color='green', markeredgewidth=2)
+        line, = ax10.plot([], [], 'o-', color='green', lw=4, \
+                markersize=6, markeredgecolor='k', \
+                markerfacecolor='k')
+        time_template = 't= %.1f s'
+        time_text = ax10.text(0.05, 0.9, '', transform=ax10.transAxes)
+        def init():
+            
+            mass1.set_data([], [])
+            line.set_data([], [])
+            time_text.set_text('')
+
+            return line, mass1, time_text
+        
+        def animatepi(i):
+            mass1.set_data([x1[i]], [y1[i]])
+            line.set_data([x1[i], x2[i]], [y1[i], y2[i]])
+            time_text.set_text(time_template % timpi[i])
+            return mass1, line, time_text
+        
+        ax10.plot(xlpi,y0,'k')
+        ax10.plot(x0,ylpi,'k')
+        ani_api = animation.FuncAnimation(figanpi, animatepi, \
+                                np.arange(1, len(timpi)), \
+                                interval=40, blit=False)
+            
+    elif event=='Returnpiga':
+        window['respi'].update(visible=False)
+        window['pfpi'].update(visible=True)
+        
+        ax11.cla()
+        ax12.cla()
+        ax13.cla()
+        ax14.cla()
+        ax15.cla()
+        ax16.cla()
+        ani_api.event_source.stop()
+        plt.subplots_adjust(left=0.125,
+                    bottom=0.1, 
+                    right=0.9, 
+                    top=0.9, 
+                    wspace=0.2, 
+                    hspace=0.35)
+    elif event=='Homesimupiga':
+        window['respi'].update(visible=False)
+        window['Home'].update(visible=True)
+        ax6.cla()
+        ax11.cla()
+        ax12.cla()
+        ax13.cla()
+        ax14.cla()
+        ax15.cla()
+        ax16.cla()
+        ani_api.new_frame_seq() 
+        ani_api.event_source.stop()
+        window['Tablpi'].update(values=tapiv)
+        plt.subplots_adjust(left=0.125,
+                    bottom=0.1, 
+                    right=0.9, 
+                    top=0.9, 
+                    wspace=0.2, 
+                    hspace=0.35)
+    
+    #------Doble----------------------
         
     elif event == 'Doble':
     
