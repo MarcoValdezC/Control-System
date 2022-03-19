@@ -2313,7 +2313,7 @@ while True:
             generacionespd=int(values['genga'])
             AMAXpd=int(values['Amga'])
             eta=int(values['eta'])
-            sg.popup('Ejecución de Evolución Diferencial, espere para poder observar el resultado (conjunto de ganancias para el controlador PID). Las ganancias permitirán al péndulo seguir la trayectoria deseada. Presione ok para continuar con la ejecución')
+            sg.popup('Ejecución de Algoritmo genético, espere para poder observar el resultado (conjunto de ganancias para el controlador PID). Las ganancias permitirán al péndulo seguir la trayectoria deseada. Presione ok para continuar con la ejecución')
             
         
             #llamado de la función main de DE
