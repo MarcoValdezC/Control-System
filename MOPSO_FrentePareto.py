@@ -525,7 +525,7 @@ def s_best(x, f, g, xbest, fxbest, gxbest, D, M, pop):
 # ---------------------------------------------------------------------------------------------------
 
 
-def selec(f, g, po, D, M):
+def selecpso(f, g, po, D, M):
     pop_r = np.empty((0, D))
     f_x_r = np.empty((0, M))
     g_x_r = np.empty(0)
@@ -570,7 +570,7 @@ def selec(f, g, po, D, M):
 #-----------END FUNCIONES PSO----#
 
 
-def MOPSO(function, limites, poblacion, Vmax, Vmin, c1, c2, generaciones, pardyna, D, M, AMAX):
+def MOPSO(function, limit, pop, Vmax, Vmin, c1, c2, gen, pardyna, D, M, AMAX):
     #-----Poblacion------------------------------------------------------------#
     population = np.zeros((gen, pop, D))  # poblacion actual
     population_next = np.zeros((gen, pop, D))  # poblacion siguiente
@@ -609,13 +609,13 @@ def MOPSO(function, limites, poblacion, Vmax, Vmin, c1, c2, generaciones, pardyn
 
 # -------------Evaluación población 0------------------------------------------------------------------
     for i, xi in enumerate(population[0, :]):  # Evalua objetivos
-        solu = pendulum_s(xi, pardyna)
+        solu = function(xi, pardyna)
         f_x[0][i], g_x[0][i] = solu[0], solu[1]  # function(xi,pardyna)
         # ------------------------------------------------------------------------------------------------------
     f_x_best[0] = f_x[0]
     g_x_best[0] = g_x[0]
 
-    selecc = selec(f_x[0, :], g_x[0, :], population[0], D, M)
+    selecc = selecpso(f_x[0, :], g_x[0, :], population[0], D, M)
     f_x_best_swarp = selecc[0]
     x_best_swarp = selecc[1]
     g_x_best_swarp = selecc[2]
@@ -634,7 +634,7 @@ def MOPSO(function, limites, poblacion, Vmax, Vmin, c1, c2, generaciones, pardyn
         for h in range(pop):
             population_next[i][h] = asegurar_limites(
                 population_next[i][h], limit)
-            sol = pendulum_s(population_next[i][h], pardyna)
+            sol = function(population_next[i][h], pardyna)
             f_x_next[i][h], g_x_next[i][h] = sol[0], sol[1]
         population[i+1] = population_next[i]
         f_x[i+1] = f_x_next[i]
@@ -644,7 +644,7 @@ def MOPSO(function, limites, poblacion, Vmax, Vmin, c1, c2, generaciones, pardyn
         x_best[i+1] = sele[0]
         f_x_best[i+1] = sele[1]
         g_x_best[i+1] = sele[2]
-        selecc = selec(f_x_best[i+1], g_x_best[i+1], x_best[i+1], D, M)
+        selecc = selecpso(f_x_best[i+1], g_x_best[i+1], x_best[i+1], D, M)
         f_x_best_swarp = selecc[0]
         x_best_swarp = selecc[1]
         g_x_best_swarp = selecc[2]
@@ -703,14 +703,7 @@ def MOPSO(function, limites, poblacion, Vmax, Vmin, c1, c2, generaciones, pardyn
     print(a)
     print(f_a)
 
-    plt.figure(1)
-    plt.title('Aproximacion al frente de Pareto')
-
-    plt.scatter(f_a[:, 0], f_a[:, 1])
-    # plt.xlim([0,1])
-    plt.xlabel('f1')
-    plt.ylabel('f2')
-    plt.show()
+    
     return f_a, a
 
 

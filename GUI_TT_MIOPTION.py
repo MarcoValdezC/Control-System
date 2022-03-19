@@ -639,6 +639,226 @@ def moga( limites, pop,eta, gen,D,M,AMAX,function,pardyna):
 
 #-------------------------------------------
 
+#------------------ PSO -----------------------------------------------------------------------------
+def s_best(x, f, g, xbest, fxbest, gxbest, D, M, pop):
+    x_b = np.zeros((pop, D))
+    f_xb = np.zeros((pop, M))
+    g_xb = np.zeros(pop)
+    ui_is_better = True
+    for u in range(pop):
+
+        if g[u] == 0 and gxbest[u] == 0:  # Ambas soluciones son factibles
+            if dominates(f[u], fxbest[u]):
+                ui_is_better = True
+            elif dominates(fxbest[u], f[u]):
+                ui_is_better = False
+            else:
+                if random.uniform(0, 1) < 0.5:
+                    ui_is_better = True
+                else:
+                    ui_is_better = False
+        elif g[u] > gxbest[u]:  # Hijo viola mas restricciones que padre
+            ui_is_better = False
+        elif g[u] < gxbest[u]:  # Padre viola mas restricciones que hijo
+            ui_is_better = True
+        else:  # Ambos violan la misma cantidad de restricciones
+            if random.uniform(0, 1) < 0.5:
+                ui_is_better = True
+            else:
+                ui_is_better = False
+
+        if ui_is_better:
+            f_xb[u] = np.copy(f[u])
+            g_xb[u] = np.copy(g[u])
+            x_b[u] = np.copy(x[u])
+        else:
+            f_xb[u] = np.copy(fxbest[u])
+            g_xb[u] = np.copy(gxbest[u])
+            x_b[u] = np.copy(xbest[u])
+    return x_b, f_xb, g_xb
+
+# ---------------------------------------------------------------------------------------------------
+
+
+def selecpso(f, g, po, D, M):
+    pop_r = np.empty((0, D))
+    f_x_r = np.empty((0, M))
+    g_x_r = np.empty(0)
+
+    for r, g_x_i in enumerate(g):
+        if g_x_i == 0:
+            f_x_r = np.append(f_x_r, [f[r]], axis=0)
+            pop_r = np.append(pop_r, [po[r]], axis=0)
+            g_x_r = np.append(g_x_r, [g[r]], axis=0)
+
+    f_x_f = np.empty((0, M))  # Conjunto no dominado
+    pop_x_f = np.empty((0, D))  # Conjunto no dominado
+    g_x_f = np.empty(0)
+    # print(len(f_x_r))
+
+    for i1, f_a_1 in enumerate(f_x_r):
+        sol_nd = True
+        for i2, f_a_2 in enumerate(f_x_r):
+            if i1 != i2:
+                if dominates(f_a_2, f_a_1):
+                    sol_nd = False
+                    break
+        if sol_nd:
+            # f_x_fil.append(f_x_1)
+            f_x_f = np.append(f_x_f, [f_a_1], axis=0)
+            pop_x_f = np.append(pop_x_f, [pop_r[i1]], axis=0)
+            g_x_f = np.append(g_x_f, [g_x_r[i1]], axis=0)
+    # print(f_x_f)
+    best = 0
+    for i in range(1, len(f_x_f)):
+        if dominates(f_x_f[i], f_x_f[best]):
+            best = i
+    if best == 0:
+        best = random.randint(0, len(f_x_f)-1)
+    # print(best)
+
+    pop_x_r = pop_x_f[best]
+    f_x_r = f_x_f[best]
+    g_x_r = g_x_f[best]
+    return f_x_r, pop_x_r, g_x_r
+
+#-----------END FUNCIONES PSO----#
+
+
+def MOPSO(function, limit, pop, Vmax, Vmin, c1, c2, gen, pardyna, D, M, AMAX):
+    #-----Poblacion------------------------------------------------------------#
+    population = np.zeros((gen, pop, D))  # poblacion actual
+    population_next = np.zeros((gen, pop, D))  # poblacion siguiente
+    x_best = np.zeros((gen, pop, D))  # Matriz de mejores posiciones locales
+    x_best_swarp = np.zeros(D)  # Gbest
+    # -----------------------------------------#
+
+    #------------------F(x)---------------------------------------------------#
+    # Valor de funcion objetivo de poblacion actual
+    f_x = np.zeros((gen, pop, M))
+    # Valor de funcion objetivo de poblacion siguiente
+    f_x_next = np.zeros((gen, pop, M))
+    f_x_best = np.zeros((gen, pop, M))  # Valor de función objetivo
+    f_x_best_swarp = np.zeros(D)  # Gbest
+    # -----------------------------------------#
+
+    g_x = np.zeros((gen, pop))
+    # Valor de violacion de restricciones de poblacion siguiente
+    g_x_next = np.zeros((gen, pop))
+    g_x_best = np.zeros((gen, pop))  # Valor de restricciones
+    g_x_best_swarp = np.zeros(D)  # Mejor posición global
+    a = np.empty((0, D))  # Archivo
+    # Valor de funcion objetivo para cada elemento del archivo
+    f_a = np.empty((0, M))
+    # Valor de funcion objetivo para cada elemento del archivo
+    g_a = np.empty(0)
+
+
+# ---------------------------------------------------------------------------
+    vel = np.zeros((pop, D))  # VECTOR DE VELOCIDADES
+    li = np.array(limit)
+    # Inicializa poblacion
+    population[0] = li[:, 0] + np.random.rand(pop, D) * (li[:, 1] - li[:, 0])
+    x_best[0] = population[0]
+
+
+# -------------Evaluación población 0------------------------------------------------------------------
+    for i, xi in enumerate(population[0, :]):  # Evalua objetivos
+        solu = function(xi, pardyna)
+        f_x[0][i], g_x[0][i] = solu[0], solu[1]  # function(xi,pardyna)
+        # ------------------------------------------------------------------------------------------------------
+    f_x_best[0] = f_x[0]
+    g_x_best[0] = g_x[0]
+
+    selecc = selecpso(f_x[0, :], g_x[0, :], population[0], D, M)
+    f_x_best_swarp = selecc[0]
+    x_best_swarp = selecc[1]
+    g_x_best_swarp = selecc[2]
+
+    for i in range(0, gen-1):
+
+        print('Generación:', i)
+        w = Vmax-(i / gen)*(Vmax-Vmin)
+        r1 = random.random()
+        r2 = random.random()
+        for j in range(pop):
+            vel[j] = w*vel[j] + r1*c1 * \
+                (x_best[i][j]-population[i][j])+r2 * \
+                c2*(x_best_swarp-population[i][j])
+        population_next[i] = population[i]+vel
+        for h in range(pop):
+            population_next[i][h] = asegurar_limites(
+                population_next[i][h], limit)
+            sol = function(population_next[i][h], pardyna)
+            f_x_next[i][h], g_x_next[i][h] = sol[0], sol[1]
+        population[i+1] = population_next[i]
+        f_x[i+1] = f_x_next[i]
+        g_x[i+1] = g_x_next[i]
+        sele = s_best(population[i+1], f_x[i+1], g_x[i+1],
+                      x_best[i], f_x_best[i], g_x_best[i], D, M, pop)
+        x_best[i+1] = sele[0]
+        f_x_best[i+1] = sele[1]
+        g_x_best[i+1] = sele[2]
+        selecc = selecpso(f_x_best[i+1], g_x_best[i+1], x_best[i+1], D, M)
+        f_x_best_swarp = selecc[0]
+        x_best_swarp = selecc[1]
+        g_x_best_swarp = selecc[2]
+
+        '''ARCHIVO'''
+        # Actualiza archivo (unicamente con soluciones factibles)
+        for r, g_x_i in enumerate(g_x_best[i+1]):
+            if g_x_i == 0:
+                f_a = np.append(f_a, [f_x_best[i+1][r]], axis=0)
+                a = np.append(a, [x_best[i+1][r]], axis=0)
+
+        # Filtrado no dominado para el archivo
+        f_a_fil = np.empty((0, M))  # Conjunto no dominado
+        a_fil = np.empty((0, D))  # Conjunto no dominado
+
+        for i1, f_a_1 in enumerate(f_a):
+            sol_nd = True
+            for i2, f_a_2 in enumerate(f_a):
+                if i1 != i2:
+                    if dominates(f_a_2, f_a_1):
+                        sol_nd = False
+                        break
+            if sol_nd:
+                # f_x_fil.append(f_x_1)
+                f_a_fil = np.append(f_a_fil, [f_a_1], axis=0)
+                a_fil = np.append(a_fil, [a[i1]], axis=0)
+
+        a = a_fil
+        f_a = f_a_fil
+
+        if len(a) > AMAX:
+            # Ordenamiento del archivo con respecto a f1
+            sorted_index = f_a[:, 0].argsort()
+            f_a = f_a[sorted_index]
+            a = a[sorted_index]
+
+            # Calculo de distancias (crowding = apiñonamiento)
+            distances = np.zeros(len(a))
+
+            distances[0] = np.inf
+            distances[-1] = np.inf
+
+            for i in range(1, len(a) - 1):
+                distances[i] += np.abs(f_a[i - 1, 0] - f_a[i + 1, 0]) + np.abs(
+                    f_a[i - 1, 1] - f_a[i + 1, 1])  # Crowding distance
+
+            # Ordenamiento del archivo con respecto a las distancias
+            sorted_index = distances.argsort()
+            f_a = f_a[sorted_index]
+            a = a[sorted_index]
+
+            # Poda o depuracion del archivo (remueve las soluciones sobrantes del archivo)
+            while len(a) != AMAX:
+                a = np.delete(a, 0, 0)
+                f_a = np.delete(f_a, 0, 0)  
+    return f_a, a
+
+#----------------------------------------------------------------------------------------------------
+
 #-----------------Péndulo invertido----------------
 limitpi=[(0,10),(0,5),(0,5),(0,10),(0,5),(0,5)]       # Limites inferior y superior
 #poblacionpi = 200                    # Tamaño de la población, mayor >= 4
@@ -1059,6 +1279,22 @@ layoutga=[[sg.Text('Algoritmo génetico',text_color='white', font=('Franklin Got
            sg.Column([[sg.Button(image_filename=r'D:\TT2\b1.png', key='repgapd',image_subsample=8,button_color=(sg.theme_background_color(), sg.theme_background_color())),sg.Button(image_filename='D:\TT2\home.png', key='Homegapd',image_subsample=8,button_color=(sg.theme_background_color(), sg.theme_background_color())),sg.Button('Continuar',size=(10,2),border_width=5,key='congapd',button_color='blue')]],key='gepd')]
           ]
 
+layoutpso=[[sg.Text('Algoritmo de optimización por enjambre de partículas (PSO)',text_color='white', font=('Franklin Gothic Book', 28, 'bold'))],
+          [sg.Text('Ingresa los siguientes  parámetros: ',text_color='white', font=('Franklin Gothic Book', 18, 'bold'))],
+          [sg.Text('Tamaño de la población:', text_color='black', font=('Franklin Gothic Book', 12, 'bold'),size=(25,1)), sg.Input('200',key='poppso')],
+          [sg.Text('Número de generaciones:', text_color='black', font=('Franklin Gothic Book', 12, 'bold'),size=(25,1)), sg.Input('10',key='genpso')],
+          [sg.Text('Tamaño del archivo:', text_color='black', font=('Franklin Gothic Book', 12, 'bold'),size=(25,1)), sg.Input('30',key='Ampso')],
+          [sg.Text('Velocidad minima :', text_color='black', font=('Franklin Gothic Book', 12, 'bold'),size=(25,1)), sg.Input('0',key='Vmin')],
+          [sg.Text('Velocidad máxima :', text_color='black', font=('Franklin Gothic Book', 12, 'bold'),size=(25,1)), sg.Input('0.1',key='Vmax')],
+          [sg.Text('Alpha :', text_color='black', font=('Franklin Gothic Book', 12, 'bold'),size=(25,1)), sg.Input('1',key='c1')],
+          [sg.Text('Betha :', text_color='black', font=('Franklin Gothic Book', 12, 'bold'),size=(25,1)), sg.Input('1',key='c2')],
+          [sg.Column([[sg.Button(image_filename=r'D:\TT2\b1.png', key='reppsops',image_subsample=8,button_color=(sg.theme_background_color(), sg.theme_background_color())),sg.Button(image_filename='D:\TT2\home.png', key='Homepsops',image_subsample=8,button_color=(sg.theme_background_color(), sg.theme_background_color())),sg.Button('Continuar',size=(10,2),border_width=5,key='conpsops',button_color='blue')]],key='papsops'),
+           sg.Column([[sg.Button(image_filename=r'D:\TT2\b1.png', key='reppsopi',image_subsample=8,button_color=(sg.theme_background_color(), sg.theme_background_color())),sg.Button(image_filename='D:\TT2\home.png', key='Homepsopi',image_subsample=8,button_color=(sg.theme_background_color(), sg.theme_background_color())),sg.Button('Continuar',size=(10,2),border_width=5,key='conpsopi',button_color='blue')]],key='papsopi'),
+           sg.Column([[sg.Button(image_filename=r'D:\TT2\b1.png', key='reppsopd',image_subsample=8,button_color=(sg.theme_background_color(), sg.theme_background_color())),sg.Button(image_filename='D:\TT2\home.png', key='Homepsopd',image_subsample=8,button_color=(sg.theme_background_color(), sg.theme_background_color())),sg.Button('Continuar',size=(10,2),border_width=5,key='conpsopd',button_color='blue')]],key='papsopd')]
+          ]
+
+
+
 layoutdepi=[[sg.Text('Evolución diferencial',text_color='white', font=('Franklin Gothic Book', 28, 'bold'))],
           [sg.Text('Ingresa los siguientes  parámetros: ',text_color='white', font=('Franklin Gothic Book', 18, 'bold'))],
           [sg.Text('Tamaño de la población:', text_color='black', font=('Franklin Gothic Book', 12, 'bold'),size=(25,1)), sg.Input('200',key='popbpi')],
@@ -1116,11 +1352,11 @@ layoutgrapd=[[sg.Canvas(key='cangrapd')]]
 layouttappd=[[sg.TabGroup([[sg.Tab('Animación',layoutanpd),sg.Tab('Gráficas', layoutgrapd)]],tab_location='centertop',border_width=5)],
            [sg.Column([[sg.Button(image_filename=r'D:\TT2\b1.png', key='Returnpd',image_subsample=8,button_color=(sg.theme_background_color(), sg.theme_background_color())),sg.Button(image_filename='D:\TT2\home.png', key='Homesimupd',image_subsample=8,button_color=(sg.theme_background_color(), sg.theme_background_color())),sg.Button('Salir',button_color='red',size=(3,2),border_width=5,key='Exit2')]],key='tappdde'),
            sg.Column([[sg.Button(image_filename=r'D:\TT2\b1.png', key='Returnpdga',image_subsample=8,button_color=(sg.theme_background_color(), sg.theme_background_color())),sg.Button(image_filename='D:\TT2\home.png', key='Homesimupdga',image_subsample=8,button_color=(sg.theme_background_color(), sg.theme_background_color())),sg.Button('Salir',button_color='red',size=(3,2),border_width=5,key='Exit21')]],key='tappdga'),
-           sg.Column([[sg.Button(image_filename=r'D:\TT2\b1.png', key='Returnpdpso',image_subsample=8,button_color=(sg.theme_background_color(), sg.theme_background_color())),sg.Button(image_filename='D:\TT2\home.png', key='Homesimupdpso',image_subsample=8,button_color=(sg.theme_background_color(), sg.theme_background_color())),sg.Button('Salir',button_color='red',size=(3,2),border_width=5,key='Exit2')]],key='tappdpso'),
+           sg.Column([[sg.Button(image_filename=r'D:\TT2\b1.png', key='Returnpdpso',image_subsample=8,button_color=(sg.theme_background_color(), sg.theme_background_color())),sg.Button(image_filename='D:\TT2\home.png', key='Homesimupdpso',image_subsample=8,button_color=(sg.theme_background_color(), sg.theme_background_color())),sg.Button('Salir',button_color='red',size=(3,2),border_width=5,key='Exit22')]],key='tappdpso'),
            ]]
 
 layout1=[[sg.Column(layouthome,key='Home'),sg.Column(layouts, visible=False,key='Sim'),sg.Column(layoutde,key='depara',visible=False),sg.Column(layoutpfps,key='pfps',visible=False),sg.Column(layouttap,key='resps',visible=False),
-          sg.Column(layoutga,key='gapara',visible=False),
+          sg.Column(layoutga,key='gapara',visible=False),sg.Column(layoutpso,key='psopara',visible=False),
           sg.Column(layouti,key='Inve',visible=False),sg.Column(layoutdepi,key='deparapi',visible=False),sg.Column(layoutpfpi,key='pfpi',visible=False),sg.Column(layouttappi,key='respi',visible=False),
           sg.Column(layoutd,key='Dob',visible=False),sg.Column(layoutdepd,key='deparapd',visible=False),sg.Column(layoutpfpd,key='pfpd',visible=False),sg.Column(layouttappd,key='respd',visible=False)]]
         
@@ -1185,7 +1421,7 @@ while True:
     
     #u=float(p)
     #e=eval(values[0])
-    if event in (None, 'Exit','Exit0','Exit1','Exit2','Exit10','Exit20','Exit11','Exit12'):
+    if event in (None, 'Exit','Exit0','Exit1','Exit2','Exit10','Exit20','Exit11','Exit12','Exit21','Exit22'):
         break
     if event == 'Simple':
         
@@ -1274,8 +1510,7 @@ while True:
         window['Sim'].update(visible=False)
         window['Home'].update(visible=True)
         
-        
-        
+
     elif event=='Simups':
         window['pfps'].update(visible=False)
         window['resps'].update(visible=True)
@@ -1546,6 +1781,198 @@ while True:
         ani_a.new_frame_seq() 
         ani_a.event_source.stop()
         window['Tabl'].update(values=tapsv)
+    
+    
+    #------------------PSO----------------------------------------------------------------------------------------
+
+    if event == 'psops':
+        window['Sim'].update(visible=False)
+        window['psopara'].update(visible=True)
+        window['papsops'].update(visible=True)
+        window['papsopi'].update(visible=False)
+        window['papsopd'].update(visible=False)
+        
+        
+        ms=values['masaps']
+        ls=values['lps']
+        lcs=values['lcps']
+        bs=values['bps']
+        iss=values['ips']
+        ss=values['sps']
+        try: 
+            dinps=np.asarray([ms,ls,lcs,bs,iss,ss], dtype=np.float64, order='C')
+
+            
+        except:
+            sg.popup('Todos los datos ingresados deben ser númericos, presione ok e intente de nuevo')
+            window['psopara'].update(visible=False)
+            window['Sim'].update(visible=True)
+            
+    elif event =='conpsops':
+        window['psopara'].update(visible=False)
+        
+    
+        window['pfps'].update(visible=True)
+        window['Simups'].update(visible=False)
+        window['Simupsga'].update(visible=False)
+        window['Simupspso'].update(visible=True)
+        Vmin=float(values['Vmin'])
+        Vmax=float(values['Vmax'])
+        try:
+             
+            poblacion=int(values['poppso'])
+            generaciones=int(values['genpso'])
+            AMAX=int(values['Ampso'])
+            Vmin=float(values['Vmin'])
+            Vmax=float(values['Vmax'])
+            c1=int(values['c1'])
+            c2=int(values['c2'])
+
+                
+            #llamado de la función main de PSO
+            sg.popup('Ejecución de PSO, espere para poder observar el resultado (conjunto de ganancias para el controlador PID). Las ganancias permitirán al péndulo llegar de la posición inicial a la deseada. Presione ok para continuar con la ejecución')
+            var = MOPSO(pendulum_s, limit, poblacion, Vmax, Vmin, c1, c2, generaciones, dinps, D, M, AMAX)
+                
+            valu=np.zeros((len(var[0]),5))
+            
+            t=var[0]
+            s=var[1]
+            
+            valu[:,0]=s[:,0]
+            valu[:,1]=s[:,1]
+            valu[:,2]=s[:,2]
+            valu[:,3]=t[:,0]
+            valu[:,4]=t[:,1]
+            indexso=np.argsort(t[:,0])
+            valu=valu[indexso]
+                
+            filename="afapso.txt" 
+            myFile=open(filename,'w') 
+            myFile.write("kp,kd,ki,f1, f2 \n") 
+            for l in range(len(t)): 
+                myFile.write(str(s[l, 0])+","+str(s[l, 1])+","+str(s[l, 2])+","+str(t[l, 0])+","+str(t[l, 1])+"\n") 
+            myFile.close()
+            window['Tabl'].update(values=valu)
+            #Create a fig for embedding.
+            ax.cla()
+            ax.set_title('Aproximación al Frente de Pareto')
+            ax.set_xlabel('ISE')
+            ax.set_ylabel('IADU')
+            
+            #plot
+            ax.scatter(t[:,0], t[:,1])   
+            #After making changes, fig_agg.draw()Reflect the change with.
+            fig_agg.draw()
+        except:
+            sg.popup('Todos los datos ingresados deben ser númericos, presione ok e intente de nuevo')
+            window['pfps'].update(visible=False)
+            window['psopara'].update(visible=True)
+    elif event =='reppsops':
+        window['psopara'].update(visible=False)
+        window['Sim'].update(visible=True)
+    elif event =='Homepsops':
+        window['psopara'].update(visible=False)
+        window['Home'].update(visible=True)
+    
+    elif event=='Simupspso':
+        window['pfps'].update(visible=False)
+        
+        window['resps'].update(visible=True)
+        window['paps'].update(visible=False)
+        window['gapaps'].update(visible=False)
+        window['psopaps'].update(visible=True)
+        
+        
+        
+        afe=values['Tabl']
+        #print(s[afe[0],:])
+        pen=pendulum_s(s[afe[0],:], dinps)
+        posi=pen[2]
+        tor=pen[3]
+        tim=pen[4]
+        
+        ax2.set_xlabel('Time [s]')
+        ax2.set_ylabel('Posición del péndulo [rad]')
+        ax2.plot(tim, posi[:, 0], 'k',label=r'$\theta$',lw=1)
+        ax2.legend()
+        
+        
+        ax3.set_xlabel('Time [s]')
+        ax3.set_ylabel('Velocidad del péndulo [rad/s]')
+        ax3.plot(tim, posi[:, 1], 'b',label=r'$\dot{\theta}$',lw=1)
+        ax3.legend()
+        
+        
+        ax4.set_xlabel('Time [s]')
+        ax4.set_ylabel('Señal de control [Nm]')
+        ax4.plot(tim, tor[:, 0], 'r',label=r'$u$',lw=1)
+        ax4.legend()
+        
+        fig_graps.draw()
+    
+        x0 = np.zeros(len(tim))
+        y0 = np.zeros(len(tim))
+        xl=np.linspace(-1.8,1.8,len(tim))
+        yl=np.linspace(-1.2,1.2,len(tim))
+        
+        l=dinps[1]
+     
+        x1 = l * np.sin(posi[:, 0])
+        y1 = -l * np.cos(posi[:, 0])
+        ax1.cla()
+        line, = ax1.plot([], [], 'o-', color='orange', lw=4, \
+                markersize=6, markeredgecolor='k', \
+                markerfacecolor='k')
+        
+        time_template = 't= %.1f s'
+        time_text = ax1.text(0.05, 0.9, '', transform=ax1.transAxes)
+        def init():
+            
+            line.set_data([], [])
+            
+            time_text.set_text('')
+            return line, time_text
+        def animate(i):
+            line.set_data([x0[i], x1[i]], [y0[i], y1[i]])
+           
+            time_text.set_text(time_template % tim[i])
+            return line, time_text,
+        
+        ax1.plot(xl,y0,'k')
+        ax1.plot(x0,yl,'k')
+        ani_a = animation.FuncAnimation(figan, animate, \
+                                np.arange(1, len(tim)), \
+                                interval=40, blit=False)
+        ani_a.new_frame_seq()
+    
+    elif event=='Returnpspso':
+        window['resps'].update(visible=False)
+        window['pfps'].update(visible=True)
+        
+        
+        ax2.cla()
+        ax3.cla()
+        ax4.cla()
+        ani_a.event_source.stop()
+        
+        
+ 
+    elif event=='Homesimupspso':
+        window['resps'].update(visible=False)
+        window['Home'].update(visible=True)
+        ax.cla()  
+        ax2.cla()
+        ax3.cla()
+        ax4.cla()
+        ani_a.new_frame_seq() 
+        ani_a.event_source.stop()
+        window['Tabl'].update(values=tapsv)
+    
+
+        
+
+
+    #-------------------------------------------------------------------------------------------------------------
          
     #---------------Invertido-------------------------
     elif event=='Invertido':
