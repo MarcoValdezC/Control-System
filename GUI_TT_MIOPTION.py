@@ -1785,7 +1785,7 @@ while True:
     
     #------------------PSO----------------------------------------------------------------------------------------
 
-    if event == 'psops':
+    if event =='psops':
         window['Sim'].update(visible=False)
         window['psopara'].update(visible=True)
         window['papsops'].update(visible=True)
@@ -2441,7 +2441,249 @@ while True:
                     wspace=0.2, 
                     hspace=0.35)
     
-    #------Doble----------------------
+
+    #-------------------PSO--------------------------------------------------------------------------------------
+
+    elif event == 'psopi':
+        window['Inve'].update(visible=False)
+        window['psopara'].update(visible=True)
+        window['papsops'].update(visible=False)
+        window['papsopi'].update(visible=True)
+        window['papsopd'].update(visible=False)
+        mi=values['masapi']
+        mc=values['masaca']
+        li=values['lpi']
+        lci=values['lcpi']
+        bi=values['bpi']
+        bc=values['bca']
+        isi=values['ipi']
+        sti=values['spi']
+        stc=values['spc']
+        
+        try:
+            
+            dinpi=np.asarray([mi,mc,li,lci,bi,bc,isi,sti,stc], dtype=np.float64, order='C')
+            
+        except:
+            sg.popup('Todos los datos ingresados deben ser númericos, presione ok e intente de nuevo')
+            window['psopara'].update(visible=False)
+            window['Inve'].update(visible=True)
+    elif event =='reppsopi':
+        window['psopara'].update(visible=False)
+        window['Inve'].update(visible=True)
+    elif event =='Homepsopi':
+        window['psopara'].update(visible=False)
+        window['Home'].update(visible=True)
+    elif event=='conpsopi':
+        window['psopara'].update(visible=False)
+        window['pfpi'].update(visible=True)
+        window['Simupi'].update(visible=False)
+        window['Simupiga'].update(visible=False)
+        window['Simupipso'].update(visible=True)
+        try:
+            
+            poblacionpi=int(values['poppso'])
+            generacionespi=int(values['genpso'])
+            AMAXpi=int(values['Ampso'])
+            Vminpi=float(values['Vmin'])
+            Vmaxpi=float(values['Vmax'])
+            c1pi=int(values['c1'])
+            c2pi=int(values['c2'])
+            
+            
+        except:
+            sg.popup('Todos los datos ingresados deben ser númericos, presione ok e intente de nuevo')
+            window['pfpi'].update(visible=False)
+            window['psopara'].update(visible=True)
+        try:
+            
+            
+            sg.popup('Ejecución de PSO, espere para poder observar el resultado (conjunto de ganancias para el controlador PID).Las ganancias permitirán al péndulo llegar de la posición inicial a la deseada. Presione ok para continuar con la ejecución')
+       
+            #llamado de la función main de DE
+            varpi = MOPSO(inverted_pendulum, limitpi, poblacionpi, Vmaxpi, Vminpi,c1pi, c2pi, generacionespi,dinpi, Dpi, Mpi, AMAXpi)
+            
+            valupi=np.zeros((len(varpi[0]),(Dpi+Mpi)))
+
+            tpi=varpi[0]
+            spi=varpi[1]
+        
+            valupi[:,0]=spi[:,0]
+            valupi[:,1]=spi[:,1]
+            valupi[:,2]=spi[:,2]
+            valupi[:,3]=spi[:,3]
+            valupi[:,4]=spi[:,4]
+            valupi[:,5]=spi[:,5]
+            valupi[:,6]=tpi[:,0]
+            valupi[:,7]=tpi[:,1]
+            
+            indexsopi=np.argsort(tpi[:,0])
+            valupi=valupi[indexsopi]
+            
+            filename="pifapso.csv" 
+            myFile=open(filename,'w') 
+            myFile.write("kp,kd,ki,kp1,kd1,ki1,f1, f2 \n") 
+            for l in range(len(tpi)): 
+                myFile.write(str(spi[l, 0])+","+str(spi[l, 1])+","+str(spi[l, 2])+","+str(spi[l, 3])+","+str(spi[l, 4])+","+str(spi[l, 5])+","+str(tpi[l, 0])+","+str(tpi[l, 1])+"\n") 
+            myFile.close()
+
+            ax6.set_title('Aproximación al Frente de Pareto')
+            ax6.set_xlabel('ISE')
+            ax6.set_ylabel('IADU')
+        
+            ax6.scatter(tpi[:,0], tpi[:,1])
+        
+            window['Tablpi'].update(values=valupi)
+            #After making changes, fig_agg.draw()Reflect the change with.
+            fig_aggpi.draw()
+            
+        except:
+            sg.popup('Algo salio mal , presione ok e intente de nuevo')
+            window['pfpi'].update(visible=False)
+            window['psopara'].update(visible=True)
+    
+    elif event=='Simupipso':
+        window['pfpi'].update(visible=False)
+        window['respi'].update(visible=True)
+        window['pide'].update(visible=False)
+        window['gapi'].update(visible=False)
+        window['psooppi'].update(visible=True)
+        
+        afepi=values['Tablpi']
+       
+        penpi=inverted_pendulum(spi[afepi[0],:], dinpi)
+        posipi=penpi[2]
+        torpi=penpi[3]
+        timpi=penpi[4]
+        
+        ax10.cla()
+        ax10.set_xlabel('x [m]')
+        ax10.set_ylabel('y [m]')
+        
+        
+        ax11.set_xlabel('Tiempo [s]')
+        ax11.set_ylabel('Posición del carro [m]')
+        ax11.plot(timpi, posipi[:, 0], 'k',label=r'$x$',lw=1)
+        ax11.legend()
+
+        ax12.set_xlabel('Tiempo [s]')
+        ax12.set_ylabel('Posición del péndulo [m]')
+        ax12.plot(timpi, posipi[:, 1], 'b',label=r'$\theta$',lw=1)
+        ax12.legend()
+        
+        
+        ax13.set_xlabel('Tiempo [s]')
+        ax13.set_ylabel('Velocidad del carrito [m/s]')
+        ax13.plot(timpi, posipi[:, 2], 'r',label=r'$\dot{x}$',lw=1)
+        ax13.legend()
+
+        ax14.set_xlabel('Tiempo [s]')
+        ax14.set_ylabel('Velocidad del péndulo [m/s]')
+        ax14.plot(timpi, posipi[:, 3], 'k',label=r'$\dot{\theta}$',lw=1)
+        ax14.legend()
+        
+    
+        ax15.set_xlabel('Tiempo [s]')
+        ax15.set_ylabel('$u_{car}$ [Nm]')
+        ax15.plot(timpi, torpi[0, :], 'b',label=r'$u_{car}$',lw=1)
+        ax15.legend()
+        
+        
+        ax16.set_xlabel('Tiempo [s]')
+        ax16.set_ylabel('$u_{pendulum}$ [Nm]')
+        ax16.plot(timpi, torpi[1, :], 'r',label=r'$u_{pendulum}$',lw=1)
+        ax16.legend()
+        
+        plt.subplots_adjust(left=0.125,
+                    bottom=0.1, 
+                    right=0.9, 
+                    top=0.9, 
+                    wspace=0.2, 
+                    hspace=0.35)
+        fig_grapspi.draw()
+
+        x0 = np.zeros(len(timpi))
+        y0 = np.zeros(len(timpi))
+        x1 = posipi[:, 0]
+        y1 = np.zeros(len(timpi))
+        xlpi=np.linspace(-1.8,1.8,len(timpi))
+        ylpi=np.linspace(-1.2,1.2,len(timpi))
+        l=dinpi[2]
+     
+        x2 = l * np.cos(posipi[:, 1]) + x1
+        y2 = l * np.sin(posipi[:, 1])
+        ax10.cla()
+        mass1, = ax10.plot([], [], linestyle='None', marker='s', \
+                 markersize=10, markeredgecolor='k', \
+                 color='green', markeredgewidth=2)
+        line, = ax10.plot([], [], 'o-', color='green', lw=4, \
+                markersize=6, markeredgecolor='k', \
+                markerfacecolor='k')
+        time_template = 't= %.1f s'
+        time_text = ax10.text(0.05, 0.9, '', transform=ax10.transAxes)
+        def init():
+            
+            mass1.set_data([], [])
+            line.set_data([], [])
+            time_text.set_text('')
+
+            return line, mass1, time_text
+        
+        def animatepi(i):
+            mass1.set_data([x1[i]], [y1[i]])
+            line.set_data([x1[i], x2[i]], [y1[i], y2[i]])
+            time_text.set_text(time_template % timpi[i])
+            return mass1, line, time_text
+        
+        ax10.plot(xlpi,y0,'k')
+        ax10.plot(x0,ylpi,'k')
+        ani_api = animation.FuncAnimation(figanpi, animatepi, \
+                                np.arange(1, len(timpi)), \
+                                interval=40, blit=False)
+            
+    elif event=='Returnpipso':
+        window['respi'].update(visible=False)
+        window['pfpi'].update(visible=True)
+        
+        ax11.cla()
+        ax12.cla()
+        ax13.cla()
+        ax14.cla()
+        ax15.cla()
+        ax16.cla()
+        ani_api.event_source.stop()
+        plt.subplots_adjust(left=0.125,
+                    bottom=0.1, 
+                    right=0.9, 
+                    top=0.9, 
+                    wspace=0.2, 
+                    hspace=0.35)
+    elif event=='Homesimupipso':
+        window['respi'].update(visible=False)
+        window['Home'].update(visible=True)
+        ax6.cla()
+        ax11.cla()
+        ax12.cla()
+        ax13.cla()
+        ax14.cla()
+        ax15.cla()
+        ax16.cla()
+        ani_api.new_frame_seq() 
+        ani_api.event_source.stop()
+        window['Tablpi'].update(values=tapiv)
+        plt.subplots_adjust(left=0.125,
+                    bottom=0.1, 
+                    right=0.9, 
+                    top=0.9, 
+                    wspace=0.2, 
+                    hspace=0.35)
+    
+
+
+
+    #------------------------------------------------------------------------------------------------------------
+    
+    #------Doble-------------------------------------------------------------------------------------------------
         
     elif event == 'Doble':
     
@@ -2451,7 +2693,7 @@ while True:
     elif event == 'depd':
         window['Dob'].update(visible=False)
         window['deparapd'].update(visible=True)
-        
+         
         m1=values['masapd1']
         m2=values['masapd2']
         l1=values['lpd1']
@@ -2490,10 +2732,9 @@ while True:
             poblacionpd=int(values['popbpd'])
             generacionespd=int(values['genpd'])
             AMAXpd=int(values['Ampd'])
-            sg.popup('Ejecución de Evolución Diferencial, espere para poder observar el resultado (conjunto de ganancias para el controlador PID). Las ganancias permitirán al péndulo seguir la trayectoria deseada. Presione ok para continuar con la ejecución')
+
             
-        
-            #llamado de la función main de DE
+            sg.popup('Ejecución de Evolución Diferencial, espere para poder observar el resultado (conjunto de ganancias para el controlador PID). Las ganancias permitirán al péndulo seguir la trayectoria deseada. Presione ok para continuar con la ejecución')
             varpd=main(double_pendulum, limitpd, poblacionpd, f_mutpd, recombinationpd, generacionespd,dinpd,Dpd,Mpd,AMAXpd)
         
             valupd=np.zeros((len(varpd[0]),(Dpd+Mpd)))
@@ -2943,5 +3184,258 @@ while True:
                     top=0.9, 
                     wspace=0.2, 
                     hspace=0.35)
+    #--------------------------- PSO -------------------------------------------------------------
+    elif event == 'psopd':
+        window['Dob'].update(visible=False)
+        window['psopara'].update(visible=True)
+        window['papsops'].update(visible=False)
+        window['papsopi'].update(visible=False)
+        window['papsopd'].update(visible=True)
+        
+        m1=values['masapd1']
+        m2=values['masapd2']
+        l1=values['lpd1']
+        lc1=values['lcpd1']
+        l2=values['lpd2']
+        lc2=values['lcpd2']
+        b1=values['bpd1']
+        b2=values['bpd2']
+        isd1=values['ipd1']
+        isd2=values['ipd2']
+        
+        try:
+            dinpd=np.asarray([m1,m2,l1,lc1,l2,lc2,b1,b2,isd1,isd2], dtype=np.float64, order='C')
+            
+        except:
+            sg.popup('Todos los datos ingresados deben ser númericos, presione ok e intente de nuevo')
+            window['psopara'].update(visible=False)
+            window['Dob'].update(visible=True)
+    
+    elif event =='repsopd':
+        window['psopara'].update(visible=False)
+        window['Dob'].update(visible=True)
+    elif event =='Homepsodepd':
+        window['psopara'].update(visible=False)
+        window['Home'].update(visible=True)       
+    elif event=='conpsopd':
+        
+        window['psopara'].update(visible=False)
+        window['pfpd'].update(visible=True)
+        window['Simupd'].update(visible=False)
+        window['Simupdpso'].update(visible=False)
+        window['Simupdga'].update(visible=True)
+
+        try:
+            
+            poblacionpd=int(values['poppso'])
+            generacionespd=int(values['genpso'])
+            AMAXpd=int(values['Ampso'])
+            Vminpd=float(values['Vmin'])
+            Vmaxpd=float(values['Vmax'])
+            c1pd=int(values['c1'])
+            c2pd=int(values['c2'])
+            sg.popup('Ejecución de PSO, espere para poder observar el resultado (conjunto de ganancias para el controlador PID). Las ganancias permitirán al péndulo seguir la trayectoria deseada. Presione ok para continuar con la ejecución')
+            
+        
+            #llamado de la función main de DE
+
+            varpd = MOPSO(double_pendulum, limitpd, poblacionpd, Vmaxpd, Vminpd,c1pd, c2pd, generacionespd,dinpd,Dpd,Mpd,AMAXpd)
+            valupd=np.zeros((len(varpd[0]),(Dpd+Mpd)))
+
+            tpd=varpd[0]
+            spd=varpd[1]
+        
+            valupd[:,0]=spd[:,0]
+            valupd[:,1]=spd[:,1]
+            valupd[:,2]=spd[:,2]
+            valupd[:,3]=spd[:,3]
+            valupd[:,4]=tpd[:,0]
+            valupd[:,5]=tpd[:,1]
+            
+            indexsopd=np.argsort(tpd[:,0])
+            valupd=valupd[indexsopd]
+            
+            filename="pdfa.csv" 
+            myFile=open(filename,'w') 
+            myFile.write("kp,kd,kp1,kd1,f1, f2 \n") 
+            for l in range(len(tpd)): 
+                myFile.write(str(spd[l, 0])+","+str(spd[l, 1])+","+str(spd[l, 2])+","+str(spd[l, 3])+","+str(tpd[l, 0])+","+str(tpd[l, 1])+"\n") 
+            myFile.close()
+
+            #Create a fig for embedding.
+            
+            ax30.set_title('Aproximación al frente de Pareto')
+            ax30.set_xlabel('ISE')
+            ax30.set_ylabel('IADU')
+        
+            #plot
+            ax30.scatter(tpd[:,0], tpd[:,1])
+
+            window['Tablpd'].update(values=valupd)
+            #After making changes, fig_agg.draw()Reflect the change with.
+            fig_aggpd.draw()
+        except:
+            sg.popup('Todos los datos ingresados deben ser númericos, presione ok e intente de nuevo')
+            window['pfpd'].update(visible=False)
+            window['psopara'].update(visible=True)
+        
+    
+    elif event=='Simupdpso':
+        window['pfpd'].update(visible=False)
+        window['respd'].update(visible=True)
+        window['tappdde'].update(visible=False)
+        window['tappdga'].update(visible=False)
+        window['tappdpso'].update(visible=True)
+        
+        afepd=values['Tablpd']
+       
+        penpd=double_pendulum(spd[afepd[0],:], dinpd)
+        posipd=penpd[2]
+        torpd=penpd[3]
+        timpd=penpd[4]
+        
+     
+        ax21.set_xlabel('Tiempo')
+        ax21.set_ylabel('Posición de la barra 1 ')
+        ax21.plot(timpd, posipd[:, 0], 'k',label=r'$\theta_1$',lw=1)
+        ax21.legend()
+        
+        
+        ax22.set_xlabel('Tiempo')
+        ax22.set_ylabel('Posición de la barra 2')
+        ax22.plot(timpd, posipd[:, 1], 'b',label=r'$\theta_2$',lw=1)
+        ax22.legend()
+        
+
+        ax23.set_xlabel('Tiempo')
+        ax23.set_ylabel('Velocidad de la barra 1')
+        ax23.plot(timpd, posipd[:, 2], 'r',label=r'$\dot{\theta_1}$',lw=1)
+        ax23.legend()
+        
+        
+        ax24.set_xlabel('Tiempo')
+        ax24.set_ylabel('Velocidad de la barra 2')
+        ax24.plot(timpd, posipd[:, 3], 'k',label=r'$\dot{\theta_1}$',lw=1)
+        ax24.legend()
+        
+        
+        ax25.set_xlabel('Tiempo')
+        ax25.set_ylabel('$u_{1}$')
+        ax25.plot(timpd[:2995], torpd[0, :2995], 'b',label=r'$u_{1}$',lw=1)
+        ax25.legend()
+        
+        
+        ax26.set_xlabel('Tiempo')
+        ax26.set_ylabel('$u_{2}$')
+        ax26.plot(timpd[:2995], torpd[1,:2995], 'r',label=r'$u_{2}$',lw=1)
+        ax26.legend()
+        
+        plt.subplots_adjust(left=0.125,
+                    bottom=0.1, 
+                    right=0.9, 
+                    top=0.9, 
+                    wspace=0.2, 
+                    hspace=0.35)
+        
+        fig_grapd.draw()
+    
+        ax20.cla()
+        ax20.set_xlabel('x')
+        ax20.set_ylabel('y')
+        
+    
+        l1=dinpd[2]
+        l2=dinpd[4]
+        
+        x0=np.zeros(len(timpd))
+        y0=np.zeros(len(timpd))
+        
+        xlpd=np.linspace(-2.8,2.8,len(timpd))
+        ylpd=np.linspace(-2.2,2.2,len(timpd))
+
+        x1=l1*np.sin(posipd[:,0])
+        y1=-l1*np.cos(posipd[:,0])
+
+        x2=l1*np.sin(posipd[:,0])+ l2*np.sin(posipd[:,0]+posipd[:,1])
+        y2=-l1*np.cos(posipd[:,0])- l2*np.cos(posipd[:,0]+posipd[:,1])
+   
+        #line1, = ax.plot([], [], 'o-',color = 'g',lw=4, markersize = 15, markeredgecolor = 'k',markerfacecolor = 'r',markevery=10000)
+        line, = ax20.plot([], [], 'o-',color = 'g',markersize = 3, markerfacecolor = 'k',lw=2, markevery=100000, markeredgecolor = 'k')   # line for Earth
+        line1, = ax20.plot([], [], 'o-',color = 'r',markersize = 8, markerfacecolor = 'b',lw=2, markevery=100000, markeredgecolor = 'k')   # line for Jupiter
+        line2, = ax20.plot([], [], 'o-',color = 'k',markersize = 8, markerfacecolor = 'r',lw=1, markevery=1000000, markeredgecolor = 'k')  
+
+
+
+        time_template = 't= %.1f s'
+        time_text = ax20.text(0.05,0.9,'',transform=ax20.transAxes)
+
+
+        def init():
+            line.set_data([],[])
+            line1.set_data([],[])
+            line2.set_data([], [])
+            time_text.set_text('')
+            
+            return line, time_text, line1,
+
+        def animatepd(i):
+            #trail1 =  16
+            trail2 = 1100   
+            
+            line.set_data([x0[i],x1[i]],[y0[i],y1[i]])
+            line1.set_data([x1[i],x2[i]],[y1[i],y2[i]])
+            line2.set_data(x2[i:max(1,i-trail2):-1], y2[i:max(1,i-trail2):-1])
+            time_text.set_text(time_template % timpd[i])
+            
+            return line, time_text, line1,line2
+        ax20.plot(x0,ylpd, 'k',lw=1)
+        ax20.plot(xlpd, y0,'k',lw=1)
+
+        ani_apd = animation.FuncAnimation(figanpd, animatepd, \
+                 np.arange(1,len(timpd)), \
+                 interval=1,blit=False,init_func=init)
+        ani_apd.new_frame_seq() 
+        
+        
+    elif event=='Returnpdpso':
+        window['respd'].update(visible=False)
+        window['pfpd'].update(visible=True)
+        
+        ax21.cla()
+        ax22.cla()
+        ax23.cla()
+        ax24.cla()
+        ax25.cla()
+        ax26.cla()
+      
+        ani_apd.event_source.stop()
+        plt.subplots_adjust(left=0.125,
+                    bottom=0.1, 
+                    right=0.9, 
+                    top=0.9, 
+                    wspace=0.2, 
+                    hspace=0.35)
+    elif event=='Homesimupdpso':
+        window['respd'].update(visible=False)
+        window['Home'].update(visible=True)
+        ax30.cla()
+        ax21.cla()
+        ax22.cla()
+        ax23.cla()
+        ax24.cla()
+        ax25.cla()
+        ax6.cla()
+        ani_apd.event_source.stop()
+        ani_apd.new_frame_seq() 
+        window['Tablpd'].update(values=tapdv)
+        plt.subplots_adjust(left=0.125,
+                    bottom=0.1, 
+                    right=0.9, 
+                    top=0.9, 
+                    wspace=0.2, 
+                    hspace=0.35)
+
+
+    #----------------------------------------------------------------------------------------------
       
 window.close()
