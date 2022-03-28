@@ -48,7 +48,7 @@ def inverted_pendulum(r):
     lc = 0.3  # Longitud al centro de masa del péndulo (m)
     b1 = 0.05  # Coeficiente de fricción viscosa pendulo
     b2 = 0.06  # Coeficiente de friccion del carro
-    g = 9.81  # Aceleración de la gravedad en la Tierra
+    gra= 9.81  # Aceleración de la gravedad en la Tierra
     I = 0.006  # Tensor de inercia del péndulo
 
     '''State variables'''
@@ -82,9 +82,9 @@ def inverted_pendulum(r):
         th_dot = z[c, 3]  # Velocidad del péndulo
 
         '''Controller'''
-        e_x = 0 - x #Error de posición de carro
+        e_x = 0- x #Error de posición de carro
         e_x_dot = 0 - x_dot #Error de velocidad de carro
-        e_th = np.pi/2-th #Error de posicón angular
+        e_th = (np.pi/2)-th #Error de posicón angular
         e_th_dot = 0 - th_dot #Error de velocidad angular 
 
         '''Ganancias del controlador del carro'''
@@ -106,7 +106,7 @@ def inverted_pendulum(r):
 
         MI = np.array([[M + m,-m * lc * np.sin(th)], [-m * lc * np.sin(th), I + m * lc ** 2]])  # Matriz de inercia
         MC = np.array([[b1, -m * lc * np.cos(th) * th_dot], [0, b2]])  # Matriz de Coriollis
-        MG = np.array([[0], [m * g * lc * np.cos(th)]])  # Vector de gravedad
+        MG = np.array([[0], [m * gra * l * np.cos(th)]])  # Vector de gravedad
 
         array_dots = np.array([[x_dot], [th_dot]])#Vector de velocidades
         MC2 = np.dot(MC, array_dots)
@@ -133,14 +133,14 @@ def inverted_pendulum(r):
         ise=ise_next+(e_th**2)*dt+(e_x**2)*dt
         iadu=iadu_next+ (abs(u[0,c]-u[0,c-1]))*dt+(abs(u[1,c]-u[1,c-1]))*dt
         g=0
-        if(ise>=2):
-            ie=2
+        if(ise>=20):
+            ie=20
             g+=1
         else:
             ie=ise
             g+=0
-        if(iadu>=0.8):
-            ia=0.8
+        if(iadu>=1.2):
+            ia=1.2
             g+=1
         else:
             ia=iadu
@@ -328,7 +328,6 @@ def main(function, limites, poblacion, f_mut, recombination, generaciones):
         f_a = f_a_fil
         #print(a)
         #print(f_a)
-
         if len(a) > AMAX:
             # Ordenamiento del archivo con respecto a f1
             sorted_index = f_a[:, 0].argsort()
@@ -353,8 +352,6 @@ def main(function, limites, poblacion, f_mut, recombination, generaciones):
             while len(a) != AMAX:
                 a = np.delete(a, 0, 0)
                 f_a = np.delete(f_a, 0, 0)
-    print(f_a)
-    print(len(f_a))
     #-------Guardar en archivo excel-----------------------------------------
   
     filename="pifa.csv" 
@@ -364,14 +361,87 @@ def main(function, limites, poblacion, f_mut, recombination, generaciones):
         myFile.write(str(a[l, 0])+","+str(a[l, 1])+","+str(a[l, 2])+","+str(a[l, 3])+","+str(a[l, 4])+","+str(a[l, 5])+","+str(f_a[l, 0])+","+str(f_a[l, 1])+"\n") 
     myFile.close()
     #------------Gráfica del Frente de Pareto-----------------------
-    plt.figure(1)
-    plt.title('Aproximacion al frente de Pareto')
-    plt.scatter(f_a[:, 0], f_a[:, 1])
-    plt.xlabel('f1')
-    plt.ylabel('f2')
-    plt.show()
     
     return f_a
 
-#llamado de la función main de DE
-var=main(inverted_pendulum, limit, poblacion, f_mut, recombination, generaciones)
+Hvpide=np.zeros(30)
+
+for r in range(30):
+    print(r)
+    #llamado de la función main de DE
+    var=main(inverted_pendulum, limit, poblacion, f_mut, recombination, generaciones)
+    # plt.figure(r)
+    # plt.title('Aproximacion al frente de Pareto')
+    # plt.scatter(var[:,0], var[:,1])
+    # plt.xlabel('f1')
+    # plt.ylabel('f2')
+    
+    
+    x=var[:,0]
+    y=var[:,1]
+    x = np.sort(x)
+    y = np.sort(y)[::-1]
+    x_max = 20
+    y_max = 1
+    yd=0
+ 
+    area2=0
+
+    for i in range(len(x)):
+        if i == 0:  # primer elemento
+            yd=0
+            area=0
+            area2=0
+            # plt.plot([x[i], x[i]], [y[i], y_max], 'g--',)  # vertical
+            # plt.plot([x_max, x[i]], [y_max, y_max], 'b--')  # horizontal
+            
+            #x_d=x[i+1]-x[i]
+            y_d=y_max-y[i]
+            #yd=y_d
+            #print(yd)
+            #area=x_d*yd
+            x_d2=x_max-x[i]
+            area2=x_d2*y_d
+            # print(area)
+            # print(area2)
+        elif (0<i<len(x)-1):
+          
+            # plt.plot([x[i], x[i]], [y[i], y[i - 1]], 'm--')  # vertical
+            # plt.plot([x[i - 1], x[i]], [y[i-1], y[i-1]], 'k--')  # horizontal
+            #x_d=x[i+1]-x[i]
+            y_d=y[i-1]-y[i]
+            x_d2=x_max-x[i]
+            #yd=y_d+yd
+            area2=area2+(y_d*x_d2)
+            #area=area+(yd*x_d)
+            
+
+        elif i == len(x)-1:  # ultimo elemento
+            # plt.plot([x[i-1], x[i-1]], [y[i], y[i - 1]], 'g--')  # vertical
+            # plt.plot([x[i - 1], x[i]], [y[i], y[i]], 'b--')  # horizontal
+            # plt.plot([x_max, x_max], [y[i], y_max], 'r--')  # vertical
+            # plt.plot([x[i], x_max], [y[i], y[i]], 'c--')  # horizontal
+            
+            x_d1=x[i]-x[i-1]
+            y_d=y[i-1]-y[i]
+            area=area+(y_d*x_d1)
+            #yd=yd+y_d
+            x_d2=x_max-x[i]
+            x_d3=x_max-x[i-1]
+            area2=area2+(y_d*x_d3)
+            # #area=area+(yd*x_d2)
+            # print('Hipervolumen:')
+            # print( area)
+            print('Hipervolumen2:')
+            print( area2)
+        Hvpide[r]=area2
+    
+    # plt.plot(x_max, y_max, 'ok')
+    
+    # plt.savefig("Hvpide"+str(r)+".png")
+filename="Hvolpide.csv" 
+myFile=open(filename,'w') 
+myFile.write("Hv \n") 
+for l in range(len(Hvpide)): 
+    myFile.write(str(Hvpide[l])+"\n")  
+myFile.close()

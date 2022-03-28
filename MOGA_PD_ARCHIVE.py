@@ -15,7 +15,7 @@ import matplotlib.pyplot as plt
 limit=[[0,8],[0,5],[0,5],[0,5]]       # Limites inferior y superior
 pop = 200                    # Tamaño de la población, mayor >= 4
 
-gen =  50               # Número de generaciones
+gen =  10              # Número de generaciones
 D= 4                             # Dimensionalidad O número de variables de diseño 
 M= 2                              # Numero de objetivos
 AMAX = 30                          # Numero maximo de soluciones en el archivo
@@ -536,6 +536,70 @@ def moga( limites, poblacion,eta, generaciones,D,M,AMAX,function,pardyna):
     plt.xlabel('f1')
     plt.ylabel('f2')
     plt.show()
-    return a,f_a
+    return f_a,a
 
-var= moga( limit, pop,eta, gen,D,M,AMAX,double_pendulum,pardyna)
+
+Hvgapd=np.zeros(30)
+
+for k in range(30):
+    print(k)
+    var= moga( limit, pop,eta, gen,D,M,AMAX,double_pendulum,pardyna)
+    t=var[0]
+    x=t[:,0]
+    y=t[:,1]
+   
+    x = np.sort(x)
+    y = np.sort(y)[::-1]
+    print(x)
+    print(y)
+    x_max = 20
+    y_max = 1
+    yd=0
+    area2=0
+    for i in range(len(x)):
+        if i == 0:  # primer elemento
+            yd=0
+            
+            area2=0
+           
+            #x_d=x[i+1]-x[i]
+            y_d=y_max-y[i]
+            #yd=y_d
+            #print(yd)
+            #area=x_d*yd
+            x_d2=x_max-x[i]
+            area2=x_d2*y_d
+            # print(area)
+            # print(area2)
+        elif (0<i<len(x)-1):
+          
+           
+            #x_d=x[i+1]-x[i]
+            y_d=y[i-1]-y[i]
+            x_d2=x_max-x[i]
+            #yd=y_d+yd
+            area2=area2+(y_d*x_d2)
+            #area=area+(yd*x_d)
+            
+
+        elif i == len(x)-1:  # ultimo elemento
+            
+            #x_d1=x[i]-x[i-1]
+            y_d=y[i-1]-y[i]
+            #area=area+(y_d*x_d1)
+            #yd=yd+y_d
+            #x_d2=x_max-x[i]
+            x_d3=x_max-x[i-1]
+            area2=area2+(y_d*x_d3)
+           
+            print('Hipervolumen2:')
+            print( area2)
+        Hvgapd[k]=area2
+    
+    
+filename="Hvolmogapd.csv" 
+myFile=open(filename,'w') 
+myFile.write("Hv \n") 
+for l in range(len(Hvgapd)): 
+    myFile.write(str(Hvgapd[l])+"\n")  
+myFile.close()

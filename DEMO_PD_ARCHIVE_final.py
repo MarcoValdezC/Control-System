@@ -436,8 +436,7 @@ def main(function, limites, poblacion, f_mut, recombination, generaciones):
             while len(a) != AMAX:
                 a = np.delete(a, 0, 0)
                 f_a = np.delete(f_a, 0, 0)
-    print(a)
-    print(f_a)
+    
     #print(len(f_a))
     #-------Guardar en archivo excel-----------------------------------------
   
@@ -448,14 +447,77 @@ def main(function, limites, poblacion, f_mut, recombination, generaciones):
         myFile.write(str(a[l, 0])+","+str(a[l, 1])+","+str(a[l, 2])+","+str(a[l, 3])+","+str(f_a[l, 0])+","+str(f_a[l, 1])+"\n") 
     myFile.close()
     #------------Gráfica del Frente de Pareto-----------------------
-    plt.figure(1)
-    plt.title('Aproximacion al frente de Pareto')
-    plt.scatter(f_a[:, 0], f_a[:, 1])
-    plt.xlabel('f1')
-    plt.ylabel('f2')
-    plt.show()
+    # plt.figure(1)
+    # plt.title('Aproximacion al frente de Pareto')
+    # plt.scatter(f_a[:, 0], f_a[:, 1])
+    # plt.xlabel('f1')
+    # plt.ylabel('f2')
+    # plt.show()
     
-    return f_a
+    return f_a,a
 
 #llamado de la función main de DE
-var=main(double_pendulum, limit, poblacion, f_mut, recombination, generaciones)
+
+
+Hvdemopd=np.zeros(30)
+
+for k in range(30):
+    print(k)
+    var=main(double_pendulum, limit, poblacion, f_mut, recombination, generaciones)
+    t=var[0]
+    x=t[:,0]
+    y=t[:,1]
+   
+    x = np.sort(x)
+    y = np.sort(y)[::-1]
+    x_max = 20
+    y_max = 1
+    yd=0
+    area2=0
+    for i in range(len(x)):
+        if i == 0:  # primer elemento
+            yd=0
+            
+            area2=0
+           
+            #x_d=x[i+1]-x[i]
+            y_d=y_max-y[i]
+            #yd=y_d
+            #print(yd)
+            #area=x_d*yd
+            x_d2=x_max-x[i]
+            area2=x_d2*y_d
+            # print(area)
+            # print(area2)
+        elif (0<i<len(x)-1):
+          
+           
+            #x_d=x[i+1]-x[i]
+            y_d=y[i-1]-y[i]
+            x_d2=x_max-x[i]
+            #yd=y_d+yd
+            area2=area2+(y_d*x_d2)
+            #area=area+(yd*x_d)
+            
+
+        elif i == len(x)-1:  # ultimo elemento
+            
+            #x_d1=x[i]-x[i-1]
+            y_d=y[i-1]-y[i]
+            #area=area+(y_d*x_d1)
+            #yd=yd+y_d
+            #x_d2=x_max-x[i]
+            x_d3=x_max-x[i-1]
+            area2=area2+(y_d*x_d3)
+           
+            print('Hipervolumen2:')
+            print( area2)
+        Hvdemopd[k]=area2
+    
+    
+filename="Hvoldemopd.csv" 
+myFile=open(filename,'w') 
+myFile.write("Hv \n") 
+for l in range(len(Hvdemopd)): 
+    myFile.write(str(Hvdemopd[l])+"\n")  
+myFile.close()

@@ -27,32 +27,47 @@ for i in range(len(x)):
         print(i)
         x_d=x[i+1]-x[i]
         y_d=y_max-y[i]
-        yd=y_d+(y[i]-y[i+1])
-        print(yd)
+        yd=y_d
+        #print(yd)
         area=x_d*yd
+        x_d2=x_max-x[i]
+        area2=x_d2*yd
         print(area)
+        print(area2)
     elif (0<i<len(x)-1):
         print(i)
-        plt.plot([x[i-1], x[i-1]], [y[i], y[i - 1]], 'k--')  # vertical
-        plt.plot([x[i - 1], x[i]], [y[i], y[i]], 'k--')  # horizontal
+        plt.plot([x[i], x[i]], [y[i], y[i - 1]], 'm--')  # vertical
+        plt.plot([x[i - 1], x[i]], [y[i-1], y[i-1]], 'k--')  # horizontal
         x_d=x[i+1]-x[i]
-        y_d=y[i]-y[i+1]
-        print(yd)
+        y_d=y[i-1]-y[i]
+        x_d2=x_max-x[i]
         yd=y_d+yd
-        print(yd)
+        area2=area2+(y_d*x_d2)
         area=area+(yd*x_d)
         
 
     elif i == len(x)-1:  # ultimo elemento
-        plt.plot([x[i-1], x[i-1]], [y[i], y[i - 1]], 'k--')  # vertical
-        plt.plot([x[i - 1], x[i]], [y[i], y[i]], 'k--')  # horizontal
+        plt.plot([x[i-1], x[i-1]], [y[i], y[i - 1]], 'g--')  # vertical
+        plt.plot([x[i - 1], x[i]], [y[i], y[i]], 'b--')  # horizontal
         plt.plot([x_max, x_max], [y[i], y_max], 'r--')  # vertical
         plt.plot([x[i], x_max], [y[i], y[i]], 'c--')  # horizontal
-        x_d=x_max-x[i]
-        area=area+(yd*x_d)
+        
+        x_d1=x[i]-x[i-1]
+        y_d=y[i-1]-y[i]
+        area=area+(y_d*x_d1)
+        yd=yd+y_d
+        x_d2=x_max-x[i]
+        x_d3=x_max-x[i-1]
+        area2=area2+(y_d*x_d3)
+        area=area+(yd*x_d2)
         
 
 plt.plot(x, y, 'or')
 plt.plot(x_max, y_max, 'ok')
-print(area)
+print('Hipervolumen:')
+print( area)
+
+print('Hipervolumen2:')
+print( area2)
+
 plt.show()

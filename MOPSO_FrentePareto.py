@@ -3,6 +3,7 @@ import matplotlib.pyplot as plt
 from random import random
 import random
 import math
+from numpy.linalg import inv
 
 #---------------------Parametros PSO-----------------------------#
 pop = 30
@@ -418,7 +419,7 @@ def double_pendulum(h):
         C2 = np.dot(C, v)
         ua = np.array([[u[0, i]], [u[1, i]]])
         aux1 = ua-C2-gra
-        Minv = linalg.inv(M)
+        Minv = inv(M)
         aux2 = np.dot(Minv, aux1)
         xdot[0] = th1_dot
         xdot[1] = th2_dot
