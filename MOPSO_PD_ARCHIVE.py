@@ -13,8 +13,8 @@ import math
 from numpy.linalg import inv
 
 #---------------------Parametros PSO-----------------------------#
-pop = 30
-gen = 20
+pop = 100
+gen = 1000
 limit=[[0,8],[0,5],[0,5],[0,5]] 
 D = 4
 M = 2
@@ -537,7 +537,7 @@ for k in range(30):
             x_d3=x_max-x[i-1]
             area2=area2+(y_d*x_d3)
            
-            print('Hipervolumen2:')
+            print('Hipervolumen:')
             print( area2)
         Hvmopsopd[k]=area2
     

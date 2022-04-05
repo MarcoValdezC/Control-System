@@ -15,10 +15,10 @@ from drawnow import *
 
 #---------------------Parametros DE-----------------------------#
 limit=[(0,10),(0,10),(0,10),(0,20),(0,20),(0,20)]       # Limites inferior y superior
-poblacion = 200                    # Tamaño de la población, mayor >= 4
+poblacion = 100                    # Tamaño de la población, mayor >= 4
 f_mut = 0.5                        # Factor de mutacion [0,2]
 recombination = 0.7                # Tasa de  recombinacion [0,1]
-generaciones =10                 # Número de generaciones
+generaciones =1000                 # Número de generaciones
 D = 6                             # Dimensionalidad O número de variables de diseño 
 M = 2                              # Numero de objetivos
 AMAX = 30                          # Numero maximo de soluciones en el archivo
@@ -370,11 +370,7 @@ for r in range(30):
     print(r)
     #llamado de la función main de DE
     var=main(inverted_pendulum, limit, poblacion, f_mut, recombination, generaciones)
-    # plt.figure(r)
-    # plt.title('Aproximacion al frente de Pareto')
-    # plt.scatter(var[:,0], var[:,1])
-    # plt.xlabel('f1')
-    # plt.ylabel('f2')
+    
     
     
     x=var[:,0]
@@ -390,49 +386,30 @@ for r in range(30):
     for i in range(len(x)):
         if i == 0:  # primer elemento
             yd=0
-            area=0
+           
             area2=0
-            # plt.plot([x[i], x[i]], [y[i], y_max], 'g--',)  # vertical
-            # plt.plot([x_max, x[i]], [y_max, y_max], 'b--')  # horizontal
-            
-            #x_d=x[i+1]-x[i]
+          
             y_d=y_max-y[i]
-            #yd=y_d
-            #print(yd)
-            #area=x_d*yd
+          
             x_d2=x_max-x[i]
             area2=x_d2*y_d
-            # print(area)
-            # print(area2)
+           
         elif (0<i<len(x)-1):
-          
-            # plt.plot([x[i], x[i]], [y[i], y[i - 1]], 'm--')  # vertical
-            # plt.plot([x[i - 1], x[i]], [y[i-1], y[i-1]], 'k--')  # horizontal
-            #x_d=x[i+1]-x[i]
+
             y_d=y[i-1]-y[i]
             x_d2=x_max-x[i]
-            #yd=y_d+yd
+         
             area2=area2+(y_d*x_d2)
-            #area=area+(yd*x_d)
             
 
         elif i == len(x)-1:  # ultimo elemento
-            # plt.plot([x[i-1], x[i-1]], [y[i], y[i - 1]], 'g--')  # vertical
-            # plt.plot([x[i - 1], x[i]], [y[i], y[i]], 'b--')  # horizontal
-            # plt.plot([x_max, x_max], [y[i], y_max], 'r--')  # vertical
-            # plt.plot([x[i], x_max], [y[i], y[i]], 'c--')  # horizontal
             
-            x_d1=x[i]-x[i-1]
+            
             y_d=y[i-1]-y[i]
-            area=area+(y_d*x_d1)
-            #yd=yd+y_d
-            x_d2=x_max-x[i]
             x_d3=x_max-x[i-1]
             area2=area2+(y_d*x_d3)
-            # #area=area+(yd*x_d2)
-            # print('Hipervolumen:')
-            # print( area)
-            print('Hipervolumen2:')
+            
+            print('Hipervolumen:')
             print( area2)
         Hvpide[r]=area2
     

@@ -13,9 +13,8 @@ import matplotlib.pyplot as plt
 
 #---------------------Parametros DE-----------------------------#
 limit=[[0,8],[0,5],[0,5],[0,5]]       # Limites inferior y superior
-pop = 200                    # Tamaño de la población, mayor >= 4
-
-gen =  10              # Número de generaciones
+pop = 100                    # Tamaño de la población, mayor >= 4
+gen =  1000              # Número de generaciones
 D= 4                             # Dimensionalidad O número de variables de diseño 
 M= 2                              # Numero de objetivos
 AMAX = 30                          # Numero maximo de soluciones en el archivo
@@ -527,15 +526,7 @@ def moga( limites, poblacion,eta, generaciones,D,M,AMAX,function,pardyna):
             while len(a) != AMAX:
                 a = np.delete(a, 0, 0)
                 f_a = np.delete(f_a, 0, 0)
-    plt.figure(1)
-    plt.title('Aproximacion al frente de Pareto')
-
-    plt.scatter(f_a[:, 0], f_a[:, 1])
-    #plt.xlim([0,1])
-
-    plt.xlabel('f1')
-    plt.ylabel('f2')
-    plt.show()
+  
     return f_a,a
 
 
@@ -561,42 +552,27 @@ for k in range(30):
             yd=0
             
             area2=0
-           
-            #x_d=x[i+1]-x[i]
             y_d=y_max-y[i]
-            #yd=y_d
-            #print(yd)
-            #area=x_d*yd
             x_d2=x_max-x[i]
             area2=x_d2*y_d
-            # print(area)
-            # print(area2)
+            
         elif (0<i<len(x)-1):
           
-           
-            #x_d=x[i+1]-x[i]
             y_d=y[i-1]-y[i]
             x_d2=x_max-x[i]
-            #yd=y_d+yd
             area2=area2+(y_d*x_d2)
-            #area=area+(yd*x_d)
+            
             
 
         elif i == len(x)-1:  # ultimo elemento
             
-            #x_d1=x[i]-x[i-1]
             y_d=y[i-1]-y[i]
-            #area=area+(y_d*x_d1)
-            #yd=yd+y_d
-            #x_d2=x_max-x[i]
             x_d3=x_max-x[i-1]
             area2=area2+(y_d*x_d3)
            
-            print('Hipervolumen2:')
+            print('Hipervolumen:')
             print( area2)
         Hvgapd[k]=area2
-    
-    
 filename="Hvolmogapd.csv" 
 myFile=open(filename,'w') 
 myFile.write("Hv \n") 

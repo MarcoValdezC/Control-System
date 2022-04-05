@@ -12,8 +12,8 @@ import math
 from numpy.linalg import inv
 
 #---------------------Parametros PSO-----------------------------#
-pop = 200
-gen = 20
+pop = 100
+gen = 1000
 limit=[(0,10),(0,10),(0,10),(0,20),(0,20),(0,20)]
 D = 6
 M = 2
@@ -452,25 +452,23 @@ for k in range(30):
         elif (0<i<len(x)-1):
           
            
-            #x_d=x[i+1]-x[i]
+            
             y_d=y[i-1]-y[i]
             x_d2=x_max-x[i]
-            #yd=y_d+yd
+            
             area2=area2+(y_d*x_d2)
-            #area=area+(yd*x_d)
+            
             
 
         elif i == len(x)-1:  # ultimo elemento
             
-            #x_d1=x[i]-x[i-1]
+          
             y_d=y[i-1]-y[i]
-            #area=area+(y_d*x_d1)
-            #yd=yd+y_d
-            #x_d2=x_max-x[i]
+            
             x_d3=x_max-x[i-1]
             area2=area2+(y_d*x_d3)
            
-            print('Hipervolumen2:')
+            print('Hipervolumen:')
             print( area2)
         Hvmopsopi[k]=area2
     

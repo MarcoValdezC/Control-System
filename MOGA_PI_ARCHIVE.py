@@ -13,9 +13,8 @@ import matplotlib.pyplot as plt
 
 #-----------------Péndulo invertido----------------
 limit=[(0,10),(0,5),(0,5),(0,10),(0,5),(0,5)]       # Limites inferior y superior
-pop= 200                    # Tamaño de la población, mayor >= 4
-
-gen=50                 # Número de generaciones
+pop= 100                    # Tamaño de la población, mayor >= 6
+gen=1000                 # Número de generaciones
 D = 6                             # Dimensionalidad O número de variables de diseño 
 M = 2                              # Numero de objetivos
 AMAX = 30     
@@ -518,7 +517,7 @@ for k in range(30):
             x_d3=x_max-x[i-1]
             area2=area2+(y_d*x_d3)
            
-            print('Hipervolumen2:')
+            print('Hipervolumen:')
             print( area2)
         Hvmopide[k]=area2
     
