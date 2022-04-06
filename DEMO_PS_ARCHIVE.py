@@ -16,7 +16,7 @@ limit=[(0,10),(0,10),(0,10)]       # Limites inferior y superior
 poblacion = 100                    # Tamaño de la población, mayor >= 4
 f_mut = 0.5                        # Factor de mutacion [0,2]
 recombination = 0.7                # Tasa de  recombinacion [0,1]
-generaciones =15             # Número de generaciones
+generaciones =1000             # Número de generaciones
 D = 3                              # Dimensionalidad O número de variables de diseño 
 M = 2                              # Numero de objetivos
 AMAX = 30                          # Numero maximo de soluciones en el archivo
