@@ -438,14 +438,14 @@ def main(function, limites, poblacion, f_mut, recombination, generaciones):
                 f_a = np.delete(f_a, 0, 0)
     
     #print(len(f_a))
-    #-------Guardar en archivo excel-----------------------------------------
+    # #-------Guardar en archivo excel-----------------------------------------
   
-    filename="pdfa.csv" 
-    myFile=open(filename,'w') 
-    myFile.write("kp,kd,kp1,kd1,f1, f2 \n") 
-    for l in range(len(f_a)): 
-        myFile.write(str(a[l, 0])+","+str(a[l, 1])+","+str(a[l, 2])+","+str(a[l, 3])+","+str(f_a[l, 0])+","+str(f_a[l, 1])+"\n") 
-    myFile.close()
+    # filename="pdfa.csv" 
+    # myFile=open(filename,'w') 
+    # myFile.write("kp,kd,kp1,kd1,f1, f2 \n") 
+    # for l in range(len(f_a)): 
+    #     myFile.write(str(a[l, 0])+","+str(a[l, 1])+","+str(a[l, 2])+","+str(a[l, 3])+","+str(f_a[l, 0])+","+str(f_a[l, 1])+"\n") 
+    # myFile.close()
     #------------Gráfica del Frente de Pareto-----------------------
     # plt.figure(1)
     # plt.title('Aproximacion al frente de Pareto')

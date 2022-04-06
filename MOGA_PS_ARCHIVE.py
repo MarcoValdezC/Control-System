@@ -11,7 +11,7 @@ import math
 import matplotlib.pyplot as plt
 
 pop=100
-gen=50
+gen=1000
 limit=[(0,10),(0,10),(0,10)] 
 D = 3                              
 M = 2   
@@ -435,7 +435,48 @@ def moga( limites, poblacion,eta, generaciones,D,M,AMAX,function,pardyna):
             while len(a) != AMAX:
                 a = np.delete(a, 0, 0)
                 f_a = np.delete(f_a, 0, 0)
+  
    
     return f_a,a
 
-var= moga( limit, pop,eta, gen,D,M,AMAX,pendulum_s,pardyna)
+Hvmogaps=np.zeros(30)
+
+for k in range(30):
+    print(k)
+    var= moga( limit, pop,eta, gen,D,M,AMAX,pendulum_s,pardyna)
+    t=var[0]
+    x=t[:,0]
+    y=t[:,1]
+   
+    x = np.sort(x)
+    y = np.sort(y)[::-1]
+    x_max = 20
+    y_max = 1
+    yd=0
+    area2=0
+    for i in range(len(x)):
+        if i == 0:  # primer elemento
+            yd=0
+            
+            area2=0
+            y_d=y_max-y[i]
+            x_d2=x_max-x[i]
+            area2=x_d2*y_d
+        elif (0<i<len(x)-1):
+            y_d=y[i-1]-y[i]
+            x_d2=x_max-x[i]
+            area2=area2+(y_d*x_d2)
+        elif i == len(x)-1:  # ultimo elemento
+            y_d=y[i-1]-y[i]
+            x_d3=x_max-x[i-1]
+            area2=area2+(y_d*x_d3)
+            print('Hipervolumen:')
+            print( area2)
+        Hvmogaps[k]=area2
+    
+filename="Hvolmogaps.csv" 
+myFile=open(filename,'w') 
+myFile.write("Hv \n") 
+for l in range(len(Hvmogaps)): 
+    myFile.write(str(Hvmogaps[l])+"\n")  
+myFile.close()

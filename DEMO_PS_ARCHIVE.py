@@ -16,7 +16,7 @@ limit=[(0,10),(0,10),(0,10)]       # Limites inferior y superior
 poblacion = 100                    # Tamaño de la población, mayor >= 4
 f_mut = 0.5                        # Factor de mutacion [0,2]
 recombination = 0.7                # Tasa de  recombinacion [0,1]
-generaciones =200               # Número de generaciones
+generaciones =15             # Número de generaciones
 D = 3                              # Dimensionalidad O número de variables de diseño 
 M = 2                              # Numero de objetivos
 AMAX = 30                          # Numero maximo de soluciones en el archivo
@@ -317,23 +317,77 @@ def main(function, limites, poblacion, f_mut, recombination, generaciones):
                 a = np.delete(a, 0, 0)
                 f_a = np.delete(f_a, 0, 0)
     
-    #-------Guardar en archivo excel-----------------------------------------
+    # #-------Guardar en archivo excel-----------------------------------------
   
-    filename="afa.csv" 
-    myFile=open(filename,'w') 
-    myFile.write("kp,kd,ki,f1, f2 \n") 
-    for l in range(len(f_a)): 
-        myFile.write(str(a[l, 0])+","+str(a[l, 1])+","+str(a[l, 2])+","+str(f_a[l, 0])+","+str(f_a[l, 1])+"\n") 
-    myFile.close()
-    #------------Gráfica del Frente de Pareto-----------------------
-    plt.figure(1)
-    plt.title('Aproximacion al frente de Pareto')
-    plt.scatter(f_a[:, 0], f_a[:, 1])
-    plt.xlabel('f1')
-    plt.ylabel('f2')
-    plt.show()
+    # filename="afa.csv" 
+    # myFile=open(filename,'w') 
+    # myFile.write("kp,kd,ki,f1, f2 \n") 
+    # for l in range(len(f_a)): 
+    #     myFile.write(str(a[l, 0])+","+str(a[l, 1])+","+str(a[l, 2])+","+str(f_a[l, 0])+","+str(f_a[l, 1])+"\n") 
+    # myFile.close()
+    # #------------Gráfica del Frente de Pareto-----------------------
+    # plt.figure(1)
+    # plt.title('Aproximacion al frente de Pareto')
+    # plt.scatter(f_a[:, 0], f_a[:, 1])
+    # plt.xlabel('f1')
+    # plt.ylabel('f2')
+    # plt.show()
     
     return f_a
 
 #llamado de la función main de DE
-var=main(pendulum_s, limit, poblacion, f_mut, recombination, generaciones)
+
+
+Hvpsdemo=np.zeros(30)
+
+for r in range(30):
+    print(r)
+    #llamado de la función main de DE
+    var=main(pendulum_s, limit, poblacion, f_mut, recombination, generaciones)
+    x=var[:,0]
+    y=var[:,1]
+    x = np.sort(x)
+    y = np.sort(y)[::-1]
+    x_max = 20
+    y_max = 1
+    yd=0
+ 
+    area2=0
+
+    for i in range(len(x)):
+        if i == 0:  # primer elemento
+            yd=0
+           
+            area2=0
+          
+            y_d=y_max-y[i]
+          
+            x_d2=x_max-x[i]
+            area2=x_d2*y_d
+           
+        elif (0<i<len(x)-1):
+
+            y_d=y[i-1]-y[i]
+            x_d2=x_max-x[i]
+         
+            area2=area2+(y_d*x_d2)
+            
+
+        elif i == len(x)-1:  # ultimo elemento
+            
+            
+            y_d=y[i-1]-y[i]
+            x_d3=x_max-x[i-1]
+            area2=area2+(y_d*x_d3)
+            
+            print('Hipervolumen:')
+            print( area2)
+        Hvpsdemo[r]=area2
+    
+    
+filename="Hvolpsde.csv" 
+myFile=open(filename,'w') 
+myFile.write("Hv \n") 
+for l in range(len(Hvpsdemo)): 
+    myFile.write(str(Hvpsdemo[l])+"\n")  
+myFile.close()

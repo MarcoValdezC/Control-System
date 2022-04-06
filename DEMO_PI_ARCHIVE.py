@@ -354,13 +354,13 @@ def main(function, limites, poblacion, f_mut, recombination, generaciones):
                 f_a = np.delete(f_a, 0, 0)
     #-------Guardar en archivo excel-----------------------------------------
   
-    filename="pifa.csv" 
-    myFile=open(filename,'w') 
-    myFile.write("kp,kd,ki,kp1,kd1,ki1,f1, f2 \n") 
-    for l in range(len(f_a)): 
-        myFile.write(str(a[l, 0])+","+str(a[l, 1])+","+str(a[l, 2])+","+str(a[l, 3])+","+str(a[l, 4])+","+str(a[l, 5])+","+str(f_a[l, 0])+","+str(f_a[l, 1])+"\n") 
-    myFile.close()
-    #------------Gráfica del Frente de Pareto-----------------------
+    # filename="pifa.csv" 
+    # myFile=open(filename,'w') 
+    # myFile.write("kp,kd,ki,kp1,kd1,ki1,f1, f2 \n") 
+    # for l in range(len(f_a)): 
+    #     myFile.write(str(a[l, 0])+","+str(a[l, 1])+","+str(a[l, 2])+","+str(a[l, 3])+","+str(a[l, 4])+","+str(a[l, 5])+","+str(f_a[l, 0])+","+str(f_a[l, 1])+"\n") 
+    # myFile.close()
+    # #------------Gráfica del Frente de Pareto-----------------------
     
     return f_a
 
@@ -413,9 +413,7 @@ for r in range(30):
             print( area2)
         Hvpide[r]=area2
     
-    # plt.plot(x_max, y_max, 'ok')
     
-    # plt.savefig("Hvpide"+str(r)+".png")
 filename="Hvolpide.csv" 
 myFile=open(filename,'w') 
 myFile.write("Hv \n") 
