@@ -16,10 +16,13 @@ limit=[(0,10),(0,10),(0,10)]       # Limites inferior y superior
 poblacion = 100                    # Tamaño de la población, mayor >= 4
 f_mut = 0.5                        # Factor de mutacion [0,2]
 recombination = 0.7                # Tasa de  recombinacion [0,1]
-generaciones =1000             # Número de generaciones
+generaciones =100             # Número de generaciones
 D = 3                              # Dimensionalidad O número de variables de diseño 
 M = 2                              # Numero de objetivos
-AMAX = 30                          # Numero maximo de soluciones en el archivo
+AMAX = 30    # Numero maximo de soluciones en el archivo
+kt=0.002189758
+Res=6.4
+                      
 #----------------------------------------------------------------
 
 #---------------Función de dominancia------#
@@ -65,7 +68,7 @@ def pendulum_s(r):
 
     '''Control vector'''
     u = np.zeros((n, 1))
-    
+    vol=np.zeros(n)
     
     ise=0
     ise_next=0
@@ -94,13 +97,14 @@ def pendulum_s(r):
         Ki =r[2]
         
         u[o,0]= limcontro(Kp * e_th + Kd * e_th_dot + Ki * ie_th)
- 
         
+ 
+        vol[o]=(kt*th_dot*27)+(Res*(u[o,0]/27)/kt)
         
         '''System dynamics'''
         
         xdot[0] = th_dot
-        xdot[1] = (u[o] - m * g * lc * np.sin(th) - b * th_dot) / (m * lc ** 2 + I)
+        xdot[1] = (u[o,0] - m * g * lc * np.sin(th) - b * th_dot) / (m * lc ** 2 + I)
         
         '''Integrate dynamics'''
         x[o + 1, 0] = x[o, 0] + xdot[0] * dt
@@ -125,9 +129,10 @@ def pendulum_s(r):
    
         ise_next=ie
         iadu_next=ia
+      
         #print(u[o,0])
        
-    
+    print(vol)
     return np.array([ise_next, iadu_next]),g
 #----------------------------------------------------------------------------------------------------
 
@@ -338,9 +343,9 @@ def main(function, limites, poblacion, f_mut, recombination, generaciones):
 #llamado de la función main de DE
 
 
-Hvpsdemo=np.zeros(30)
+Hvpsdemo=np.zeros(1)
 
-for r in range(30):
+for r in range(1):
     print(r)
     #llamado de la función main de DE
     var=main(pendulum_s, limit, poblacion, f_mut, recombination, generaciones)

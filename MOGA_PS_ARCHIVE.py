@@ -151,41 +151,26 @@ def asegurar_limites(vec, limit):
         
     return vec_new
 #---------------------------------Selección elitista------------------------------------------
-def selecga(f,g,po,D,M):
-    pop_r=np.empty((0,D))
-    f_x_r=np.empty((0,M))
-    g_x_r=np.empty(0)
-    
-    for r, g_x_i in enumerate(g):
-        if g_x_i == 0:
-            f_x_r = np.append(f_x_r, [f[r]], axis=0)
-            pop_r = np.append(pop_r, [po[r]], axis=0)
-            g_x_r=np.append(g_x_r,[g[r]],axis=0)
-        
-    f_x_f = np.empty((0, M))  # Conjunto no dominado
-    pop_x_f = np.empty((0, D))  # Conjunto no dominado
-    g_x_f=np.empty(0)
-    #print(len(f_x_r))
+def selecga(f, g, po, D, M):
+    pop_x_r = np.empty((0, D))
+    f_x_r = np.empty((0, M))
+    g_x_r = np.empty(0)
 
-    for i1, f_a_1 in enumerate(f_x_r):
+    for r, f_x_i in enumerate(f):
         sol_nd = True
-        for i2, f_a_2 in enumerate(f_x_r):
-            if i1 != i2:
-                if dominates(f_a_2, f_a_1):
+        g_x_i=g[r]
+        
+        for i2, f_a_2 in enumerate(f):
+            if r != i2 and g_x_i==0:
+                if dominates(f_a_2, f_x_i):
                     sol_nd = False
                     break
         if sol_nd:
-            # f_x_fil.append(f_x_1)
-            f_x_f = np.append(f_x_f, [f_a_1], axis=0)
-            pop_x_f = np.append(pop_x_f, [pop_r[i1]], axis=0)
-     #       print(i1)
-            g_x_f=np.append(g_x_f,[g_x_r[i1]],axis=0)
-            
+            f_x_r = np.append(f_x_r, [f[r]], axis=0)
+            pop_x_r = np.append(pop_x_r, [po[r]], axis=0)
+            g_x_r = np.append(g_x_r, [g[r]], axis=0)
 
-    pop_x_r= pop_x_f
-    f_x_r = f_x_f
-    g_x_r = g_x_f
-    return f_x_r,pop_x_r,g_x_r
+    return f_x_r, pop_x_r, g_x_r
 #-------------------------SBX------------------------------------------
 def crossov(p1,p2,eta,llo,lup):
     esp=1e-14

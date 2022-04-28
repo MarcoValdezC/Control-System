@@ -310,41 +310,14 @@ def selecpso(f, g, po, D, M):
     f_x_r = np.empty((0, M))
     g_x_r = np.empty(0)
 
-    for r, g_x_i in enumerate(g):
-        if g_x_i == 0:
-            f_x_r = np.append(f_x_r, [f[r]], axis=0)
-            pop_r = np.append(pop_r, [po[r]], axis=0)
-            g_x_r = np.append(g_x_r, [g[r]], axis=0)
-
-    f_x_f = np.empty((0, M))  # Conjunto no dominado
-    pop_x_f = np.empty((0, D))  # Conjunto no dominado
-    g_x_f = np.empty(0)
-    # print(len(f_x_r))
-
-    for i1, f_a_1 in enumerate(f_x_r):
-        sol_nd = True
-        for i2, f_a_2 in enumerate(f_x_r):
-            if i1 != i2:
-                if dominates(f_a_2, f_a_1):
-                    sol_nd = False
-                    break
-        if sol_nd:
-            # f_x_fil.append(f_x_1)
-            f_x_f = np.append(f_x_f, [f_a_1], axis=0)
-            pop_x_f = np.append(pop_x_f, [pop_r[i1]], axis=0)
-            g_x_f = np.append(g_x_f, [g_x_r[i1]], axis=0)
-    # print(f_x_f)
     best = 0
-    for i in range(1, len(f_x_f)):
-        if dominates(f_x_f[i], f_x_f[best]):
+    for i in range(1, len(f)):
+        if dominates(f[i], f[best]) and g[i] <= g[best]:
             best = i
-    if best == 0:
-        best = random.randint(0, len(f_x_f)-1)
     # print(best)
-
-    pop_x_r = pop_x_f[best]
-    f_x_r = f_x_f[best]
-    g_x_r = g_x_f[best]
+    pop_x_r = po[best]
+    f_x_r = f[best]
+    g_x_r = g[best]
     return f_x_r, pop_x_r, g_x_r
 
 #-----------END FUNCIONES PSO----#
@@ -480,14 +453,22 @@ def MOPSO(function, limit, pop, Vmax, Vmin, c1, c2, gen, D, M, AMAX):
             while len(a) != AMAX:
                 a = np.delete(a, 0, 0)
                 f_a = np.delete(f_a, 0, 0)
+    plt.figure(1)
+    plt.title('Aproximacion al frente de Pareto')
+    plt.scatter(f_a[:, 0], f_a[:, 1])
+    plt.xlabel('f1')
+    plt.ylabel('f2')
+    plt.show()
+    plt.savefig("PD_PSO_100GEN_150POP_30A.png")
+    print(f_a)
    
     return f_a, a
 
 
 
-Hvmopsopd=np.zeros(30)
+Hvmopsopd=np.zeros(1)
 
-for k in range(30):
+for k in range(1):
     print(k)
     var = MOPSO(double_pendulum, limit, pop, Vmax, Vmin,
             c1, c2, gen, D, M, AMAX)
