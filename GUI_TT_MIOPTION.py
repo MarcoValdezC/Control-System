@@ -25,6 +25,7 @@ import pylab as py
 from matplotlib import animation, rc
 from IPython.display import HTML
 from matplotlib import pyplot as plt
+import mplcursors
 
 
 #---------------------Parametros DEPS-----------------------------#
@@ -1189,7 +1190,7 @@ bo: dict = {'size': (15, 2), 'font': ('Arial', 24), 'button_color': ("black", "#
 layouthome= [[sg.Text('CONTROL PID CON OPTIMIZACIÓN MULTIOBJETIVO',justification='center', 
              text_color='white', font=('Franklin Gothic Book', 28, 'bold'))],
              [sg.Text('Selecciona un péndulo:', justification='center',text_color='white', font=('Franklin Gothic Book', 14, 'bold'))],
-             [sg.Button(image_filename='./img/PS.png' ,key='Simple',button_color=(sg.theme_background_color(), sg.theme_background_color())), sg.Button(image_filename='D:\TT2\PI.png', key='Invertido',button_color=(sg.theme_background_color(), sg.theme_background_color())),sg.Button(image_filename='D:\TT2\PD.png', key='Doble')],
+             [sg.Button(image_filename='./img/PS.png' ,key='Simple',button_color=(sg.theme_background_color(), sg.theme_background_color())), sg.Button(image_filename='./img/PI.png', key='Invertido',button_color=(sg.theme_background_color(), sg.theme_background_color())),sg.Button(image_filename='./img/PD.png', key='Doble')],
              [sg.Text('Simple',size=(38,2),justification='center',font=('Franklin Gothic Book', 15, 'bold')), sg.Text('Invertido',size=(38,2), justification='center',font=('Franklin Gothic Book', 15, 'bold')),sg.Text('Doble',size=(38,2),justification='center',font=('Franklin Gothic Book', 15, 'bold'))],
              [sg.Button('Salir',button_color='red',size=(5,2),border_width=5,key='Exit')]]
 
@@ -1201,8 +1202,8 @@ layouts=[[sg.Text('Péndulo Simple:',text_color='white', font=('Franklin Gothic 
             [sg.Text('Momento de inercia (I):', text_color='black', font=('Franklin Gothic Book', 12, 'bold'),size=(24,1)), sg.InputText('0.006',key='ips'),sg.Text('kgm^2', text_color='black', font=('Franklin Gothic Book', 12, 'bold'))],
             [sg.Text('Set point (rad):', text_color='black', font=('Franklin Gothic Book', 12, 'bold italic'),size=(24,1)), sg.InputText('3.1416',key='sps'),sg.Text('rad', text_color='black', font=('Franklin Gothic Book', 12, 'bold'))],
             [sg.Text('Seleccione el algoritmo metaheurístico:',text_color='white', font=('Franklin Gothic Book', 28, 'bold'))],
-            [sg.Button('DE',button_color='blue',border_width=5,key='deps',**bt),sg.Button('GE',button_color='blue',border_width=5,key='geps',**bt),sg.Button('PSO',button_color='blue',border_width=5,key='psops',**bt)],
-            [sg.Button(image_filename='D:\TT2\home.png', key='Homeps',image_subsample=8,button_color=(sg.theme_background_color(), sg.theme_background_color()))]
+            [sg.Button('DE',button_color='blue',border_width=5,key='deps',**bt),sg.Button('GA',button_color='blue',border_width=5,key='geps',**bt),sg.Button('PSO',button_color='blue',border_width=5,key='psops',**bt)],
+            [sg.Button(image_filename='./img/home.png', key='Homeps',image_subsample=8,button_color=(sg.theme_background_color(), sg.theme_background_color()))]
             ]
 
 layouti=[[sg.Text('Péndulo Invertido:',text_color='white', font=('Franklin Gothic Book', 28, 'bold')) ],
@@ -1216,8 +1217,8 @@ layouti=[[sg.Text('Péndulo Invertido:',text_color='white', font=('Franklin Goth
             [sg.Text('Set point del péndulo (rad):', text_color='black', font=('Franklin Gothic Book', 12, 'bold italic'),size=(24,1)), sg.InputText('1.57',key='spi'),sg.Text('rad', text_color='black', font=('Franklin Gothic Book', 12, 'bold'))],
             [sg.Text('Set point del carrito:', text_color='black', font=('Franklin Gothic Book', 12, 'bold italic'),size=(24,1)), sg.InputText('0',key='spc'),sg.Text('m', text_color='black', font=('Franklin Gothic Book', 12, 'bold'))],
             [sg.Text('Seleccione el algoritmo metaheurístico:',text_color='white', font=('Franklin Gothic Book', 28, 'bold'))],
-            [sg.Button('DE',button_color='blue',border_width=5,key='depi',**bt),sg.Button('GE',button_color='blue',border_width=5,key='gepipi',**bt),sg.Button('PSO',button_color='blue',border_width=5,key='psopi',**bt)],
-            [sg.Button(image_filename='D:\TT2\home.png', key='Homepi',image_subsample=8,button_color=(sg.theme_background_color(), sg.theme_background_color()))]
+            [sg.Button('DE',button_color='blue',border_width=5,key='depi',**bt),sg.Button('GA',button_color='blue',border_width=5,key='gepipi',**bt),sg.Button('PSO',button_color='blue',border_width=5,key='psopi',**bt)],
+            [sg.Button(image_filename='./img/home.png', key='Homepi',image_subsample=8,button_color=(sg.theme_background_color(), sg.theme_background_color()))]
             ]
 
 layoutd=[[sg.Text('Péndulo Doble:',text_color='white', font=('Franklin Gothic Book', 28, 'bold')) ],
@@ -1232,8 +1233,8 @@ layoutd=[[sg.Text('Péndulo Doble:',text_color='white', font=('Franklin Gothic B
             [sg.Text('Momento de inercia  brazo 1 (I1):', text_color='black', font=('Franklin Gothic Book', 12, 'bold'),size=(28,1)), sg.InputText('0.006',key='ipd1'),sg.Text('kg/m^2', text_color='black', font=('Franklin Gothic Book', 12, 'bold'))],
             [sg.Text('Momento de inercia  brazo 2 (I2):', text_color='black', font=('Franklin Gothic Book', 12, 'bold'),size=(28,1)), sg.InputText('0.004',key='ipd2'),sg.Text('kgm^2', text_color='black', font=('Franklin Gothic Book', 12, 'bold'))],
             [sg.Text('Seleccione el algoritmo metaheurístico:',text_color='white', font=('Franklin Gothic Book', 28, 'bold'))],
-            [sg.Button('DE',button_color='blue',border_width=5,key='depd',**bt),sg.Button('GE',button_color='blue',border_width=5,key='gepd',**bt),sg.Button('PSO',button_color='blue',border_width=5,key='psopd',**bt)],
-            [sg.Button(image_filename='D:\TT2\home.png', key='Homepd',image_subsample=8,button_color=(sg.theme_background_color(), sg.theme_background_color()))]
+            [sg.Button('DE',button_color='blue',border_width=5,key='depd',**bt),sg.Button('GA',button_color='blue',border_width=5,key='gepd',**bt),sg.Button('PSO',button_color='blue',border_width=5,key='psopd',**bt)],
+            [sg.Button(image_filename='./img/home.png', key='Homepd',image_subsample=8,button_color=(sg.theme_background_color(), sg.theme_background_color()))]
             ]
 
 layoutde=[[sg.Text('Evolución diferencial',text_color='white', font=('Franklin Gothic Book', 28, 'bold'))],
@@ -1241,7 +1242,7 @@ layoutde=[[sg.Text('Evolución diferencial',text_color='white', font=('Franklin 
           [sg.Text('Tamaño de la población:', text_color='black', font=('Franklin Gothic Book', 12, 'bold'),size=(25,1)), sg.Input('200',key='popb')],
           [sg.Text('Número de generaciones:', text_color='black', font=('Franklin Gothic Book', 12, 'bold'),size=(25,1)), sg.Input('10',key='gen')],
           [sg.Text('Tamaño del archivo:', text_color='black', font=('Franklin Gothic Book', 12, 'bold'),size=(25,1)), sg.Input('30',key='Am')],
-          [sg.Button(image_filename=r'D:\TT2\b1.png', key='rep',image_subsample=8,button_color=(sg.theme_background_color(), sg.theme_background_color())),sg.Button(image_filename='D:\TT2\home.png', key='Homede',image_subsample=8,button_color=(sg.theme_background_color(), sg.theme_background_color())),sg.Button('Continuar',size=(10,2),border_width=5,key='con',button_color='blue')]
+          [sg.Button(image_filename=r'./img/b1.png', key='rep',image_subsample=8,button_color=(sg.theme_background_color(), sg.theme_background_color())),sg.Button(image_filename='./img/home.png', key='Homede',image_subsample=8,button_color=(sg.theme_background_color(), sg.theme_background_color())),sg.Button('Continuar',size=(10,2),border_width=5,key='con',button_color='blue')]
           ]
 layoutga=[[sg.Text('Algoritmo génetico',text_color='white', font=('Franklin Gothic Book', 28, 'bold'))],
           [sg.Text('Ingresa los siguientes  parámetros: ',text_color='white', font=('Franklin Gothic Book', 18, 'bold'))],
@@ -1249,9 +1250,9 @@ layoutga=[[sg.Text('Algoritmo génetico',text_color='white', font=('Franklin Got
           [sg.Text('Número de generaciones:', text_color='black', font=('Franklin Gothic Book', 12, 'bold'),size=(25,1)), sg.Input('10',key='genga')],
           [sg.Text('Tamaño del archivo:', text_color='black', font=('Franklin Gothic Book', 12, 'bold'),size=(25,1)), sg.Input('30',key='Amga')],
           [sg.Text('Eta :', text_color='black', font=('Franklin Gothic Book', 12, 'bold'),size=(25,1)), sg.Input('1',key='eta')],
-          [sg.Column([[sg.Button(image_filename=r'D:\TT2\b1.png', key='repgaps',image_subsample=8,button_color=(sg.theme_background_color(), sg.theme_background_color())),sg.Button(image_filename='D:\TT2\home.png', key='Homegaps',image_subsample=8,button_color=(sg.theme_background_color(), sg.theme_background_color())),sg.Button('Continuar',size=(10,2),border_width=5,key='congaps',button_color='blue')]],key='gepips'),
-           sg.Column([[sg.Button(image_filename=r'D:\TT2\b1.png', key='repgapi',image_subsample=8,button_color=(sg.theme_background_color(), sg.theme_background_color())),sg.Button(image_filename='D:\TT2\home.png', key='Homegapi',image_subsample=8,button_color=(sg.theme_background_color(), sg.theme_background_color())),sg.Button('Continuar',size=(10,2),border_width=5,key='congapi',button_color='blue')]],key='gepi'),
-           sg.Column([[sg.Button(image_filename=r'D:\TT2\b1.png', key='repgapd',image_subsample=8,button_color=(sg.theme_background_color(), sg.theme_background_color())),sg.Button(image_filename='D:\TT2\home.png', key='Homegapd',image_subsample=8,button_color=(sg.theme_background_color(), sg.theme_background_color())),sg.Button('Continuar',size=(10,2),border_width=5,key='congapd',button_color='blue')]],key='gepd')]
+          [sg.Column([[sg.Button(image_filename=r'./img/b1.png', key='repgaps',image_subsample=8,button_color=(sg.theme_background_color(), sg.theme_background_color())),sg.Button(image_filename='./img/home.png', key='Homegaps',image_subsample=8,button_color=(sg.theme_background_color(), sg.theme_background_color())),sg.Button('Continuar',size=(10,2),border_width=5,key='congaps',button_color='blue')]],key='gepips'),
+           sg.Column([[sg.Button(image_filename=r'./img/b1.png', key='repgapi',image_subsample=8,button_color=(sg.theme_background_color(), sg.theme_background_color())),sg.Button(image_filename='./img/home.png', key='Homegapi',image_subsample=8,button_color=(sg.theme_background_color(), sg.theme_background_color())),sg.Button('Continuar',size=(10,2),border_width=5,key='congapi',button_color='blue')]],key='gepi'),
+           sg.Column([[sg.Button(image_filename=r'./img/b1.png', key='repgapd',image_subsample=8,button_color=(sg.theme_background_color(), sg.theme_background_color())),sg.Button(image_filename='./img/home.png', key='Homegapd',image_subsample=8,button_color=(sg.theme_background_color(), sg.theme_background_color())),sg.Button('Continuar',size=(10,2),border_width=5,key='congapd',button_color='blue')]],key='gepd')]
           ]
 
 layoutpso=[[sg.Text('Algoritmo de optimización por enjambre de partículas (PSO)',text_color='white', font=('Franklin Gothic Book', 28, 'bold'))],
@@ -1263,9 +1264,9 @@ layoutpso=[[sg.Text('Algoritmo de optimización por enjambre de partículas (PSO
           [sg.Text('Velocidad máxima :', text_color='black', font=('Franklin Gothic Book', 12, 'bold'),size=(25,1)), sg.Input('0.1',key='Vmax')],
           [sg.Text('Alpha :', text_color='black', font=('Franklin Gothic Book', 12, 'bold'),size=(25,1)), sg.Input('1',key='c1')],
           [sg.Text('Betha :', text_color='black', font=('Franklin Gothic Book', 12, 'bold'),size=(25,1)), sg.Input('1',key='c2')],
-          [sg.Column([[sg.Button(image_filename=r'D:\TT2\b1.png', key='reppsops',image_subsample=8,button_color=(sg.theme_background_color(), sg.theme_background_color())),sg.Button(image_filename='D:\TT2\home.png', key='Homepsops',image_subsample=8,button_color=(sg.theme_background_color(), sg.theme_background_color())),sg.Button('Continuar',size=(10,2),border_width=5,key='conpsops',button_color='blue')]],key='papsops'),
-           sg.Column([[sg.Button(image_filename=r'D:\TT2\b1.png', key='reppsopi',image_subsample=8,button_color=(sg.theme_background_color(), sg.theme_background_color())),sg.Button(image_filename='D:\TT2\home.png', key='Homepsopi',image_subsample=8,button_color=(sg.theme_background_color(), sg.theme_background_color())),sg.Button('Continuar',size=(10,2),border_width=5,key='conpsopi',button_color='blue')]],key='papsopi'),
-           sg.Column([[sg.Button(image_filename=r'D:\TT2\b1.png', key='reppsopd',image_subsample=8,button_color=(sg.theme_background_color(), sg.theme_background_color())),sg.Button(image_filename='D:\TT2\home.png', key='Homepsopd',image_subsample=8,button_color=(sg.theme_background_color(), sg.theme_background_color())),sg.Button('Continuar',size=(10,2),border_width=5,key='conpsopd',button_color='blue')]],key='papsopd')]
+          [sg.Column([[sg.Button(image_filename=r'./img/b1.png', key='reppsops',image_subsample=8,button_color=(sg.theme_background_color(), sg.theme_background_color())),sg.Button(image_filename='./img/home.png', key='Homepsops',image_subsample=8,button_color=(sg.theme_background_color(), sg.theme_background_color())),sg.Button('Continuar',size=(10,2),border_width=5,key='conpsops',button_color='blue')]],key='papsops'),
+           sg.Column([[sg.Button(image_filename=r'./img/b1.png', key='reppsopi',image_subsample=8,button_color=(sg.theme_background_color(), sg.theme_background_color())),sg.Button(image_filename='./img/home.png', key='Homepsopi',image_subsample=8,button_color=(sg.theme_background_color(), sg.theme_background_color())),sg.Button('Continuar',size=(10,2),border_width=5,key='conpsopi',button_color='blue')]],key='papsopi'),
+           sg.Column([[sg.Button(image_filename=r'./img/b1.png', key='reppsopd',image_subsample=8,button_color=(sg.theme_background_color(), sg.theme_background_color())),sg.Button(image_filename='./img/home.png', key='Homepsopd',image_subsample=8,button_color=(sg.theme_background_color(), sg.theme_background_color())),sg.Button('Continuar',size=(10,2),border_width=5,key='conpsopd',button_color='blue')]],key='papsopd')]
           ]
 
 
@@ -1275,7 +1276,7 @@ layoutdepi=[[sg.Text('Evolución diferencial',text_color='white', font=('Frankli
           [sg.Text('Tamaño de la población:', text_color='black', font=('Franklin Gothic Book', 12, 'bold'),size=(25,1)), sg.Input('200',key='popbpi')],
           [sg.Text('Número de generaciones:', text_color='black', font=('Franklin Gothic Book', 12, 'bold'),size=(25,1)), sg.Input('10',key='genpi')],
           [sg.Text('Tamaño del archivo:', text_color='black', font=('Franklin Gothic Book', 12, 'bold'),size=(25,1)), sg.Input('30',key='Ampi')],
-          [sg.Button(image_filename=r'D:\TT2\b1.png', key='reppi',image_subsample=8,button_color=(sg.theme_background_color(), sg.theme_background_color())),sg.Button(image_filename='D:\TT2\home.png', key='Homedepi',image_subsample=8,button_color=(sg.theme_background_color(), sg.theme_background_color())),sg.Button('Continuar',size=(10,2),border_width=5,key='conpi',button_color='blue')]
+          [sg.Button(image_filename=r'./img/b1.png', key='reppi',image_subsample=8,button_color=(sg.theme_background_color(), sg.theme_background_color())),sg.Button(image_filename='./img/home.png', key='Homedepi',image_subsample=8,button_color=(sg.theme_background_color(), sg.theme_background_color())),sg.Button('Continuar',size=(10,2),border_width=5,key='conpi',button_color='blue')]
           ]
 
 layoutdepd=[[sg.Text('Evolución diferencial',text_color='white', font=('Franklin Gothic Book', 28, 'bold'))],
@@ -1283,7 +1284,7 @@ layoutdepd=[[sg.Text('Evolución diferencial',text_color='white', font=('Frankli
           [sg.Text('Tamaño de la población:', text_color='black', font=('Franklin Gothic Book', 12, 'bold'),size=(25,1)), sg.Input('200',key='popbpd')],
           [sg.Text('Número de generaciones:', text_color='black', font=('Franklin Gothic Book', 12, 'bold'),size=(25,1)), sg.Input('10',key='genpd')],
           [sg.Text('Tamaño del archivo:', text_color='black', font=('Franklin Gothic Book', 12, 'bold'),size=(25,1)), sg.Input('30',key='Ampd')],
-          [sg.Button(image_filename=r'D:\TT2\b1.png', key='reppd',image_subsample=8,button_color=(sg.theme_background_color(), sg.theme_background_color())),sg.Button(image_filename='D:\TT2\home.png', key='Homedepd',image_subsample=8,button_color=(sg.theme_background_color(), sg.theme_background_color())),sg.Button('Continuar',size=(10,2),border_width=5,key='conpd',button_color='blue')]
+          [sg.Button(image_filename=r'./img/b1.png', key='reppd',image_subsample=8,button_color=(sg.theme_background_color(), sg.theme_background_color())),sg.Button(image_filename='./img/home.png', key='Homedepd',image_subsample=8,button_color=(sg.theme_background_color(), sg.theme_background_color())),sg.Button('Continuar',size=(10,2),border_width=5,key='conpd',button_color='blue')]
           ]
 
 tapsv=[['Espere','se está','ejecutando','código','......'],['Espera','estamos','ejecutando','código','......']]
@@ -1307,27 +1308,27 @@ layoutsimpan=[[sg.Canvas(key='canani')]]
 layoutsimpgra=[[sg.Canvas(key='cangraps')]]
 
 layouttap=[[sg.TabGroup([[sg.Tab('Animación',layoutsimpan),sg.Tab('Gráficas', layoutsimpgra)]],tab_location='centertop',border_width=5)],
-           [sg.Column([[sg.Button(image_filename=r'D:\TT2\b1.png', key='Returnps',image_subsample=8,button_color=(sg.theme_background_color(), sg.theme_background_color())),sg.Button(image_filename='D:\TT2\home.png', key='Homesimups',image_subsample=8,button_color=(sg.theme_background_color(), sg.theme_background_color())),sg.Button('Salir',button_color='red',size=(3,2),border_width=5,key='Exit0')]],key='paps'),
-           sg.Column([[sg.Button(image_filename=r'D:\TT2\b1.png', key='Returnpsga',image_subsample=8,button_color=(sg.theme_background_color(), sg.theme_background_color())),sg.Button(image_filename='D:\TT2\home.png', key='Homesimupsga',image_subsample=8,button_color=(sg.theme_background_color(), sg.theme_background_color())),sg.Button('Salir',button_color='red',size=(3,2),border_width=5,key='Exit10')]],key='gapaps'),
-           sg.Column([[sg.Button(image_filename=r'D:\TT2\b1.png', key='Returnpspso',image_subsample=8,button_color=(sg.theme_background_color(), sg.theme_background_color())),sg.Button(image_filename='D:\TT2\home.png', key='Homesimupspso',image_subsample=8,button_color=(sg.theme_background_color(), sg.theme_background_color())),sg.Button('Salir',button_color='red',size=(3,2),border_width=5,key='Exit20')]],key='psopaps')
+           [sg.Column([[sg.Button(image_filename=r'./img/b1.png', key='Returnps',image_subsample=8,button_color=(sg.theme_background_color(), sg.theme_background_color())),sg.Button(image_filename='./img/home.png', key='Homesimups',image_subsample=8,button_color=(sg.theme_background_color(), sg.theme_background_color())),sg.Button('Salir',button_color='red',size=(3,2),border_width=5,key='Exit0')]],key='paps'),
+           sg.Column([[sg.Button(image_filename=r'./img/b1.png', key='Returnpsga',image_subsample=8,button_color=(sg.theme_background_color(), sg.theme_background_color())),sg.Button(image_filename='./img/home.png', key='Homesimupsga',image_subsample=8,button_color=(sg.theme_background_color(), sg.theme_background_color())),sg.Button('Salir',button_color='red',size=(3,2),border_width=5,key='Exit10')]],key='gapaps'),
+           sg.Column([[sg.Button(image_filename=r'./img/b1.png', key='Returnpspso',image_subsample=8,button_color=(sg.theme_background_color(), sg.theme_background_color())),sg.Button(image_filename='./img/home.png', key='Homesimupspso',image_subsample=8,button_color=(sg.theme_background_color(), sg.theme_background_color())),sg.Button('Salir',button_color='red',size=(3,2),border_width=5,key='Exit20')]],key='psopaps')
            ]]
 
 layoutinvpan=[[sg.Canvas(key='cananipi')]]
 layoutinvpgra=[[sg.Canvas(key='cangrapi')]]
 
 layouttappi=[[sg.TabGroup([[sg.Tab('Animación',layoutinvpan),sg.Tab('Gráficas', layoutinvpgra)]],tab_location='centertop',border_width=5)],
-           [sg.Column([[sg.Button(image_filename=r'D:\TT2\b1.png', key='Returnpi',image_subsample=8,button_color=(sg.theme_background_color(), sg.theme_background_color())),sg.Button(image_filename='D:\TT2\home.png', key='Homesimupi',image_subsample=8,button_color=(sg.theme_background_color(), sg.theme_background_color())),sg.Button('Salir',button_color='red',size=(3,2),border_width=5,key='Exit1')]],key='pide'),
-            sg.Column([[sg.Button(image_filename=r'D:\TT2\b1.png', key='Returnpiga',image_subsample=8,button_color=(sg.theme_background_color(), sg.theme_background_color())),sg.Button(image_filename='D:\TT2\home.png', key='Homesimupiga',image_subsample=8,button_color=(sg.theme_background_color(), sg.theme_background_color())),sg.Button('Salir',button_color='red',size=(3,2),border_width=5,key='Exit11')]],key='gapi'),
-            sg.Column([[sg.Button(image_filename=r'D:\TT2\b1.png', key='Returnpipso',image_subsample=8,button_color=(sg.theme_background_color(), sg.theme_background_color())),sg.Button(image_filename='D:\TT2\home.png', key='Homesimupipso',image_subsample=8,button_color=(sg.theme_background_color(), sg.theme_background_color())),sg.Button('Salir',button_color='red',size=(3,2),border_width=5,key='Exit2')]],key='psooppi')
+           [sg.Column([[sg.Button(image_filename=r'./img/b1.png', key='Returnpi',image_subsample=8,button_color=(sg.theme_background_color(), sg.theme_background_color())),sg.Button(image_filename='./img/home.png', key='Homesimupi',image_subsample=8,button_color=(sg.theme_background_color(), sg.theme_background_color())),sg.Button('Salir',button_color='red',size=(3,2),border_width=5,key='Exit1')]],key='pide'),
+            sg.Column([[sg.Button(image_filename=r'./img/b1.png', key='Returnpiga',image_subsample=8,button_color=(sg.theme_background_color(), sg.theme_background_color())),sg.Button(image_filename='./img/home.png', key='Homesimupiga',image_subsample=8,button_color=(sg.theme_background_color(), sg.theme_background_color())),sg.Button('Salir',button_color='red',size=(3,2),border_width=5,key='Exit11')]],key='gapi'),
+            sg.Column([[sg.Button(image_filename=r'./img/b1.png', key='Returnpipso',image_subsample=8,button_color=(sg.theme_background_color(), sg.theme_background_color())),sg.Button(image_filename='./img/home.png', key='Homesimupipso',image_subsample=8,button_color=(sg.theme_background_color(), sg.theme_background_color())),sg.Button('Salir',button_color='red',size=(3,2),border_width=5,key='Exit2')]],key='psooppi')
             ]]
 
 layoutanpd=[[sg.Canvas(key='cananipd')]]
 layoutgrapd=[[sg.Canvas(key='cangrapd')]]
 
 layouttappd=[[sg.TabGroup([[sg.Tab('Animación',layoutanpd),sg.Tab('Gráficas', layoutgrapd)]],tab_location='centertop',border_width=5)],
-           [sg.Column([[sg.Button(image_filename=r'D:\TT2\b1.png', key='Returnpd',image_subsample=8,button_color=(sg.theme_background_color(), sg.theme_background_color())),sg.Button(image_filename='D:\TT2\home.png', key='Homesimupd',image_subsample=8,button_color=(sg.theme_background_color(), sg.theme_background_color())),sg.Button('Salir',button_color='red',size=(3,2),border_width=5,key='Exit2')]],key='tappdde'),
-           sg.Column([[sg.Button(image_filename=r'D:\TT2\b1.png', key='Returnpdga',image_subsample=8,button_color=(sg.theme_background_color(), sg.theme_background_color())),sg.Button(image_filename='D:\TT2\home.png', key='Homesimupdga',image_subsample=8,button_color=(sg.theme_background_color(), sg.theme_background_color())),sg.Button('Salir',button_color='red',size=(3,2),border_width=5,key='Exit21')]],key='tappdga'),
-           sg.Column([[sg.Button(image_filename=r'D:\TT2\b1.png', key='Returnpdpso',image_subsample=8,button_color=(sg.theme_background_color(), sg.theme_background_color())),sg.Button(image_filename='D:\TT2\home.png', key='Homesimupdpso',image_subsample=8,button_color=(sg.theme_background_color(), sg.theme_background_color())),sg.Button('Salir',button_color='red',size=(3,2),border_width=5,key='Exit22')]],key='tappdpso'),
+           [sg.Column([[sg.Button(image_filename=r'./img/b1.png', key='Returnpd',image_subsample=8,button_color=(sg.theme_background_color(), sg.theme_background_color())),sg.Button(image_filename='./img/home.png', key='Homesimupd',image_subsample=8,button_color=(sg.theme_background_color(), sg.theme_background_color())),sg.Button('Salir',button_color='red',size=(3,2),border_width=5,key='Exit2')]],key='tappdde'),
+           sg.Column([[sg.Button(image_filename=r'./img/b1.png', key='Returnpdga',image_subsample=8,button_color=(sg.theme_background_color(), sg.theme_background_color())),sg.Button(image_filename='./img/home.png', key='Homesimupdga',image_subsample=8,button_color=(sg.theme_background_color(), sg.theme_background_color())),sg.Button('Salir',button_color='red',size=(3,2),border_width=5,key='Exit21')]],key='tappdga'),
+           sg.Column([[sg.Button(image_filename=r'./img/b1.png', key='Returnpdpso',image_subsample=8,button_color=(sg.theme_background_color(), sg.theme_background_color())),sg.Button(image_filename='./img/home.png', key='Homesimupdpso',image_subsample=8,button_color=(sg.theme_background_color(), sg.theme_background_color())),sg.Button('Salir',button_color='red',size=(3,2),border_width=5,key='Exit22')]],key='tappdpso'),
            ]]
 
 layout1=[[sg.Column(layouthome,key='Home'),sg.Column(layouts, visible=False,key='Sim'),sg.Column(layoutde,key='depara',visible=False),sg.Column(layoutpfps,key='pfps',visible=False),sg.Column(layouttap,key='resps',visible=False),
@@ -1470,6 +1471,10 @@ while True:
             window['Tabl'].update(values=valu)
             #After making changes, fig_agg.draw()Reflect the change with.
             fig_agg.draw()
+            nair_scatter = ax.scatter(valu[:, 3], valu[:, 4], c="blue", s=3)
+            crs1 = mplcursors.cursor(nair_scatter, hover=True)
+            crs1.connect("add", cursor1_annotations)
+
         except:
             sg.popup('Todos los datos ingresados deben ser númericos, presione ok e intente de nuevo')
             window['pfps'].update(visible=False)
