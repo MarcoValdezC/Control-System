@@ -1163,6 +1163,23 @@ def draw_figure(canvas, figure):
     figure_canvas_agg.get_tk_widget().pack(side='top', fill='both', expand=1)
     return figure_canvas_agg
 
+def pick_scatter_plot():
+    # picking on a scatter plot (matplotlib.collections.RegularPolyCollection)
+
+    #x, y, c, s = rand(4, 100)
+
+    def onpick3(event):
+        ind = event.ind
+        print('onpick3 scatter:', ind, valu[ind, 3], valu[ind, 4])
+
+    #fig, ax = plt.subplots()
+    #ax.scatter(x, y, 100*s, c, picker=True)
+    fig.canvas.mpl_connect('pick_event', onpick3)
+
+
+def cursor1_annotations(sel):
+    sel.annotation.set_text(
+        'ISE: {:.4f} \nIADU: {:.4f}'.format(sel.target[0], sel.target[1]))
 
 ##-----DEFAULT SETTINGS----------------------------------##
 bw: dict = {'size': (20, 20), 'font': ('Franklin Gothic Book', 60), 'button_color': ("blue", "#F8F8F8")}
@@ -1172,7 +1189,7 @@ bo: dict = {'size': (15, 2), 'font': ('Arial', 24), 'button_color': ("black", "#
 layouthome= [[sg.Text('CONTROL PID CON OPTIMIZACIÓN MULTIOBJETIVO',justification='center', 
              text_color='white', font=('Franklin Gothic Book', 28, 'bold'))],
              [sg.Text('Selecciona un péndulo:', justification='center',text_color='white', font=('Franklin Gothic Book', 14, 'bold'))],
-             [sg.Button(image_filename='D:\TT2\PS.png' ,key='Simple',button_color=(sg.theme_background_color(), sg.theme_background_color())), sg.Button(image_filename='D:\TT2\PI.png', key='Invertido',button_color=(sg.theme_background_color(), sg.theme_background_color())),sg.Button(image_filename='D:\TT2\PD.png', key='Doble')],
+             [sg.Button(image_filename='./img/PS.png' ,key='Simple',button_color=(sg.theme_background_color(), sg.theme_background_color())), sg.Button(image_filename='D:\TT2\PI.png', key='Invertido',button_color=(sg.theme_background_color(), sg.theme_background_color())),sg.Button(image_filename='D:\TT2\PD.png', key='Doble')],
              [sg.Text('Simple',size=(38,2),justification='center',font=('Franklin Gothic Book', 15, 'bold')), sg.Text('Invertido',size=(38,2), justification='center',font=('Franklin Gothic Book', 15, 'bold')),sg.Text('Doble',size=(38,2),justification='center',font=('Franklin Gothic Book', 15, 'bold'))],
              [sg.Button('Salir',button_color='red',size=(5,2),border_width=5,key='Exit')]]
 
