@@ -14,9 +14,11 @@ import math
 import matplotlib.pyplot as plt
 from drawnow import *
 import matplotlib.animation as animation
-from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
-from numpy.linalg import inv
 
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolbar2Tk
+
+from numpy.linalg import inv
+from matplotlib.widgets  import RectangleSelector
 import os
 from scipy import linalg
 from scipy.integrate import odeint 
@@ -1290,6 +1292,7 @@ layoutdepd=[[sg.Text('Evolución diferencial',text_color='white', font=('Frankli
 tapsv=[['Espere','se está','ejecutando','código','......'],['Espera','estamos','ejecutando','código','......']]
 
 layoutpfps=[[sg.Text('Seleccione un conjunto de ganancias del controlador  PID',text_color='white', font=('Franklin Gothic Book', 20, 'bold'))],
+            [sg.Canvas(key='canw')],
             [sg.Table(values=tapsv ,headings=['Kp' , 'Kd' ,' Ki','ISE','IADU'],auto_size_columns=True,right_click_selects=True,enable_click_events=True, key='Tabl',vertical_scroll_only=False,num_rows=25 ), sg.Canvas(key='can')],
             [sg.Button('Simular',key='Simups'), sg.Button('Simular',key='Simupsga'),sg.Button('Simular',key='Simupspso')]]
 
@@ -1629,15 +1632,15 @@ while True:
             gen=int(values['genga'])
             AMAX=int(values['Amga'])
             eta=int(values['eta'])
-                
-            #llamado de la función main de DE
+                    
+                #llamado de la función main de DE
             sg.popup('Ejecución de Algoritmo genético, espere para poder observar el resultado (conjunto de ganancias para el controlador PID). Las ganancias permitirán al péndulo llegar de la posición inicial a la deseada. Presione ok para continuar con la ejecución')
             var= moga( limit, pop,eta, gen,D,M,AMAX,pendulum_s,dinps)
             valu=np.zeros((len(var[0]),5))
-            
+                
             t=var[0]
             s=var[1]
-            
+                
             valu[:,0]=s[:,0]
             valu[:,1]=s[:,1]
             valu[:,2]=s[:,2]
@@ -1645,24 +1648,28 @@ while True:
             valu[:,4]=t[:,1]
             indexso=np.argsort(t[:,0])
             valu=valu[indexso]
-                
+                    
             filename="afaga.txt" 
             myFile=open(filename,'w') 
             myFile.write("kp,kd,ki,f1, f2 \n") 
             for l in range(len(t)): 
                 myFile.write(str(s[l, 0])+","+str(s[l, 1])+","+str(s[l, 2])+","+str(t[l, 0])+","+str(t[l, 1])+"\n") 
             myFile.close()
-            
-            #Create a fig for embedding.
+                
+                #Create a fig for embedding.
             ax.cla()
             ax.set_title('Aproximación al Frente de Pareto')
             ax.set_xlabel('ISE')
             ax.set_ylabel('IADU')
-             
-            #plot
-            ax.scatter(t[:,0], t[:,1])   
+                
+                #plot
+            ax.scatter(t[:,0], t[:,1]) 
+            nair_scatter = ax.scatter(t[:,0], t[:,1], c="blue", s=3)
+            crs1 = mplcursors.cursor(nair_scatter, hover=True)
+            crs1.connect("add", cursor1_annotations)  
             window['Tabl'].update(values=valu)
-            #After making changes, fig_agg.draw()Reflect the change with.
+        
+        #After making changes, fig_agg.draw()Reflect the change with.
             fig_agg.draw()
         except:
             sg.popup('Todos los datos ingresados deben ser númericos, presione ok e intente de nuevo')
@@ -1842,7 +1849,11 @@ while True:
             #plot
             ax.scatter(t[:,0], t[:,1])   
             #After making changes, fig_agg.draw()Reflect the change with.
+            nair_scatter = ax.scatter(t[:,0], t[:,1], c="blue", s=3)
+            crs1 = mplcursors.cursor(nair_scatter, hover=True)
+            crs1.connect("add", cursor1_annotations)  
             fig_agg.draw()
+
         except:
             sg.popup('Todos los datos ingresados deben ser númericos, presione ok e intente de nuevo')
             window['pfps'].update(visible=False)
@@ -2039,10 +2050,13 @@ while True:
             ax6.set_xlabel('ISE')
             ax6.set_ylabel('IADU')
         
-            ax6.scatter(tpi[:,0], tpi[:,1])
-        
+             
             window['Tablpi'].update(values=valupi)
             #After making changes, fig_agg.draw()Reflect the change with.
+            ax6.scatter(tpi[:,0], tpi[:,1])
+            nair_scatter = ax6.scatter(tpi[:,0], tpi[:,1], c="blue", s=3)
+            crs1 = mplcursors.cursor(nair_scatter, hover=True)
+            crs1.connect("add", cursor1_annotations) 
             fig_aggpi.draw()
             
         except:
@@ -2276,6 +2290,9 @@ while True:
             ax6.set_ylabel('IADU')
             
             ax6.scatter(tpi[:,0], tpi[:,1])
+            nair_scatter = ax6.scatter(tpi[:,0], tpi[:,1], c="blue", s=3)
+            crs1 = mplcursors.cursor(nair_scatter, hover=True)
+            crs1.connect("add", cursor1_annotations)  
             
             window['Tablpi'].update(values=valupi)
             #After making changes, fig_agg.draw()Reflect the change with.
@@ -2512,6 +2529,9 @@ while True:
             ax6.set_ylabel('IADU')
         
             ax6.scatter(tpi[:,0], tpi[:,1])
+            nair_scatter = ax6.scatter(tpi[:,0], tpi[:,1], c="blue", s=3)
+            crs1 = mplcursors.cursor(nair_scatter, hover=True)
+            crs1.connect("add", cursor1_annotations)  
         
             window['Tablpi'].update(values=valupi)
             #After making changes, fig_agg.draw()Reflect the change with.
@@ -2747,6 +2767,9 @@ while True:
         
             #plot
             ax30.scatter(tpd[:,0], tpd[:,1])
+            nair_scatter = ax30.scatter(tpd[:,0], tpd[:,1], c="blue", s=3)
+            crs1 = mplcursors.cursor(nair_scatter, hover=True)
+            crs1.connect("add", cursor1_annotations) 
 
             window['Tablpd'].update(values=valupd)
             #After making changes, fig_agg.draw()Reflect the change with.
@@ -2996,6 +3019,9 @@ while True:
         
             #plot
             ax30.scatter(tpd[:,0], tpd[:,1])
+            nair_scatter = ax30.scatter(tpd[:,0], tpd[:,1], c="blue", s=3)
+            crs1 = mplcursors.cursor(nair_scatter, hover=True)
+            crs1.connect("add", cursor1_annotations) 
 
             window['Tablpd'].update(values=valupd)
             #After making changes, fig_agg.draw()Reflect the change with.
@@ -3250,6 +3276,9 @@ while True:
         
             #plot
             ax30.scatter(tpd[:,0], tpd[:,1])
+            nair_scatter = ax30.scatter(tpd[:,0], tpd[:,1], c="blue", s=3)
+            crs1 = mplcursors.cursor(nair_scatter, hover=True)
+            crs1.connect("add", cursor1_annotations) 
 
             window['Tablpd'].update(values=valupd)
             #After making changes, fig_agg.draw()Reflect the change with.
