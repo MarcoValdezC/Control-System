@@ -1456,7 +1456,7 @@ while True:
             indexso=np.argsort(t[:,0])
             valu=valu[indexso]
             
-            filename="afa.txt" 
+            filename="afa.csv" 
             myFile=open(filename,'w') 
             myFile.write("kp,kd,ki,f1, f2 \n") 
             for l in range(len(t)): 
@@ -1504,7 +1504,7 @@ while True:
         
         afe=values['Tabl']
         #print(s[afe[0],:])
-        pen=pendulum_s(s[afe[0],:], dinps)
+        pen=pendulum_s(valu[afe[0],:], dinps)
         posi=pen[2]
         tor=pen[3]
         tim=pen[4]
@@ -1649,7 +1649,7 @@ while True:
             indexso=np.argsort(t[:,0])
             valu=valu[indexso]
                     
-            filename="afaga.txt" 
+            filename="afaga.csv" 
             myFile=open(filename,'w') 
             myFile.write("kp,kd,ki,f1, f2 \n") 
             for l in range(len(t)): 
@@ -1687,7 +1687,7 @@ while True:
         
         afe=values['Tabl']
         #print(s[afe[0],:])
-        pen=pendulum_s(s[afe[0],:], dinps)
+        pen=pendulum_s(valu[afe[0],:], dinps)
         posi=pen[2]
         tor=pen[3]
         tim=pen[4]
@@ -1833,7 +1833,7 @@ while True:
             indexso=np.argsort(t[:,0])
             valu=valu[indexso]
                 
-            filename="afapso.txt" 
+            filename="afapso.csv" 
             myFile=open(filename,'w') 
             myFile.write("kp,kd,ki,f1, f2 \n") 
             for l in range(len(t)): 
@@ -1877,7 +1877,7 @@ while True:
         
         afe=values['Tabl']
         #print(s[afe[0],:])
-        pen=pendulum_s(s[afe[0],:], dinps)
+        pen=pendulum_s(valu[afe[0],:], dinps)
         posi=pen[2]
         tor=pen[3]
         tim=pen[4]
@@ -2076,7 +2076,8 @@ while True:
         window['psooppi'].update(visible=False)
         afepi=values['Tablpi']
        
-        penpi=inverted_pendulum(spi[afepi[0],:], dinpi)
+        penpi=inverted_pendulum(valupi[afepi[0],:], dinpi)
+        
         posipi=penpi[2]
         torpi=penpi[3]
         timpi=penpi[4]
@@ -2311,7 +2312,7 @@ while True:
         
         afepi=values['Tablpi']
        
-        penpi=inverted_pendulum(spi[afepi[0],:], dinpi)
+        penpi=inverted_pendulum(valupi[afepi[0],:], dinpi)
         posipi=penpi[2]
         torpi=penpi[3]
         timpi=penpi[4]
@@ -2551,7 +2552,8 @@ while True:
         
         afepi=values['Tablpi']
        
-        penpi=inverted_pendulum(spi[afepi[0],:], dinpi)
+        penpi=inverted_pendulum(valupi[afepi[0],:], dinpi)
+        
         posipi=penpi[2]
         torpi=penpi[3]
         timpi=penpi[4]
@@ -2791,7 +2793,7 @@ while True:
         
         afepd=values['Tablpd']
        
-        penpd=double_pendulum(spd[afepd[0],:], dinpd)
+        penpd=double_pendulum(valupd[afepd[0],:], dinpd)
         posipd=penpd[2]
         torpd=penpd[3]
         timpd=penpd[4]
@@ -3045,7 +3047,7 @@ while True:
         
         afepd=values['Tablpd']
        
-        penpd=double_pendulum(spd[afepd[0],:], dinpd)
+        penpd=double_pendulum(valupd[afepd[0],:], dinpd)
         posipd=penpd[2]
         torpd=penpd[3]
         timpd=penpd[4]
@@ -3298,7 +3300,7 @@ while True:
         
         afepd=values['Tablpd']
        
-        penpd=double_pendulum(spd[afepd[0],:], dinpd)
+        penpd=double_pendulum(valupd[afepd[0],:], dinpd)
         posipd=penpd[2]
         torpd=penpd[3]
         timpd=penpd[4]
