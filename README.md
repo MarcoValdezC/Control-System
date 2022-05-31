@@ -20,3 +20,32 @@ Librerias requeridas: <br>
 * PySimpleGUI versión 4.56.0
 * PySimpleGUIQt versión 0.35.0
 * scipy versión 1.7.1
+
+## Algoritmo Genético
+
+Nombre de los archivos:<br>
+
+* MOGA_PD_ARCHIVE.py
+* MOGA_PI_ARCHIVE.py
+* MOGA_PS_ARCHIVE.py
+
+Ests programas contienen el Algoritmo Genétco aplicado a los 3 sistemas, en el primero, aplicado al péndulo doble, el segundo aplicado al péndulo invertido y el último aplicado al péndulo simple. Todos estos programas dan como resultado la aproximación al frente de Pareto, así como una versión preliminar del calculo de Hipervolumen.
+
+Las bibliotecas requeridas: <br>
+
+* matplotlib versión 3.4.3
+* numpy versión 1.21.2
+
+## Enjambre de Partpículas
+
+Nombre de los archivos:
+
+* MOPSO_FrentePareto.py
+* MOPSO_PD_ARCHIVE.py
+* MOPSO_PI_ARCHIVE.py
+
+De igual manera, cada programa corresponde a una versión preliminar del calculo de Hipervolumen aplicado al péndulo simple, doble e invertido respectivamente.
+Las librerias requeridas: <br>
+
+* matplotlib versión 3.4.3
+* numpy versión 1.21.2
