@@ -1,8 +1,0 @@
-Con settings.ini se establece las condiciones del experimento (NP, GMax, Runs, SaveG)
-
-En cada Algoritmo.m se puede cambiar los parámetros propios del mismo como CR y F en Parametros.m. En parametros.m incluir 
-
-En cada problema en limites.m se puede cambiar los límites en las variables de diseño.
-
-Se corre con SetAlgortimos.m
-

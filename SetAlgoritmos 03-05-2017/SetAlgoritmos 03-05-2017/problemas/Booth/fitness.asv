@@ -1,4 +1,0 @@
-function f = fitness(x)
-f=(1 + (x(1)+x(2)+1) ...
-    + ();
-end

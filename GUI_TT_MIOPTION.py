@@ -9,14 +9,11 @@ import PySimpleGUI as sg
 import math 
 import numpy as np 
 import random
-
 import math
 import matplotlib.pyplot as plt
 from drawnow import *
 import matplotlib.animation as animation
-
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolbar2Tk
-
 from numpy.linalg import inv
 from matplotlib.widgets  import RectangleSelector
 import os
@@ -1340,7 +1337,7 @@ layout1=[[sg.Column(layouthome,key='Home'),sg.Column(layouts, visible=False,key=
           sg.Column(layoutd,key='Dob',visible=False),sg.Column(layoutdepd,key='deparapd',visible=False),sg.Column(layoutpfpd,key='pfpd',visible=False),sg.Column(layouttappd,key='respd',visible=False)]]
         
 
-window = sg.Window('Swapping the contents of a window', layout1, finalize=True,resizable=True)
+window = sg.Window('TT2', layout1, finalize=True,resizable=True)
 #Associate fig with Canvas.
 fig = plt.figure(figsize=(6, 5))
 ax = fig.add_subplot(111)
