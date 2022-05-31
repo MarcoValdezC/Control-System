@@ -4,7 +4,7 @@ Este repositorio contiene los archivos de la interfaz de usuario, creada en pyth
 Tambien contiene la versión de prueba del calculo de Hipervolumen. A continuación se describiran cada uno de los programas ya mencionados.
 
 ## GUI
-Nombre del archivo: GUI_TT_MIOPTION.py
+Nombre del archivo: GUI_TT_MIOPTION.py <br>
 La implementación de la GUI fue realizada con la biblioteca de PySimpleGUI, la cual fue seleccionada por su simplicidad de uso.
 La interfaz grafica permite al usuario seleccionar el sistema a sintonizar, ingresar los parámetros dinámicos característicos de cada sistema, así como sleccionar el algoritmo metaheurístico deseado, posteriormente se deberan ingresar los parámetros necesarios de cada algoritmo, según sea el caso.
 Al aceptar la ejeción del algoritmo seleccionado, se presentara la aproximación al frente de Pareto junto con una tabla que presenta el conjunto de soluciones inmejorables obtenidas por el algoritmo evolutivo.
