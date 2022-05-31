@@ -49,3 +49,16 @@ Las librerias requeridas: <br>
 
 * matplotlib versión 3.4.3
 * numpy versión 1.21.2
+
+## Hipervolumen
+
+Los resultados de las ejecuciones de HIPERVOLUMEN, así como los programas usados para obtenerlos se encuentran en dentro de la carpeta Hipervolumen.
+Dentro de esta carpeta se encuentran 3 carpetas, las cuales se enlistas a continuación:<br>
+
+* pendulo-doble
+* pendulo-invertido
+* pendulo-simple
+
+Dentro de cada carpeta se encunetran los programas ejecutados, es decir, se encuntra un programa por cada algoritmo (Evolución Diferencial, Algotimo Gnético y Algoritmo de Enjambre de Partículas), así como los resultados obtenidos de las ejeciones del calculo de Hipervolumen.
+Los archivos de resultados se encuentra en formato txt, mismos que fueron usados para la prueba de Wilcoxon.
+Esta prueba nos brindo una manera adecuada de realizar la comparación de manera adecuada entre algoritmos.
