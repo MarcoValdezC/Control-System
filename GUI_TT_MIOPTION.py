@@ -2857,6 +2857,7 @@ while True:
         x1=l1*np.sin(posipd[:,0])
         y1=-l1*np.cos(posipd[:,0])
 
+
         x2=l1*np.sin(posipd[:,0])+ l2*np.sin(posipd[:,0]+posipd[:,1])
         y2=-l1*np.cos(posipd[:,0])- l2*np.cos(posipd[:,0]+posipd[:,1])
    
