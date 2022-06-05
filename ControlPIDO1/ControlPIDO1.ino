@@ -8,6 +8,7 @@ int forWARDS  = 1;
 int backWARDS = 0;
 const byte    encA     =  2;                  // Signal for channel A
 const byte    encB     =  3;
+byte cmd;
 //kp=9.0123585312173
 //kd=3.87462795414925
 double Setpoint, Input, Output;
@@ -51,11 +52,12 @@ Serial.println("Basic Encoder Test:");
 long oldPosition  = -999;
 void loop() {
   // put your main code here, to run repeatedly:
-
+  input_data();
   long newPosition = myEnc.read();
   if (newPosition != oldPosition) {
     oldPosition = newPosition;
     Serial.println((newPosition*2*pi)/resolucion);
+    Serial.println((Setpoint*2*pi)/resolucion);
   }
   Input=newPosition;
   error= Setpoint-newPosition;
@@ -83,6 +85,7 @@ RunMotor(uf);
 }
 
 void RunMotor(double Usignal){  
+  
   if (Setpoint-Input==0){
     shaftrev(IN1,IN2,PWM1,backWARDS, 0);
     digitalWrite(EN, LOW);
@@ -124,5 +127,21 @@ void shaftrev(int in1, int in2, int PWM, int sentido,int Wpulse){
     digitalWrite(in1, HIGH);
     analogWrite(PWM,Wpulse);    
     digitalWrite(EN, HIGH); 
+    }
+}
+
+
+void input_data(void){
+  if (Serial.available() > 0){           // Check if you have received any data through the serial terminal.
+  
+      cmd = 0;                            // clean CMD
+      cmd = Serial.read();                // "cmd" keep the recived byte
+      if (cmd > 31){
+        if (cmd == '0') { Setpoint = 0.0; Serial.println((Setpoint*2*pi)/resolucion);  }  // Ir a Inicio.                    
+        if (cmd == '1') { Setpoint = 13650.0; Serial.println((Setpoint*2*pi)/resolucion); }  
+        if (cmd == '2') { Setpoint = 6825.0; Serial.println((Setpoint*2*pi)/resolucion); }  //
+        if (cmd == '3') { Setpoint = 3413.0; Serial.println((Setpoint*2*pi)/resolucion);}  //
+        if (cmd == '4') { Setpoint = 2275.0;Serial.println((Setpoint*2*pi)/resolucion); }
+      }
     }
 }
