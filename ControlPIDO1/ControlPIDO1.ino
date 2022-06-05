@@ -137,11 +137,11 @@ void input_data(void){
       cmd = 0;                            // clean CMD
       cmd = Serial.read();                // "cmd" keep the recived byte
       if (cmd > 31){
-        if (cmd == '0') { Setpoint = 0.0; Serial.println((Setpoint*2*pi)/resolucion);  }  // Ir a Inicio.                    
-        if (cmd == '1') { Setpoint = 13650.0; Serial.println((Setpoint*2*pi)/resolucion); }  
-        if (cmd == '2') { Setpoint = 6825.0; Serial.println((Setpoint*2*pi)/resolucion); }  //
-        if (cmd == '3') { Setpoint = 3413.0; Serial.println((Setpoint*2*pi)/resolucion);}  //
-        if (cmd == '4') { Setpoint = 2275.0;Serial.println((Setpoint*2*pi)/resolucion); }
+        if (cmd == '0') { Setpoint = 0.0;  }  // Ir a Inicio.                    
+        if (cmd == '1') { Setpoint = 13650.0;  }  
+        if (cmd == '2') { Setpoint = 6825.0;  }  //
+        if (cmd == '3') { Setpoint = 3413.0; }  //
+        if (cmd == '4') { Setpoint = 2275.0; }
       }
     }
 }

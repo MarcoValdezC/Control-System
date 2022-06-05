@@ -135,10 +135,10 @@ void input_data(void){
       cmd = Serial.read();                // "cmd" keep the recived byte
       if (cmd > 31){
         if (cmd == '0') { Setpoint = 0.0;  }  // Ir a Inicio.                    
-        if (cmd == '1') { Setpoint = 13650.0;  }  
-        if (cmd == '2') { Setpoint = 6825.0;  }  //
-        if (cmd == '3') { Setpoint = 3413.0; }  //
-        if (cmd == '4') { Setpoint = 2275.0; }
+        if (cmd == '1') { Setpoint = 800.0;  }  
+        if (cmd == '2') { Setpoint = 400.0;  }  //
+        if (cmd == '3') { Setpoint = 200.0; }  //
+        if (cmd == '4') { Setpoint = 267.0; }
       }
     }
 }
