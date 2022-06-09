@@ -47,7 +47,7 @@ void setup() {
   Setpoint = po1;//13650/4;
   // put your setup code here, to run once:
 Serial.begin(9600);
-Serial.println("Basic Encoder Test:");
+Serial.println("Ingrese el ángulo deseado:");
 }
 long oldPosition  = -999;
 void loop() {
