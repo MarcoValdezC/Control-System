@@ -115,7 +115,7 @@ def pendulum_s(r,dyna):
         
         vol[o] =(limcontro(Kp * e_th + Kd * e_th_dot + Ki * ie_th)/(14*kt))+(th_dot*kt*14/R)
         #print(vol[o])
-        u[o,0]=limcontro(((vol[o]/kt)-th_dot)*(kt**2/R)*131)
+        u[o,0]=limcontro(((vol[o]/kt)-th_dot)*(kt**2/R)*14)
  
         
         
