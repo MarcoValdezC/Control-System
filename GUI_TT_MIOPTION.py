@@ -49,12 +49,12 @@ def dominates(_a, _b):
 #Funcón de límite del actuador
 
 def limcontro(u):
-    if(u>2.94):
-        ur=2.94
-    elif(u>=-2.94 and u<=2.94):
-        ur=u
+    if(u > 4.41):
+        ur = 4.41
+    elif(u >= -4.41 and u <= 4.41):
+        ur = u
     else:
-        ur=-2.94
+        ur = -4.41
     
     return ur
 #-----------------------------------------------------------------------------
@@ -68,8 +68,8 @@ def pendulum_s(r,dyna):
     tf = 10.0  # Tiempo inicial de la simulación (10s)
     n = int((tf - ti) / dt) + 1  # Número de muestras
     t = np.linspace(ti, tf, n)  # Vector con los intsntes de tiempo (en Matlab 0:0.005:10)
-    kt=0.041042931
-    R=4.19
+    kt=0.1223
+    R=48.9
     
     '''Dynamics Parameters'''
     m = dyna[0]  # Masa del pendulo (kg)
@@ -113,9 +113,9 @@ def pendulum_s(r,dyna):
         Kd =r[1]
         Ki =r[2]
         
-        vol[o] =(limcontro(Kp * e_th + Kd * e_th_dot + Ki * ie_th)/(14*kt))+(th_dot*kt*14/R)
-   
-        u[o,0]=limcontro(((vol[o]/kt)-th_dot)*(kt**2/R)*14)
+        vol[o] =(limcontro(Kp * e_th + Kd * e_th_dot + Ki * ie_th)/(131*kt))+(th_dot*kt*131/R)
+        #print(vol[o])
+        u[o,0]=limcontro(((vol[o]/kt)-th_dot)*(kt**2/R)*131)
  
         
         
@@ -132,8 +132,8 @@ def pendulum_s(r,dyna):
         ise=ise_next+(e_th**2)*dt
         iadu=iadu_next+ (abs(u[o]-u[o-1]))*dt
         g=0
-        if(ise>=10):
-            ie=10
+        if(ise>=20):
+            ie=20
             g+=1
         else:
             ie=ise
