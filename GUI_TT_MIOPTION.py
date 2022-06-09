@@ -68,6 +68,8 @@ def pendulum_s(r,dyna):
     tf = 10.0  # Tiempo inicial de la simulación (10s)
     n = int((tf - ti) / dt) + 1  # Número de muestras
     t = np.linspace(ti, tf, n)  # Vector con los intsntes de tiempo (en Matlab 0:0.005:10)
+    kt=0.041042931
+    R=4.19
     
     '''Dynamics Parameters'''
     m = dyna[0]  # Masa del pendulo (kg)
@@ -82,7 +84,8 @@ def pendulum_s(r,dyna):
 
     '''Control vector'''
     u = np.zeros((n, 1))
-    
+    vol=np.zeros(n)
+
     
     ise=0
     ise_next=0
@@ -110,7 +113,9 @@ def pendulum_s(r,dyna):
         Kd =r[1]
         Ki =r[2]
         
-        u[o,0]= limcontro(Kp * e_th + Kd * e_th_dot + Ki * ie_th)
+        vol[o] =(limcontro(Kp * e_th + Kd * e_th_dot + Ki * ie_th)/(14*kt))+(th_dot*kt*14/R)
+   
+        u[o,0]=limcontro(((vol[o]/kt)-th_dot)*(kt**2/R)*14)
  
         
         
@@ -127,8 +132,8 @@ def pendulum_s(r,dyna):
         ise=ise_next+(e_th**2)*dt
         iadu=iadu_next+ (abs(u[o]-u[o-1]))*dt
         g=0
-        if(ise>=3):
-            ie=3
+        if(ise>=10):
+            ie=10
             g+=1
         else:
             ie=ise
@@ -1194,9 +1199,9 @@ layouthome= [[sg.Text('CONTROL PID CON OPTIMIZACIÓN MULTIOBJETIVO',justificatio
              [sg.Button('Salir',button_color='red',size=(5,2),border_width=5,key='Exit')]]
 
 layouts=[[sg.Text('Péndulo Simple:',text_color='white', font=('Franklin Gothic Book', 28, 'bold')) ],
-            [sg.Text('Masa (m):', text_color='black', font=('Franklin Gothic Book', 12, 'bold'),size=(24,1)), sg.Input('0.5',key='masaps'),sg.Text('kg', text_color='black', font=('Franklin Gothic Book', 12, 'bold'))],
-            [sg.Text('Longitud (l):', text_color='black', font=('Franklin Gothic Book', 12, 'bold'),size=(24,1)), sg.InputText('1',key='lps'),sg.Text('m', text_color='black', font=('Franklin Gothic Book', 12, 'bold'))],
-            [sg.Text('Longitud al centro masa (lc):', text_color='black', font=('Franklin Gothic Book', 12, 'bold'),size=(24,1)), sg.InputText('0.3',key='lcps'),sg.Text('m', text_color='black', font=('Franklin Gothic Book', 12, 'bold'))],
+            [sg.Text('Masa (m):', text_color='black', font=('Franklin Gothic Book', 12, 'bold'),size=(24,1)), sg.Input('0.06555',key='masaps'),sg.Text('kg', text_color='black', font=('Franklin Gothic Book', 12, 'bold'))],
+            [sg.Text('Longitud (l):', text_color='black', font=('Franklin Gothic Book', 12, 'bold'),size=(24,1)), sg.InputText('0.443',key='lps'),sg.Text('m', text_color='black', font=('Franklin Gothic Book', 12, 'bold'))],
+            [sg.Text('Longitud al centro masa (lc):', text_color='black', font=('Franklin Gothic Book', 12, 'bold'),size=(24,1)), sg.InputText('0.2215',key='lcps'),sg.Text('m', text_color='black', font=('Franklin Gothic Book', 12, 'bold'))],
             [sg.Text('Fricción (b):', text_color='black', font=('Franklin Gothic Book', 12, 'bold '),size=(24,1)), sg.InputText('0.05',key='bps'),sg.Text('Ns/m', text_color='black', font=('Franklin Gothic Book', 12, 'bold'))],
             [sg.Text('Momento de inercia (I):', text_color='black', font=('Franklin Gothic Book', 12, 'bold'),size=(24,1)), sg.InputText('0.006',key='ips'),sg.Text('kgm^2', text_color='black', font=('Franklin Gothic Book', 12, 'bold'))],
             [sg.Text('Set point (rad):', text_color='black', font=('Franklin Gothic Book', 12, 'bold italic'),size=(24,1)), sg.InputText('3.1416',key='sps'),sg.Text('rad', text_color='black', font=('Franklin Gothic Book', 12, 'bold'))],
@@ -1572,7 +1577,7 @@ while True:
         ax3.cla()
         ax4.cla()
         ani_a.event_source.stop()
-        
+        ani_a.new_frame_seq()
         
  
     elif event=='Homesimups':

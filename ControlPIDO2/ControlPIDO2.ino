@@ -8,7 +8,7 @@ int forWARDS  = 1;
 int backWARDS = 0;
 const byte    encA     =  2;                  // Signal for channel A
 const byte    encB     =  3;
-byte cmd;
+double cmd;
 //kp=9.0123585312173
 //kd=3.87462795414925
 double Setpoint, Input, Output;
@@ -42,7 +42,7 @@ void setup() {
   pinMode(IN1, OUTPUT);
   pinMode(IN2, OUTPUT);
   pinMode(PWM1, OUTPUT);
- double po1=800;
+ double po1=0.0;
  
   Setpoint = po1;//13650/4;
   // put your setup code here, to run once:
@@ -56,7 +56,7 @@ input_data();
   long newPosition = myEnc.read();
   if (newPosition != oldPosition) {
     oldPosition = newPosition;
-    Serial.println((newPosition*2*pi)/resolucion);
+    Serial.println((newPosition*360)/resolucion);
   }
   Input=newPosition;
   error= Setpoint-newPosition;
@@ -93,9 +93,7 @@ void RunMotor(double Usignal){
     if(Usignal<200 && error >= 20){
    Usignal=210; 
     }
-    else if(error<5){
-        digitalWrite(EN, LOW);
-        }
+    
     shaftrev(IN1,IN2,PWM1,backWARDS, Usignal);
     //Serial.println("positivo");
     
@@ -117,21 +115,21 @@ void shaftrev(int in1, int in2, int PWM, int sentido,int Wpulse){
     digitalWrite(in2, HIGH);
     digitalWrite(in1, LOW);
     analogWrite(PWM,Wpulse);
-    digitalWrite(EN, HIGH);
+    
     
     }
   if(sentido == 1){ //forWARDS
     digitalWrite(in2, LOW);
     digitalWrite(in1, HIGH);
     analogWrite(PWM,Wpulse);    
-    digitalWrite(EN, HIGH); 
+    
     }
 }
 
 void input_data(void){
   if (Serial.available() > 0){           // Check if you have received any data through the serial terminal.
   
-      cmd = 0;                            // clean CMD
+      /*cmd = 0;                            // clean CMD
       cmd = Serial.read();                // "cmd" keep the recived byte
       if (cmd > 31){
         if (cmd == '0') { Setpoint = 0.0;  }  // Ir a Inicio.                    
@@ -139,6 +137,17 @@ void input_data(void){
         if (cmd == '2') { Setpoint = 400.0;  }  //
         if (cmd == '3') { Setpoint = 200.0; }  //
         if (cmd == '4') { Setpoint = 267.0; }
-      }
+      }*/
+
+      delay(20);
+    String cm = "";
+     while (Serial.available() > 0) {
+      cm += (char)Serial.read();
+      
+  }
+  //Serial.println(cm);  
+     cmd=cm.toFloat();
+     Setpoint=(cmd*resolucion)/360;
+     //Serial.println(Setpoint); 
     }
 }
