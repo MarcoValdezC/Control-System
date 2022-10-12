@@ -10,24 +10,38 @@ import random
 import math
 import matplotlib.pyplot as plt
 
-pop=1000
+pop=100
 gen=100
-limit=[(0,5),(0,3)] 
+limit=[(0.1,1),(0,5)] 
 D = 2                             
 M = 2   
 AMAX=30
 eta=1
 
+# #----------------------------------------------------------------------------------------------------
+# #Función Bihn and Korn
+# def Bihn(x):
+#     f1=4*x[0]**2 + 4*x[1]**2
+#     f2=(x[0]-5)**2+(x[1]-5)**2
+#     g = 0
+#     g += 0 if (x[0] - 5) ** 2 + x[1] ** 2 <= 25 else 1
+#     g += 0 if (x[0]- 8) ** 2 + (x[1] + 3) ** 2 >= 7.7 else 1
+#     return np.array([f1,f2]),g
+# #----------------------------------------------------------------------------------------------------
+
 #----------------------------------------------------------------------------------------------------
-#Función Bihn and Korn
-def Bihn(x):
-    f1=4*x[0]**2 + 4*x[1]**2
-    f2=(x[0]-5)**2+(x[1]-5)**2
+
+
+def conex(x):
+    f1=x[0]
+    f2=(1+x[1])/x[0]
     g = 0
-    g += 0 if (x[0] - 5) ** 2 + x[1] ** 2 <= 25 else 1
-    g += 0 if (x[0]- 8) ** 2 + (x[1] + 3) ** 2 >= 7.7 else 1
-    return np.array([f1,f2]),g
-#----------------------------------------------------------------------------------------------------
+    g += 0 if x[1] + 9 * x[0]>= 6 else 1
+    g += 0 if -x[1] + 9 * x[0]>= 1 else 1
+    return np.array([f1,f2]), g
+    
+
+#--------------------------------------------------------------------------------------------------------
 
 #------------------------------------------------------------------
 def dominates(_a, _b):
@@ -64,19 +78,24 @@ def selecga(f, g, po, D, M):
     g_x_r = np.empty(0)
 
     for r, f_x_i in enumerate(f):
+        
+            
         sol_nd = True
         g_x_i=g[r]
-        
+            
         for i2, f_a_2 in enumerate(f):
-            if r != i2 and g_x_i==0:
+            g_x_i_2=g[i2]
+            if r != i2:
                 if dominates(f_a_2, f_x_i):
                     sol_nd = False
                     break
         if sol_nd:
             f_x_r = np.append(f_x_r, [f[r]], axis=0)
             pop_x_r = np.append(pop_x_r, [po[r]], axis=0)
-            g_x_r = np.append(g_x_r, [g[r]], axis=0)
-
+            g_x_r = np.append(g_x_r, [g_x_i], axis=0)
+        
+ 
+    #print(g_x_r)
     return f_x_r, pop_x_r, g_x_r
 #-------------------------SBX------------------------------------------
 def crossov(p1,p2,eta,llo,lup):
@@ -192,6 +211,7 @@ def moga( limites, poblacion,eta, generaciones,D,M,AMAX,function):
     for i, xi in enumerate(population[0,:]):  # Evalua objetivos
         solu=function(xi)
         f_x[0][i], g_x[0][i] =solu[0],solu[1] #function(xi,pardyna)
+        
         #------------------------------------------------------------------------------------------------
     for i in range(0,gen-1):
         f_x_next[i][:]=f_x[i][:]
@@ -200,9 +220,11 @@ def moga( limites, poblacion,eta, generaciones,D,M,AMAX,function):
     
         #print ('Generación:',i) 
         selecc=selecga(f_x[i,:],g_x[i,:],population[i],D,M)
+        
         f_x_s=selecc[0]
         popu_x_s=selecc[1]
         g_x_s=selecc[2]
+        #print(g_x_s)
     
         cross=[]
         if len(f_x_s) % 2 != 0:
@@ -283,8 +305,10 @@ def moga( limites, poblacion,eta, generaciones,D,M,AMAX,function):
         # Actualiza archivo (unicamente con soluciones factibles)
         for k, g_x_i in enumerate(g_x[i+1,:]):
             if g_x_i == 0:
+                #print(g_x_i)
                 f_a = np.append(f_a, [f_x[i+1][k]], axis=0)
                 a = np.append(a, [population[i+1][k]], axis=0)
+                
         
         f_a_fil = np.empty((0, M))  # Conjunto no dominado
         a_fil = np.empty((0, D))  # Conjunto no dominado
@@ -302,6 +326,8 @@ def moga( limites, poblacion,eta, generaciones,D,M,AMAX,function):
             
         a = a_fil
         f_a = f_a_fil
+        #print(a)
+        #print(f_a)
 
         if len(a) > AMAX:
             # Ordenamiento del archivo con respecto a f1
@@ -327,9 +353,9 @@ def moga( limites, poblacion,eta, generaciones,D,M,AMAX,function):
             while len(a) != AMAX:
                 a = np.delete(a, 0, 0)
                 f_a = np.delete(f_a, 0, 0)
-    print(a)
-    print (a[:,1])
-    print(len(f_a))
+    #print(a)
+    #print (a[:,1])
+    print((f_a))
     # filename="fafill.csv" 
     # myFile=open(filename,'w') 
     # myFile.write("f1, f2 \n") 
@@ -346,7 +372,7 @@ def moga( limites, poblacion,eta, generaciones,D,M,AMAX,function):
   
    
     return f_a,a
-var= moga( limit, pop,eta, gen,D,M,AMAX,Bihn)
+var= moga( limit, pop,eta, gen,D,M,AMAX,conex)
 # Hvmogaps=np.zeros(3)
 
 # for k in range(3):
