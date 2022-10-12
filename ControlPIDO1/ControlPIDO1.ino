@@ -17,7 +17,7 @@ double Setpoint, Input, Output;
 const float pi = 3.14;
 //double kp=7.039759626, ki=0, kd=1.068451969;
 //double kp=6.8916108747095, ki=0.114454931035736, kd=4.59502748219678;
-double kp=9.0123585312173, ki=0, kd=3.87462795414925;
+double kp=7.99, ki=0.0, kd=0.3397;
 //float Ts=466e-6;
 long prevT = 0;
 float outmax=20000.0;
