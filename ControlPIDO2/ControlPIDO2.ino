@@ -42,17 +42,17 @@ void setup() {
   pinMode(IN1, OUTPUT);
   pinMode(IN2, OUTPUT);
   pinMode(PWM1, OUTPUT);
- double po1=0.0;
+ double po1=180.0;
  
-  Setpoint = po1;//13650/4;
+  Setpoint = (po1*resolucion)/360;//13650/4;
   // put your setup code here, to run once:
 Serial.begin(9600);
-Serial.println("Ingrese el ángulo deseado:");
+//Serial.println("Ingrese el ángulo deseado:");
 }
 long oldPosition  = -999;
 void loop() {
   // put your main code here, to run repeatedly:
-input_data();
+//input_data();
   long newPosition = myEnc.read();
   if (newPosition != oldPosition) {
     oldPosition = newPosition;
